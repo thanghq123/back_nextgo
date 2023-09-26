@@ -10,14 +10,14 @@
 <body>
 <form action="{{route('upload')}}" method="post" enctype="multipart/form-data">
     @csrf
-    <input type="file" name="image" id="">
+    <input type="file" name="file" id="">
     <input type="submit" value="upload">
 </form>
 
 <p>
     <span>{{$url}}</span>
-{{--    <img src="https://drive.google.com/file/d/1ja0UGkFMkm2mG1WtMuG0XO14cZmyOzo9/view" alt="">--}}
-    <iframe src="https://drive.google.com/file/d/1ja0UGkFMkm2mG1WtMuG0XO14cZmyOzo9/preview" width="640" height="480"></iframe>
+    <img src="{{$url}}" alt="">
+{{--    <iframe src="https://drive.google.com/file/d/1ja0UGkFMkm2mG1WtMuG0XO14cZmyOzo9/preview" width="640" height="480"></iframe>--}}
 </p>
 </body>
 </html>

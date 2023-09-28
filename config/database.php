@@ -93,6 +93,24 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'tenant' => [
+            'driver' => 'mysql',
+            'database' => null,
+            'host' => env('DB_HOST', 'localhost'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            // And other options if needed ...
+        ],
+
+        'landlord' => [
+            'driver' => 'mysql',
+            'database' => env('DB_DATABASE', 'laravel'),
+            'host' => env('DB_HOST', 'localhost'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            // And other options if needed ...
+        ],
+
     ],
 
     /*

@@ -101,7 +101,7 @@ if (!function_exists('responseApi')) {
     {
         if (!$status) $code = 404;
 
-        if (!$status) $data = ['status' => $status, 'message' => $data];
+        if (!$status) $data = ['status' => $status, 'meta' => $data];
 
         if ($status) $data = ['status' => $status, 'payload' => $data];
 

@@ -97,7 +97,7 @@ function getContent($folderName, $fileName, $cloud = 'google')
 }
 
 if (!function_exists('responseApi')) {
-    function responseApi($status = false, $data = "Not found", $dataAppend = [], $code = 200)
+    function responseApi(mixed $data = "Not found", bool $status = false, int $code = 200, mixed $dataAppend = []): \Illuminate\Http\JsonResponse
     {
         if (!$status) $code = 404;
 

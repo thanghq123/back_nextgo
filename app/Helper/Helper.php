@@ -1,5 +1,7 @@
 <?php
+
 use Illuminate\Support\Facades\Storage;
+
 function createFolder($folderName, $cloud = 'google')
 {
     $googleDisk = Storage::disk($cloud)->makeDirectory($folderName);
@@ -17,7 +19,7 @@ function createDoc($folderName, $fileName, $content, $cloud = 'google')
     return $id;
 }
 
-function createFile($folderName,$file,$fileName, $cloud = 'google')
+function createFile($folderName, $file, $fileName, $cloud = 'google')
 {
     $googleDisk = Storage::disk($cloud)->putFileAs($folderName, $file, $fileName);
     if ($googleDisk) {
@@ -84,6 +86,7 @@ function getLinkImage($folderName, $fileName, $cloud = 'google')
     }
     return "File not found";
 }
+
 function getContent($folderName, $fileName, $cloud = 'google')
 {
     if (Storage::disk($cloud)->exists($folderName . '/' . $fileName) == false) {
@@ -91,4 +94,22 @@ function getContent($folderName, $fileName, $cloud = 'google')
     }
     $content = Storage::disk($cloud)->get($folderName . '/' . $fileName);
     return $content;
+}
+
+if (!function_exists('responseApi')) {
+    function responseApi($status = false, $data = "Not found", $dataAppend = [], $code = 200)
+    {
+        if (!$status) $code = 404;
+
+        if (!$status) $data = ['status' => $status, 'message' => $data];
+
+        if ($status) $data = ['status' => $status, 'payload' => $data];
+
+        if ($status) $data = array_merge($data, $dataAppend);
+
+        return response()->json(
+            $data,
+            $code
+        );
+    }
 }

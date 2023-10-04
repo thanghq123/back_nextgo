@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TenantFinder;
+namespace App\Multitenancy\Finders;
 
 use Illuminate\Http\Request;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantModel;

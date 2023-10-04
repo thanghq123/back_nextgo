@@ -15,5 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/', function (Request $request) {
-    return App\Models\Tenant::current();
 });

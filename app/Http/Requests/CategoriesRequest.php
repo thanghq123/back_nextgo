@@ -27,9 +27,16 @@ class CategoriesRequest extends FormRequest
     public function rules()
     {
         $url = Str::after($this->url(), 'tenant/api/v1/');
-        if($url == "category/store" || $url == "category/update"){
+
+        if($url == "category/store"){
             return [
-                'name' => 'required'
+                'name' => 'required|unique:App\Models\Tenant\Category,name'
+            ];
+        }
+
+        if($url == "category/update"){
+            return [
+                'name' => 'required|unique:App\Models\Tenant\Category,name,'.$this->id,
             ];
         }
 
@@ -39,7 +46,8 @@ class CategoriesRequest extends FormRequest
      public function messages()
      {
          return [
-             "name.required" => "Không được để trống!"
+             "name.required" => "Không được để trống!",
+             "name.unique" => "Tên đã tồn tại!"
          ];
      }
 }

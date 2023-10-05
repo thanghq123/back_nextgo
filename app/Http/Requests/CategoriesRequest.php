@@ -26,15 +26,15 @@ class CategoriesRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::after($this->url(), 'tenant/api/v1/');
+        $url = Str::after($this->url(), 'tenant/api/v1/category/');
 
-        if($url == "category/store"){
+        if($url == "store"){
             return [
                 'name' => 'required|unique:App\Models\Tenant\Category,name'
             ];
         }
 
-        if($url == "category/update"){
+        if($url == "update"){
             return [
                 'name' => 'required|unique:App\Models\Tenant\Category,name,'.$this->id,
             ];

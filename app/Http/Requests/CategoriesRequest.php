@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class CategoriesRequest extends FormRequest
 {
@@ -25,9 +26,14 @@ class CategoriesRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required'
-        ];
+        $url = Str::after($this->url(), 'tenant/api/v1/');
+        if($url == "category/store" || $url == "category/update"){
+            return [
+                'name' => 'required'
+            ];
+        }
+
+        return [];
     }
 
      public function messages()

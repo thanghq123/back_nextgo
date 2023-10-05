@@ -36,23 +36,23 @@ class CategoriesController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(CategoriesRequest $request)
     {
         try {
-            if (!$this->category::find($id)) return responseApi('Category not found', false);
-            return responseApi($this->category::find($id), true);
+            if (!$this->category::find($request->id)) return responseApi('Category not found', false);
+            return responseApi($this->category::find($request->id), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function update(CategoriesRequest $request, $id)
+    public function update(CategoriesRequest $request)
     {
         try {
-            if (!$this->category::find($id)) return responseApi('Category not found', false);
+            if (!$this->category::find($request->id)) return responseApi('Category not found', false);
             if (!empty($request->validated())) {
-                $category = $this->category::find($id);
+                $category = $this->category::find($request->id);
                 $category->update($request->all());
                 return responseApi('Update successfully!', true);
             }
@@ -63,11 +63,11 @@ class CategoriesController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy(CategoriesRequest $request){
         try {
-            if (!$this->category::find($id)) return responseApi('Category not found', false);
+            if (!$this->category::find($request->id)) return responseApi('Category not found', false);
 
-            $this->category::find($id)->delete();
+            $this->category::find($request->id)->delete();
 
             return responseApi('Delete successfully!', true);
         }catch (\Throwable $throwable)

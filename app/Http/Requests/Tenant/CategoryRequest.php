@@ -26,7 +26,7 @@ class CategoryRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::after($this->url(), 'tenant/api/v1/categories/');
+        $url = Str::afterLast($this->url(), '/');
 
         if($url == "store"){
             return [

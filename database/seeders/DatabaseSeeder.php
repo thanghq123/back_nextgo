@@ -31,6 +31,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'tenant1@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
+
+        \App\Models\Tenant\Category::query()->create([
+            "name" => "Quần"
+        ]);
     }
 
     public function runLandlordSpecificSeeders()

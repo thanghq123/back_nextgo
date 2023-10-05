@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Tenant\CategoriesController;
+use App\Http\Controllers\Tenant\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +18,10 @@ use App\Http\Controllers\Tenant\CategoriesController;
 Route::post('/', function (Request $request) {
 });
 
-Route::prefix('category')->name('category')->group(function (){
-    Route::post('/', [CategoriesController::class, 'list'])->name('list');
-    Route::post('store', [CategoriesController::class, 'store'])->name('store');
-    Route::post('show', [CategoriesController::class, 'show'])->name('show');
-    Route::post('update', [CategoriesController::class, 'update'])->name('update');
-    Route::post('delete', [CategoriesController::class, 'destroy'])->name('destroy');
+Route::prefix('categories')->name('categories')->group(function (){
+    Route::post('/', [CategoryController::class, 'list'])->name('list');
+    Route::post('store', [CategoryController::class, 'store'])->name('store');
+    Route::post('show', [CategoryController::class, 'show'])->name('show');
+    Route::post('update', [CategoryController::class, 'update'])->name('update');
+    Route::post('delete', [CategoryController::class, 'delete'])->name('delete');
 });

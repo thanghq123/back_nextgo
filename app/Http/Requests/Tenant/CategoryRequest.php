@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Tenant;
 
 use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class CategoriesRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -26,7 +26,7 @@ class CategoriesRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::after($this->url(), 'tenant/api/v1/category/');
+        $url = Str::after($this->url(), 'tenant/api/v1/categories/');
 
         if($url == "store"){
             return [

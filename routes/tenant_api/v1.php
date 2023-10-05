@@ -17,3 +17,11 @@ use App\Http\Controllers\Tenant\CategoriesController;
 
 Route::post('/', function (Request $request) {
 });
+
+Route::prefix('category')->name('category')->group(function (){
+    Route::post('/', [CategoriesController::class, 'list'])->name('list');
+    Route::post('store', [CategoriesController::class, 'store'])->name('store');
+    Route::post('show/{id}', [CategoriesController::class, 'show'])->name('show');
+    Route::put('update/{id}', [CategoriesController::class, 'update'])->name('update');
+    Route::post('delete/{id}', [CategoriesController::class, 'destroy'])->name('destroy');
+});

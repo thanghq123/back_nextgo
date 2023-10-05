@@ -26,16 +26,14 @@ class CategoriesRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:categories'
-//            unique:categories,category_name,".$id
+            'name' => 'required'
         ];
     }
 
      public function messages()
      {
          return [
-             "name.required" => "Không được để trống!",
-             "name.unique" => "Tên đã tồn tại!",
+             "name.required" => "Không được để trống!"
          ];
      }
 }

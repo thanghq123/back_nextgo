@@ -5,7 +5,7 @@ $ composer install
 
 ### Migrate cho landlord database (main database)
 ```shc
-$ php artisan migrate --database=landlord
+$ php artisan migrate --database=landlord --seed
 ```
 
 ### Migrate cho tất cả các tenants có trong bảng tenants của landlord database

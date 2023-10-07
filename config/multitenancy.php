@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tenant;
 use Illuminate\Broadcasting\BroadcastEvent;
 use Illuminate\Events\CallQueuedListener;
 use Illuminate\Mail\SendQueuedMailable;
@@ -8,7 +9,6 @@ use Spatie\Multitenancy\Actions\ForgetCurrentTenantAction;
 use Spatie\Multitenancy\Actions\MakeQueueTenantAwareAction;
 use Spatie\Multitenancy\Actions\MakeTenantCurrentAction;
 use Spatie\Multitenancy\Actions\MigrateTenantAction;
-use App\Models\Tenant;
 
 return [
     /*
@@ -18,7 +18,7 @@ return [
      * This class should extend `Spatie\Multitenancy\TenantFinder\TenantFinder`
      *
      */
-    'tenant_finder' => \App\TenantFinder\NameTenantFinder::class,
+    'tenant_finder' => \App\Multitenancy\Finders\NameTenantFinder::class,
 
     /*
      * These fields are used by tenant:artisan command to match one or more tenant
@@ -36,6 +36,7 @@ return [
         // \Spatie\Multitenancy\Tasks\PrefixCacheTask::class,
          \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
         // \Spatie\Multitenancy\Tasks\SwitchRouteCacheTask::class,
+        \App\Multitenancy\Tasks\SetSanctumPersonAccessTokenModelTask::class,
     ],
 
     /*

@@ -35,6 +35,12 @@ class DatabaseSeeder extends Seeder
         \App\Models\Tenant\Category::query()->create([
             "name" => "Quần"
         ]);
+
+        \App\Models\Tenant\Warranty::query()->create([
+            "name" => "Bảo hành áo da",
+            "unit" => 1,
+            "period" => 2
+        ]);
     }
 
     public function runLandlordSpecificSeeders()
@@ -43,7 +49,7 @@ class DatabaseSeeder extends Seeder
         $user = User::query()->create([
             'name' => 'tenant_test',
             'email' => 'tenant_test@gmail.com',
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
         ]);
         DB::statement("DROP DATABASE IF EXISTS `tenant1`;");
         Tenant::query()->create([

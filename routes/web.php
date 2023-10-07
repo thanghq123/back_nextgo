@@ -16,11 +16,15 @@ use App\Http\Controllers\TestController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/test',[TestController::class,'test']);
 Route::get('/mail',[TestController::class,'index']);
 Route::get('/create',[TestController::class,'create']);
 Route::get('/list',[TestController::class,'list']);
 Route::post('/upload',[TestController::class,'upload'])->name('upload');
 Route::get('/rename',[TestController::class,'rename']);
 Route::get('/delete',[TestController::class,'delete']);
+Route::prefix('admin')->name('admin.')->group(function (){
+    Route::view('/','admin.dashboard.index')->name('home');
+    Route::prefix('pricing')->name('pricing.')->group(function (){
+        Route::view('list','admin.pricing.list')->name('list');
+    });
+});

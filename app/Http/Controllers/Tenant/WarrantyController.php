@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\CategoryRequest;
-use App\Models\Tenant\Category;
+use App\Http\Requests\Tenant\WarrantyRequest;
+use App\Models\Tenant\Warranty;
 
-class CategoryController extends Controller
+class WarrantyController extends Controller
 {
     public function __construct(
-        private Category $model,
-        private CategoryRequest $request,
-        private string $module_name = "Loại",
+        private Warranty $model,
+        private WarrantyRequest $request,
+        private string $module_name = "Bảo hành",
     )
     {
     }
@@ -78,4 +78,3 @@ class CategoryController extends Controller
         }
     }
 }
-

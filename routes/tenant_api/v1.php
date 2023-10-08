@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tenant\CategoryController;
+use App\Http\Controllers\Tenant\WarrantyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,12 @@ Route::prefix('categories')->name('categories')->group(function (){
     Route::post('show', [CategoryController::class, 'show'])->name('show');
     Route::post('update', [CategoryController::class, 'update'])->name('update');
     Route::post('delete', [CategoryController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('warranties')->name('warranties')->group(function (){
+    Route::post('/', [WarrantyController::class, 'list'])->name('list');
+    Route::post('store', [WarrantyController::class, 'store'])->name('store');
+    Route::post('show', [WarrantyController::class, 'show'])->name('show');
+    Route::post('update', [WarrantyController::class, 'update'])->name('update');
+    Route::post('delete', [WarrantyController::class, 'delete'])->name('delete');
 });

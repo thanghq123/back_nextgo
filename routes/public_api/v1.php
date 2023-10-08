@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PublicApi\Addresscontroller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,3 +18,8 @@ Route::get('/', function (Request $request) {
     return 1;
 });
 
+Route::prefix('areas')->group(function (){
+    Route::get('provinces',[Addresscontroller::class,'getProvinces']);
+    Route::get('districts/{province_id}',[Addresscontroller::class,'getDistricts']);
+    Route::get('communes/{district_id}',[Addresscontroller::class,'getCommunes']);
+});

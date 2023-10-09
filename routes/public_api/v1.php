@@ -22,9 +22,9 @@ Route::prefix('business-field')->name('bf.')->group(function () {
         ->name('list');
     Route::get('show/{id}',[BusinessFieldController::class,'getById'])
         ->name('get-by-id');
-    Route::match(['get','post'],'create',[BusinessFieldController::class,'create'])
+    Route::post('create',[BusinessFieldController::class,'create'])
         ->name('create');
-    Route::match(['get','post'],'update/{id}',[BusinessFieldController::class,'update'])
+    Route::post('update/{id}',[BusinessFieldController::class,'update'])
         ->name('update');
     Route::get('delete/{id}',[BusinessFieldController::class,'delete'])
         ->name('delete');

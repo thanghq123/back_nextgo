@@ -41,7 +41,8 @@ class WarrantyController extends Controller
     public function show()
     {
         try {
-            if (!$this->model::find($this->request->id)) return responseApi($this->module_name." không tồn tại!", false);
+            if (!$this->model::find($this->request->id))
+                return responseApi($this->module_name." không tồn tại!", false);
             return responseApi($this->model::find($this->request->id), true);
         }catch (\Throwable $throwable)
         {
@@ -52,7 +53,8 @@ class WarrantyController extends Controller
     public function update()
     {
         try {
-            if (!$this->model::find($this->request->id)) return responseApi($this->module_name." không tồn tại!", false);
+            if (!$this->model::find($this->request->id))
+                return responseApi($this->module_name." không tồn tại!", false);
             if (!empty($this->request->validated())) {
                 $category = $this->model::find($this->request->id);
                 $category->update($this->request->all());
@@ -67,7 +69,8 @@ class WarrantyController extends Controller
 
     public function delete(){
         try {
-            if (!$this->model::find($this->request->id)) return responseApi($this->module_name." không tồn tại!", false);
+            if (!$this->model::find($this->request->id))
+                return responseApi($this->module_name." không tồn tại!", false);
 
             $this->model::find($this->request->id)->delete();
 

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\CategoryRequest;
-use App\Models\Tenant\Category;
+use App\Http\Requests\Tenant\CustomerRequest;
+use App\Models\Tenant\Customer;
 
-class CategoryController extends Controller
+class CustomerController extends Controller
 {
     public function __construct(
-        private Category $model,
-        private CategoryRequest $request,
-        private string $module_name = "Loại",
+        private Customer $model,
+        private CustomerRequest $request,
+        private string $module_name = "Khách hàng",
+        private string $module_group_customer = "Nhóm khách hàng",
     )
     {
     }
@@ -28,6 +29,8 @@ class CategoryController extends Controller
     public function store(){
         try {
             if (!empty($this->request->validated())) {
+                if (!$this->model::find($this->request->group_customer_id))
+                    return responseApi($this->module_group_customer." không tồn tại!", false);
                 $this->model::create($this->request->all());
                 return responseApi("Tạo thành công!", true);
             }
@@ -55,6 +58,8 @@ class CategoryController extends Controller
         try {
             if (!$this->model::find($this->request->id))
                 return responseApi($this->module_name." không tồn tại!", false);
+            if (!$this->model::find($this->request->group_customer_id))
+                return responseApi($this->module_group_customer." không tồn tại!", false);
             if (!empty($this->request->validated())) {
                 $category = $this->model::find($this->request->id);
                 $category->update($this->request->all());
@@ -81,4 +86,3 @@ class CategoryController extends Controller
         }
     }
 }
-

@@ -6,7 +6,7 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class WarrantyRequest extends FormRequest
+class GroupCustomerRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -32,17 +32,11 @@ class WarrantyRequest extends FormRequest
             return [
                 "name" => [
                     "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Warranty,name"
+                    "unique:App\Models\Tenant\GroupCustomer,name"
                 ],
-                "unit" => [
+                "description" => [
                     "required",
-                    "in:0,1,2"
-                ],
-                "period" => [
-                    "required",
-                    "gt:0",
-                    "max:500"
+                    "max:1000"
                 ]
             ];
         }
@@ -51,17 +45,11 @@ class WarrantyRequest extends FormRequest
             return [
                 "name" => [
                     "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Warranty,name,".$this->id
+                    "unique:App\Models\Tenant\GroupCustomer,name,".$this->id
                 ],
-                "unit" => [
+                "description" => [
                     "required",
-                    "in:0,1,2"
-                ],
-                "period" => [
-                    "required",
-                    "gt:0",
-                    "max:500"
+                    "max:1000"
                 ]
             ];
         }
@@ -74,12 +62,8 @@ class WarrantyRequest extends FormRequest
         return [
             "name.required" => "Không được để trống!",
             "name.unique" => "Tên đã tồn tại!",
-            "name.max" => "Bạn đã vượt quá ký tự cho phép!",
-            "unit.required" => "Không được để trống!",
-            "unit.in" => "Giá trị không hợp lệ!",
-            "period.required" => "Không được để trống!",
-            "period.gt" => "Phải lớn hơn 0!",
-            "period.max" => "Bạn đã vượt quá số lượng cho phép!"
+            "description.required" => "Không được để trống!",
+            "description.max" => "Bạn đã vượt quá ký tự cho phép!"
         ];
     }
 }

@@ -1,9 +1,9 @@
 <?php
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
-use App\Models\Province;
-use App\Models\District;
-use App\Models\Commune;
+use App\Models\Address\Province;
+use App\Models\Address\District;
+use App\Models\Address\Commune;
 
 class CrawlGeoDataCommand extends Command
 {

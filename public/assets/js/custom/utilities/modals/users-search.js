@@ -10,7 +10,7 @@ var KTModalUserSearch = function () {
     };
     return {
         init: function () {
-            (e = document.querySelector("#kt_modal_users_search_handler")) && (e.querySelector('[data-kt-search-element="wrapper"]'), t = e.querySelector('[data-kt-search-element="suggestions"]'), n = e.querySelector('[data-kt-search-element="results"]'), s = e.querySelector('[data-kt-search-element="empty"]'), (a = new KTSearch(e)).on("kt.search.process", r), a.on("kt.search.clear", o))
+            (e = document.querySelector("#kt_modal_pricing_search_handler")) && (e.querySelector('[data-kt-search-element="wrapper"]'), t = e.querySelector('[data-kt-search-element="suggestions"]'), n = e.querySelector('[data-kt-search-element="results"]'), s = e.querySelector('[data-kt-search-element="empty"]'), (a = new KTSearch(e)).on("kt.search.process", r), a.on("kt.search.clear", o))
         }
     }
 }();

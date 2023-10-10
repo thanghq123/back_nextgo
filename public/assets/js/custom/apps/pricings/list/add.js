@@ -1,0 +1,119 @@
+"use strict";
+const KTPricingAddPricing = function () {
+    const modalForm = document.getElementById("kt_modal_add_pricing"),
+        form = modalForm.querySelector("#kt_modal_add_pricing_form"),
+        modal = new bootstrap.Modal(modalForm);
+    return {
+        init: function () {
+            (() => {
+                var checkForm = FormValidation.formValidation(form, {
+                    fields: {
+                        name: {validators: {notEmpty: {message: "Tên không được để trống"}}},
+                        max_locations: {validators: {notEmpty: {message: "Số chi nhánh tối đa không được để trống"}}},
+                        max_users: {validators: {notEmpty: {message: "Số người dùng tối đa không được để trống"}}},
+                        price_per_month: {validators: {notEmpty: {message: "Giá không được để trống"}}},
+                    },
+                    plugins: {
+                        trigger: new FormValidation.plugins.Trigger,
+                        bootstrap: new FormValidation.plugins.Bootstrap5({
+                            rowSelector: ".fv-row",
+                            eleInvalidClass: "",
+                            eleValidClass: ""
+                        })
+                    }
+                });
+                const btn_submit = modalForm.querySelector('[data-kt-pricing-modal-action="submit"]');
+                btn_submit.addEventListener("click", (modalForm => {
+                        let pricing_id = form.querySelector('[name="id"]')?form.querySelector('[name="id"]').value:"";
+                    modalForm.preventDefault(), checkForm && checkForm.validate().then((function (modalForm) {
+                        if ("Valid" == modalForm) {
+                            (btn_submit.setAttribute("data-kt-indicator", "on"), btn_submit.disabled = !0,
+                                $.ajax({
+                                    url: pricing_id!=""?'/admin/pricing/update':'/admin/pricing/store',
+                                    method: pricing_id!=""?'PUT':'POST',
+                                    data: {
+                                        _token: form.querySelector('[name="_token"]').value,
+                                        name: form.querySelector('[name="name"]').value,
+                                        max_locations: form.querySelector('[name="max_locations"]').value,
+                                        max_users: form.querySelector('[name="max_users"]').value,
+                                        price_per_month: form.querySelector('[name="price_per_month"]').value,
+                                        id: pricing_id!=""?pricing_id:null
+                                    },
+                                    success: function (data) {
+                                        btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1,
+                                            Swal.fire({
+                                                text: data.payload,
+                                                icon: "success",
+                                                buttonsStyling: !1,
+                                                confirmButtonText: "Ok, đồng ý!",
+                                                customClass: {confirmButton: "btn btn-primary"}
+                                            }).then((function (modalForm) {
+                                                modalForm.isConfirmed && modal.hide()
+                                                window.location.reload()
+                                            }))
+                                    }, error: function (data) {
+                                        btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1,
+                                            Swal.fire({
+                                                text: "Xin lỗi, đã có lỗi xảy ra xin vui lòng thử lại.",
+                                                icon: "error",
+                                                buttonsStyling: !1,
+                                                confirmButtonText: "Ok, đồng ý!",
+                                                customClass: {confirmButton: "btn btn-primary"}
+                                            })
+                                    }
+                                }))
+                        } else {
+                            Swal.fire({
+                                text: "Xin lỗi, đã có lỗi xảy ra xin vui lòng thử lại.",
+                                icon: "error",
+                                buttonsStyling: !1,
+                                confirmButtonText: "Ok, đồng ý!",
+                                customClass: {confirmButton: "btn btn-primary"}
+                            })
+                        }
+                    }))
+                }))
+                modalForm.querySelector('[data-kt-pricing-modal-action="cancel"]').addEventListener("click", (modalForm => {
+                    modalForm.preventDefault(), Swal.fire({
+                        text: "Bạn có chắc chắn muốn huỷ?",
+                        icon: "warning",
+                        showCancelButton: !0,
+                        buttonsStyling: !1,
+                        confirmButtonText: "Đúng, huỷ nó!",
+                        cancelButtonText: "Không, trở lại",
+                        customClass: {confirmButton: "btn btn-primary", cancelButton: "btn btn-active-light"}
+                    }).then((function (modalForm) {
+                        modalForm.value ? (form.reset(), modal.hide()) : "cancel" === modalForm.dismiss && Swal.fire({
+                            text: "Biểu mẫu của bạn chưa bị hủy!.",
+                            icon: "error",
+                            buttonsStyling: !1,
+                            confirmButtonText: "Ok, đồng ý!",
+                            customClass: {confirmButton: "btn btn-primary"}
+                        })
+                    }))
+                })), modalForm.querySelector('[data-kt-pricing-modal-action="close"]').addEventListener("click", (modalForm => {
+                    modalForm.preventDefault(), Swal.fire({
+                        text: "Bạn có chắc chắn muốn huỷ?",
+                        icon: "warning",
+                        showCancelButton: !0,
+                        buttonsStyling: !1,
+                        confirmButtonText: "Đúng, huỷ nó!",
+                        cancelButtonText: "Không, trở lại",
+                        customClass: {confirmButton: "btn btn-primary", cancelButton: "btn btn-active-light"}
+                    }).then((function (modalForm) {
+                        modalForm.value ? (form.reset(), modal.hide()) : "cancel" === modalForm.dismiss && Swal.fire({
+                            text: "Biểu mẫu của bạn chưa bị hủy!.",
+                            icon: "error",
+                            buttonsStyling: !1,
+                            confirmButtonText: "Đúng, huỷ nó!",
+                            customClass: {confirmButton: "btn btn-primary"}
+                        })
+                    }))
+                }))
+            })()
+        }
+    }
+}();
+KTUtil.onDOMContentLoaded((function () {
+    KTPricingAddPricing.init()
+}));

@@ -18,7 +18,7 @@ Route::get('/', function (Request $request) {
     return 1;
 });
 
-Route::prefix('areas')->group(function (){
+Route::prefix('areas')->middleware('cors')->group(function (){
     Route::get('provinces',[Addresscontroller::class,'getProvinces']);
     Route::get('districts/{province_id}',[Addresscontroller::class,'getDistricts']);
     Route::get('communes/{district_id}',[Addresscontroller::class,'getCommunes']);

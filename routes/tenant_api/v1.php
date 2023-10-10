@@ -21,7 +21,7 @@ use App\Http\Controllers\Tenant\CustomerController;
 Route::post('/', function (Request $request) {
 });
 
-Route::prefix('categories')->name('categories')->group(function (){
+Route::prefix('categories')->middleware('cors')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
     Route::post('store', [CategoryController::class, 'store'])->name('store');
     Route::post('show', [CategoryController::class, 'show'])->name('show');
@@ -29,7 +29,7 @@ Route::prefix('categories')->name('categories')->group(function (){
     Route::post('delete', [CategoryController::class, 'delete'])->name('delete');
 });
 
-Route::prefix('warranties')->name('warranties')->group(function (){
+Route::prefix('warranties')->middleware('cors')->name('warranties')->group(function (){
     Route::post('/', [WarrantyController::class, 'list'])->name('list');
     Route::post('store', [WarrantyController::class, 'store'])->name('store');
     Route::post('show', [WarrantyController::class, 'show'])->name('show');

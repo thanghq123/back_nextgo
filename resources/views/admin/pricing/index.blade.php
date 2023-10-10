@@ -16,6 +16,7 @@
                            class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm"/>
                 </div>
                 <!--end::Search-->
+
             </div>
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
@@ -23,13 +24,47 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <!--begin::Export-->
-                    <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_export_pricings">
-                        <i class="ki-duotone ki-exit-up fs-2">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>Export
+                    <button type="button" class="btn btn-light-primary mx-2" data-kt-menu-trigger="click"
+                            data-kt-menu-placement="bottom-end">
+                        <i class="ki-duotone ki-exit-down fs-2"><span class="path1"></span><span
+                                class="path2"></span></i>
+                        Export Report
                     </button>
+                    <div id="kt_datatable_pricing_export_menu"
+                         class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4"
+                         data-kt-menu="true">
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3" data-kt-export="copy">
+                                Copy to clipboard
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3" data-kt-export="excel">
+                                Export as Excel
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3" data-kt-export="csv">
+                                Export as CSV
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <a href="#" class="menu-link px-3" data-kt-export="pdf">
+                                Export as PDF
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                    </div>
+                    <!--begin::Hide default export buttons-->
+                    <div id="kt_datatable_pricing_buttons" class="d-none"></div>
+                    <!--end::Hide default export buttons-->
                     <!--end::Export-->
                     <!--begin::Add user-->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -46,73 +81,6 @@
                     </div>
                     <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Xoá bỏ
                     </button>
-                </div>
-                <!--end::Group actions-->
-                <!--begin::Modal - Adjust Balance-->
-                <div class="modal fade" id="kt_modal_export_pricings" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-650px">
-                        <!--begin::Modal content-->
-                        <div class="modal-content">
-                            <!--begin::Modal header-->
-                            <div class="modal-header">
-                                <!--begin::Modal title-->
-                                <h2 class="fw-bold">Export Users</h2>
-                                <!--end::Modal title-->
-                                <!--begin::Close-->
-                                <div class="btn btn-icon btn-sm btn-active-icon-primary"
-                                     data-kt-pricing-modal-action="close">
-                                    <i class="ki-duotone ki-cross fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </div>
-                                <!--end::Close-->
-                            </div>
-                            <!--end::Modal header-->
-                            <!--begin::Modal body-->
-                            <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                                <!--begin::Form-->
-                                <form id="kt_modal_export_pricings_form" class="form" action="#">
-                                    <!--begin::Input group-->
-                                    <div class="fv-row mb-10">
-                                        <!--begin::Label-->
-                                        <label class="required fs-6 fw-semibold form-label mb-2">Chọn định dạng xuất:</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <select name="format" data-control="select2" data-placeholder="Select a format"
-                                                data-hide-search="true" class="form-select form-select-solid fw-bold">
-                                            <option></option>
-                                            <option value="excel">Excel</option>
-                                            <option value="pdf">PDF</option>
-                                            <option value="cvs">CVS</option>
-                                            <option value="zip">ZIP</option>
-                                        </select>
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Actions-->
-                                    <div class="text-center">
-                                        <button type="reset" class="btn btn-light me-3"
-                                                data-kt-pricing-modal-action="cancel">Huỷ
-                                        </button>
-                                        <button type="submit" class="btn btn-primary"
-                                                data-kt-pricing-modal-action="submit">
-                                            <span class="indicator-label">Lưu</span>
-                                            <span class="indicator-progress">Vui lòng đợi...
-                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <!--end::Actions-->
-                                </form>
-                                <!--end::Form-->
-                            </div>
-                            <!--end::Modal body-->
-                        </div>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
                 </div>
                 <!--end::Modal - New Card-->
                 <!--begin::Modal - Add task-->
@@ -210,12 +178,6 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_pricing">
                 <thead>
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-{{--                    <th class="w-10px pe-2">--}}
-{{--                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">--}}
-{{--                            <input class="form-check-input" type="checkbox" data-kt-check="true"--}}
-{{--                                   data-kt-check-target="#kt_table_pricing .form-check-input" value="1"/>--}}
-{{--                        </div>--}}
-{{--                    </th>--}}
                     <th class="min-w-125px">Tên gói dịch vụ</th>
                     <th class="min-w-125px">Số chi nhánh tối đa</th>
                     <th class="min-w-125px">Số người dùng tối đa</th>
@@ -226,11 +188,6 @@
                 <tbody class="text-gray-600 fw-semibold">
                 @foreach($pricings as $pricing)
                     <tr data-id="{{$pricing->id}}">
-{{--                        <td>--}}
-{{--                            <div class="form-check form-check-sm form-check-custom form-check-solid">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="1"/>--}}
-{{--                            </div>--}}
-{{--                        </td>--}}
                         <td>{{$pricing->name}}</td>
                         <td>{{$pricing->max_locations}}</td>
                         <td>{{$pricing->max_users}}</td>

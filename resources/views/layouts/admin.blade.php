@@ -11,7 +11,11 @@
         </div>
         <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
             @include('layouts.components.sidebar')
-            @yield('content')
+            <div id="kt_app_content" class="app-content  flex-column-fluid " data-select2-id="select2-data-kt_app_content">
+                <div id="kt_app_content_container" class="app-container  container-xxl " data-select2-id="select2-data-kt_app_content_container">
+                    @yield('content')
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\PricingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +26,10 @@ Route::get('/delete',[TestController::class,'delete']);
 Route::prefix('admin')->name('admin.')->group(function (){
     Route::view('/','admin.dashboard.index')->name('home');
     Route::prefix('pricing')->name('pricing.')->group(function (){
-        Route::view('list','admin.pricing.list')->name('list');
+        Route::get('/',[PricingController::class,'index'])->name('index');
+        Route::post('/store',[PricingController::class,'store'])->name('store');
+        Route::get('/show',[PricingController::class,'show'])->name('show');
+        Route::put('/update',[PricingController::class,'update'])->name('update');
+        Route::delete('/delete',[PricingController::class,'delete'])->name('delete');
     });
 });

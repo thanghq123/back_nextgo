@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\CategoryRequest;
-use App\Models\Tenant\Category;
+use App\Http\Requests\Tenant\GroupCustomerRequest;
+use App\Models\Tenant\GroupCustomer;
 
-class CategoryController extends Controller
+class GroupCustomerController extends Controller
 {
     public function __construct(
-        private Category $model,
-        private CategoryRequest $request,
-        private string $module_name = "Loại",
+        private GroupCustomer $model,
+        private GroupCustomerRequest $request,
+        private string $module_name = "Nhóm khách hàng",
     )
     {
     }
@@ -81,4 +81,3 @@ class CategoryController extends Controller
         }
     }
 }
-

@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\BusinessFieldController;
+use App\Http\Controllers\PublicApi\Addresscontroller;
+use App\Http\Controllers\PublicApi\BusinessFieldController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +31,8 @@ Route::prefix('business-field')->name('bf.')->group(function () {
         ->name('delete');
 });
 
+Route::prefix('areas')->middleware('cors')->group(function (){
+    Route::get('provinces',[Addresscontroller::class,'getProvinces']);
+    Route::get('districts/{province_id}',[Addresscontroller::class,'getDistricts']);
+    Route::get('communes/{district_id}',[Addresscontroller::class,'getCommunes']);
+});

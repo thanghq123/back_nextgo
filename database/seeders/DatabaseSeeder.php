@@ -17,8 +17,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
-        $this->call(BusinessFieldSeeder::class);
-
+        $this->call([
+            PricingSeeder::class,
+            BusinessFieldSeeder::class,
+        ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
             : $this->runLandlordSpecificSeeders();
@@ -41,6 +43,27 @@ class DatabaseSeeder extends Seeder
             "name" => "Bảo hành áo da",
             "unit" => 1,
             "period" => 2
+        ]);
+
+        $groupCustomer = \App\Models\Tenant\GroupCustomer::query()->create([
+            "name" => "Bán lẻ",
+            "description" => "Bán ở cửa hàng cá nhân"
+        ]);
+
+        \App\Models\Tenant\Customer::query()->create([
+            "group_customer_id" => $groupCustomer->id,
+            "type" => 0,
+            "name" => "Đặng Văn Hậu",
+            "gender" => 1,
+            "dob" => "2023/10/10",
+            "email" => "a@gmail.com",
+            "tel" => "0985658741",
+            "status" => 1,
+            "province_code" => "100000",
+            "district_code" => "29",
+            "ward_code" => "10222",
+            "address_detail" => "Nhà cách mặt đất 1m, xung quanh toàn đất là đất và đất",
+            "note" => "Đang tuyển vợ"
         ]);
     }
 

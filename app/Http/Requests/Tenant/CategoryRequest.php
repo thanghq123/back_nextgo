@@ -30,13 +30,21 @@ class CategoryRequest extends FormRequest
 
         if($url == "store"){
             return [
-                'name' => 'required|unique:App\Models\Tenant\Category,name'
+                "name" => [
+                    "required",
+                    "max:255",
+                    "unique:App\Models\Tenant\Category,name"
+                ],
             ];
         }
 
         if($url == "update"){
             return [
-                'name' => 'required|unique:App\Models\Tenant\Category,name,'.$this->id,
+                "name" => [
+                    "required",
+                    "max:255",
+                    "unique:App\Models\Tenant\Category,name,".$this->id
+                ],
             ];
         }
 
@@ -47,7 +55,8 @@ class CategoryRequest extends FormRequest
      {
          return [
              "name.required" => "Không được để trống!",
-             "name.unique" => "Tên đã tồn tại!"
+             "name.unique" => "Tên đã tồn tại!",
+             "name.max" => "Bạn đã vượt quá ký tự cho phép!",
          ];
      }
 }

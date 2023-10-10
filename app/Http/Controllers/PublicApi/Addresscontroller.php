@@ -13,7 +13,7 @@ class Addresscontroller extends Controller
     public function getProvinces()
     {
         $provinces = Province::all();
-        if (!$provinces) return response()->json(['status' => 'error', 'message' => 'No provinces found'], 404);
+        if (!$provinces) return response()->json(['status' => 'error', 'message' => 'No provinces found']);
         return response()->json([
             'status' => 'success',
             'results' => $provinces,
@@ -24,7 +24,7 @@ class Addresscontroller extends Controller
     {
         $districts = District::with('province:id,name')->where('province_id', $province_id)->get();
 
-        if ($districts->isEmpty()) return response()->json(['status' => 'error', 'message' => 'No districts found'], 404);
+        if ($districts->isEmpty()) return response()->json(['status' => 'error', 'message' => 'No districts found']);
 
         $districts = $districts->map(function ($district) {
             return [
@@ -44,7 +44,7 @@ class Addresscontroller extends Controller
     {
         $communes = Commune::with(['district.province:id,name'])->where('district_id', $district_id)->get(['id', 'name', 'district_id']);
 
-        if ($communes->isEmpty()) return response()->json(['status' => 'error', 'message' => 'No districts found'], 404);
+        if ($communes->isEmpty()) return response()->json(['status' => 'error', 'message' => 'No districts found']);
 
         $communes = $communes->map(function ($communes) {
             return [

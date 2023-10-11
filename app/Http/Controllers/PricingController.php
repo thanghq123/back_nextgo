@@ -22,7 +22,7 @@ class PricingController extends Controller
     public function store(){
         try {
             if (!empty($this->request->validated())) {
-                $this->model::create($this->request->all());
+                $this->model::create($this->request->except('_token', 'id'));
                 return responseApi("Tạo thành công!", true);
             }
             return responseApi("Tạo thất bại!", false);
@@ -49,7 +49,7 @@ class PricingController extends Controller
             if (!$this->model::find($this->request->id)) return responseApi($this->module_name." không tồn tại!", false);
             if (!empty($this->request->validated())) {
                 $category = $this->model::find($this->request->id);
-                $category->update($this->request->all());
+                $category->update($this->request->except('_token'));
                 return responseApi("Cập nhật thành công!", true);
             }
             return responseApi("Cập nhật thất bại!", false);

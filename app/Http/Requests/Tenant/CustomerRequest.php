@@ -128,10 +128,7 @@ class CustomerRequest extends FormRequest
                     "required",
                     "numeric"
                 ],
-                "ward_code" => [
-                    "required",
-                    "numeric"
-                ],
+                "ward_code" => 'numeric',
                 "address_detail" => [
                     "required",
                     "max:1000"
@@ -165,7 +162,6 @@ class CustomerRequest extends FormRequest
             "province_code.numeric" => "Chỉ được nhập số!",
             "district_code.required" => "Không được để trống!",
             "district_code.numeric" => "Chỉ được nhập số!",
-            "ward_code.required" => "Không được để trống!",
             "ward_code.numeric" => "Chỉ được nhập số!",
             "address_detail.required" => "Không được để trống!",
             "address_detail.max" => "Bạn đã vượt quá ký tự cho phép!",

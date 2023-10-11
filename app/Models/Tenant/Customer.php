@@ -26,4 +26,8 @@ class Customer extends Model
         "address_detail",
         "note"
     ];
+
+    public function group_customer(){
+        return $this->belongsTo(GroupCustomer::class, 'group_customer_id');
+    }
 }

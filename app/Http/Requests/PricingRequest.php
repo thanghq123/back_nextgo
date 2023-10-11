@@ -28,19 +28,19 @@ class PricingRequest extends FormRequest
 
         if($url == "store"){
             return [
-                'name' => 'required|unique:App\Models\Pricing,name',
-                'max_locations' => 'required',
-                'max_users' => 'required',
-                'price_per_month' => 'required',
+                'name' => 'required|min:3|unique:App\Models\Pricing,name',
+                'max_locations' => 'required|numeric|min:0',
+                'max_users' => 'required|numeric|min:0',
+                'price_per_month' => 'required|numeric|min:0',
             ];
         }
 
         if($url == "update"){
             return [
-                'name' => 'required|unique:App\Models\Pricing,name,'.$this->id,
-                'max_locations' => 'required',
-                'max_users' => 'required',
-                'price_per_month' => 'required',
+                'name' => 'required|min:3|unique:App\Models\Pricing,name,'.$this->id,
+                'max_locations' => 'required|numeric|min:0',
+                'max_users' => 'required|numeric|min:0',
+                'price_per_month' => 'required|numeric|min:0',
             ];
         }
 
@@ -55,6 +55,12 @@ class PricingRequest extends FormRequest
             "max_locations.required" => "Số chi nhánh tối đa không được để trống",
             "max_users.required" => "Số người dùng tối đa không được để trống",
             "price_per_month.required" => "Giá/tháng không được để trống",
+            "max_locations.numeric" => "Số chi nhánh tối đa phải là số",
+            "max_users.numeric" => "Số người dùng tối đa phải là số",
+            "price_per_month.numeric" => "Giá/tháng phải là số",
+            "max_locations.min" => "Số chi nhánh tối đa phải lớn hơn 0",
+            "max_users.min" => "Số người dùng tối đa phải lớn hơn 0",
+            "price_per_month.min" => "Giá/tháng phải lớn hơn 0",
         ];
     }
 }

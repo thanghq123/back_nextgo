@@ -15,4 +15,8 @@ class BusinessField extends Model
         'code',
         'detail'
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 }

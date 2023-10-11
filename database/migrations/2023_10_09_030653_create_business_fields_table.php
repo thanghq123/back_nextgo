@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('business_fields', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('detail');
             $table->timestamps();
         });

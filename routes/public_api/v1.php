@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\PublicApi\Addresscontroller;
-use App\Http\Controllers\PublicApi\BusinessFieldController;
+use App\Http\Controllers\BusinessFieldController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,17 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/',function (){
     return 1;
 });
+
 Route::prefix('business-field')->name('bf.')->group(function () {
-    Route::get('/', [BusinessFieldController::class, 'list'])
-        ->name('list');
-    Route::get('show/{id}',[BusinessFieldController::class,'getById'])
-        ->name('get-by-id');
-    Route::post('create',[BusinessFieldController::class,'create'])
-        ->name('create');
-    Route::post('update/{id}',[BusinessFieldController::class,'update'])
-        ->name('update');
-    Route::get('delete/{id}',[BusinessFieldController::class,'delete'])
-        ->name('delete');
+    Route::get('/', [BusinessFieldController::class, 'list']);
 });
 
 Route::prefix('areas')->middleware('cors')->group(function (){

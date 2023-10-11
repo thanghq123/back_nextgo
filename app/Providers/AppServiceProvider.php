@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Interface\BusinessFieldInterface;
-use App\Repository\BusinessFieldRepository;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Storage;
 

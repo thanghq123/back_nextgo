@@ -9,6 +9,7 @@ use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 class Customer extends Model
 {
     use HasFactory, UsesTenantConnection;
+
     public $table = "customers";
 
     protected $fillable = [

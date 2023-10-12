@@ -10,6 +10,8 @@ class Supplier extends Model
 {
     use HasFactory, UsesTenantConnection;
 
+    protected $table = "suppliers";
+
     protected $fillable = [
         "group_supplier_id",
         "type",

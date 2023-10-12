@@ -6,7 +6,7 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class GroupCustomerRequest extends FormRequest
+class GroupSupplierRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -33,7 +33,7 @@ class GroupCustomerRequest extends FormRequest
                 return [
                     "name" => [
                         "required",
-                        "unique:App\Models\Tenant\GroupCustomer,name"
+                        "unique:App\Models\Tenant\GroupSupplier,name"
                     ],
                     "description" => "max:1000"
                 ];
@@ -41,11 +41,11 @@ class GroupCustomerRequest extends FormRequest
                 return [
                     "id" => [
                         "required",
-                        "exists:App\Models\Tenant\GroupCustomer,id"
+                        "exists:App\Models\Tenant\GroupSupplier,id"
                     ],
                     "name" => [
                         "required",
-                        "unique:App\Models\Tenant\GroupCustomer,name,".$this->id
+                        "unique:App\Models\Tenant\GroupSupplier,name,".$this->id
                     ],
                     "description" => "max:1000"
                 ];
@@ -54,7 +54,7 @@ class GroupCustomerRequest extends FormRequest
                 return [
                     "id" => [
                         "required",
-                        "exists:App\Models\Tenant\GroupCustomer,id"
+                        "exists:App\Models\Tenant\GroupSupplier,id"
                     ]
                 ];
             default:

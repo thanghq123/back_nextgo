@@ -6,17 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
-class Customer extends Model
+class Supplier extends Model
 {
     use HasFactory, UsesTenantConnection;
-    public $table = "customers";
 
     protected $fillable = [
-        "group_customer_id",
+        "group_supplier_id",
         "type",
         "name",
-        "gender",
-        "dob",
         "email",
         "tel",
         "status",

@@ -6,10 +6,9 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class CustomerRequest extends FormRequest
+class SupplierRequest extends FormRequest
 {
     use TFailedValidation;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -32,24 +31,22 @@ class CustomerRequest extends FormRequest
         switch ($getUrl){
             case "store":
                 return [
-                    "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
+                    "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
                     "type" => "in:0,1",
                     "name" => [
                         "required",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,name"
+                        "unique:App\Models\Tenant\Supplier,name"
                     ],
-                    "gender" => "in:0,1,2",
-                    "dob" => "date",
                     "email" => [
                         "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,email"
+                        "unique:App\Models\Tenant\Supplier,email"
                     ],
                     "tel" => [
                         "required",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,tel",
+                        "unique:App\Models\Tenant\Supplier,tel",
                         "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
                     ],
                     "status" => "in:0,1",
@@ -65,32 +62,31 @@ class CustomerRequest extends FormRequest
                         "numeric",
                         "nullable"
                     ],
-                    "address_detail" => "max:1000"
+                    "address_detail" => "max:500",
+                    "note" => "max:500"
                 ];
             case "update":
                 return [
                     "id" => [
                         "required",
-                        "exists:App\Models\Tenant\Customer,id"
+                        "exists:App\Models\Tenant\Supplier,id"
                     ],
-                    "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
+                    "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
                     "type" => "in:0,1",
                     "name" => [
                         "required",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,name,".$this->id
+                        "unique:App\Models\Tenant\Supplier,name,".$this->id
                     ],
-                    "gender" => "in:0,1,2",
-                    "dob" => "date",
                     "email" => [
                         "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,email,".$this->id
+                        "unique:App\Models\Tenant\Supplier,email,".$this->id
                     ],
                     "tel" => [
                         "required",
                         "max:255",
-                        "unique:App\Models\Tenant\Customer,tel,".$this->id,
+                        "unique:App\Models\Tenant\Supplier,tel,".$this->id,
                         "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
                     ],
                     "status" => "in:0,1",
@@ -106,14 +102,15 @@ class CustomerRequest extends FormRequest
                         "numeric",
                         "nullable"
                     ],
-                    "address_detail" => "max:1000"
+                    "address_detail" => "max:500",
+                    "note" => "max:500"
                 ];
             case "show":
             case "delete":
                 return [
                     "id" => [
                         "required",
-                        "exists:App\Models\Tenant\Customer,id"
+                        "exists:App\Models\Tenant\Supplier,id"
                     ]
                 ];
             default:
@@ -126,10 +123,9 @@ class CustomerRequest extends FormRequest
         return [
             "required" => "Không được để trống!",
             "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Giá trị không hợp lệ!",
+            "in" => "Dữ liệu không hợp lệ!",
             "unique" => "Dữ liệu đã tồn tại!",
             "max" => "Bạn đã vượt quá ký tự cho phép!",
-            "date" => "Sai định dạng ngày!",
             "regex" => "Sai định dạng!",
             "numeric" => "Chỉ được nhập số!"
         ];

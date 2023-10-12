@@ -3,21 +3,26 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\WarrantyRequest;
-use App\Models\Tenant\Warranty;
+use App\Http\Requests\Tenant\SupplierRequest;
+use App\Models\Tenant\Supplier;
 
-class WarrantyController extends Controller
+class SupplierController extends Controller
 {
     public function __construct(
-        private Warranty $model,
-        private WarrantyRequest $request
+        private Supplier $model,
+        private SupplierRequest $request,
     )
     {
     }
 
     public function list(){
         try {
-            return responseApi($this->model::all(), true);
+            return responseApi($this->model::query()
+                ->select('suppliers.*')
+                ->selectRaw('(SELECT name FROM group_suppliers
+                                                   WHERE group_suppliers.id = suppliers.group_supplier_id)
+                                                   as group_supplier_name')
+                ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -37,7 +42,12 @@ class WarrantyController extends Controller
     public function show()
     {
         try {
-            return responseApi($this->model::find($this->request->id), true);
+            return responseApi($this->model::query()
+                ->select('suppliers.*')
+                ->selectRaw('(SELECT name FROM group_suppliers
+                                                   WHERE group_suppliers.id = suppliers.group_supplier_id)
+                                                   as group_supplier_name')
+                ->first(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

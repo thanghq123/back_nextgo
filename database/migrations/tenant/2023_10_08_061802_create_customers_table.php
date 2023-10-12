@@ -25,7 +25,7 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->unsignedBigInteger('province_code');
             $table->unsignedBigInteger('district_code');
-            $table->unsignedBigInteger('ward_code');
+            $table->unsignedBigInteger('ward_code')->nullable();
             $table->text('address_detail');
             $table->text('note')->nullable();
             $table->timestamps();

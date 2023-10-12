@@ -34,10 +34,7 @@ class GroupCustomerRequest extends FormRequest
                     "required",
                     "unique:App\Models\Tenant\GroupCustomer,name"
                 ],
-                "description" => [
-                    "required",
-                    "max:1000"
-                ]
+                "description" => "max:1000"
             ];
         }
 
@@ -47,10 +44,7 @@ class GroupCustomerRequest extends FormRequest
                     "required",
                     "unique:App\Models\Tenant\GroupCustomer,name,".$this->id
                 ],
-                "description" => [
-                    "required",
-                    "max:1000"
-                ]
+                "description" => "max:1000"
             ];
         }
 
@@ -62,7 +56,6 @@ class GroupCustomerRequest extends FormRequest
         return [
             "name.required" => "Không được để trống!",
             "name.unique" => "Tên đã tồn tại!",
-            "description.required" => "Không được để trống!",
             "description.max" => "Bạn đã vượt quá ký tự cho phép!"
         ];
     }

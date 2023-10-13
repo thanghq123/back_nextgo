@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\GroupCustomerController;
 use App\Http\Controllers\Tenant\CustomerController;
+use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
 
@@ -31,7 +32,15 @@ Route::prefix('categories')->name('categories')->group(function (){
     Route::post('delete', [CategoryController::class, 'delete'])->name('delete');
 });
 
-Route::prefix('warranties')->name('warranties')->group(function (){
+Route::prefix('brands')->middleware('cors')->name('brands')->group(function (){
+    Route::post('/', [BrandController::class, 'list'])->name('list');
+    Route::post('store', [BrandController::class, 'store'])->name('store');
+    Route::post('show', [BrandController::class, 'show'])->name('show');
+    Route::post('update', [BrandController::class, 'update'])->name('update');
+    Route::post('delete', [BrandController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('warranties')->middleware('cors')->name('warranties')->group(function (){
     Route::post('/', [WarrantyController::class, 'list'])->name('list');
     Route::post('store', [WarrantyController::class, 'store'])->name('store');
     Route::post('show', [WarrantyController::class, 'show'])->name('show');

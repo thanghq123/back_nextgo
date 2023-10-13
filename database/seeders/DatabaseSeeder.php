@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
-            PricingSeeder::class,
-            BusinessFieldSeeder::class,
+//            PricingSeeder::class,
+//            BusinessFieldSeeder::class,
         ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
@@ -29,14 +29,18 @@ class DatabaseSeeder extends Seeder
     public function runTenantSpecificSeeders()
     {
         // run tenant specific seeders
-        \App\Models\Tenant\User::query()->create([
-            'name' => 'tenant1',
-            'email' => 'tenant1@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+//        \App\Models\Tenant\User::query()->create([
+//            'name' => 'tenant1',
+//            'email' => 'tenant1@gmail.com',
+//            'password' => Hash::make('12345678'),
+//        ]);
+//
+//        \App\Models\Tenant\Category::query()->create([
+//            "name" => "Quần"
+//        ]);
 
-        \App\Models\Tenant\Category::query()->create([
-            "name" => "Quần"
+        \App\Models\Tenant\ItemUnit::query()->create([
+            "name" => fake()->name()
         ]);
 
         \App\Models\Tenant\Warranty::query()->create([

@@ -6,7 +6,7 @@ use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\GroupCustomerController;
 use App\Http\Controllers\Tenant\CustomerController;
-
+use App\Http\Controllers\Tenant\ItemUnitController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,6 +35,14 @@ Route::prefix('warranties')->middleware('cors')->name('warranties')->group(funct
     Route::post('show', [WarrantyController::class, 'show'])->name('show');
     Route::post('update', [WarrantyController::class, 'update'])->name('update');
     Route::post('delete', [WarrantyController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('item-units')->middleware('cors')->name('item-units')->group(function (){
+    Route::post('/', [ItemUnitController::class, 'list'])->name('list');
+    Route::post('store', [ItemUnitController::class, 'store'])->name('store');
+    Route::post('show', [ItemUnitController::class, 'show'])->name('show');
+    Route::post('update', [ItemUnitController::class, 'update'])->name('update');
+    Route::post('delete', [ItemUnitController::class, 'delete'])->name('delete');
 });
 
 Route::prefix('group_customers')->name('group_customers')->group(function (){

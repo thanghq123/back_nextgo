@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
             "name" => "Quần"
         ]);
 
+        \App\Models\Tenant\ItemUnit::query()->create([
+            "name" => fake()->name()
+        ]);
+      
         \App\Models\Tenant\Brand::query()->create([
             "name" => "Test model brand"
         ]);

@@ -231,16 +231,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "00d03067f07482f025d41ab55e4ba0db5eca2cdf"
+                "reference": "5b7bd66c9ff58c04c5474ab85edce442f8081cb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/00d03067f07482f025d41ab55e4ba0db5eca2cdf",
-                "reference": "00d03067f07482f025d41ab55e4ba0db5eca2cdf",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/5b7bd66c9ff58c04c5474ab85edce442f8081cb2",
+                "reference": "5b7bd66c9ff58c04c5474ab85edce442f8081cb2",
                 "shasum": ""
             },
             "require": {
@@ -324,7 +324,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.7.0"
+                "source": "https://github.com/doctrine/dbal/tree/3.7.1"
             },
             "funding": [
                 {
@@ -340,7 +340,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-26T20:56:55+00:00"
+            "time": "2023-10-06T05:06:20+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -841,21 +841,21 @@
         },
         {
             "name": "fruitcake/php-cors",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruitcake/php-cors.git",
-                "reference": "58571acbaa5f9f462c9c77e911700ac66f446d4e"
+                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/php-cors/zipball/58571acbaa5f9f462c9c77e911700ac66f446d4e",
-                "reference": "58571acbaa5f9f462c9c77e911700ac66f446d4e",
+                "url": "https://api.github.com/repos/fruitcake/php-cors/zipball/3d158f36e7875e2f040f37bc0573956240a5a38b",
+                "reference": "3d158f36e7875e2f040f37bc0573956240a5a38b",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "symfony/http-foundation": "^4.4|^5.4|^6"
+                "symfony/http-foundation": "^4.4|^5.4|^6|^7"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.4",
@@ -865,7 +865,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -896,7 +896,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fruitcake/php-cors/issues",
-                "source": "https://github.com/fruitcake/php-cors/tree/v1.2.0"
+                "source": "https://github.com/fruitcake/php-cors/tree/v1.3.0"
             },
             "funding": [
                 {
@@ -908,7 +908,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-20T15:07:15+00:00"
+            "time": "2023-10-12T05:21:21+00:00"
         },
         {
             "name": "google/apiclient",
@@ -7042,16 +7042,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.13.2",
+            "version": "v1.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "bbb13460d7f8c5c0cd9a58109beedd79cd7331ff"
+                "reference": "93b2d0d49719bc6e444ba21cd4dbbccec935413d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/bbb13460d7f8c5c0cd9a58109beedd79cd7331ff",
-                "reference": "bbb13460d7f8c5c0cd9a58109beedd79cd7331ff",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/93b2d0d49719bc6e444ba21cd4dbbccec935413d",
+                "reference": "93b2d0d49719bc6e444ba21cd4dbbccec935413d",
                 "shasum": ""
             },
             "require": {
@@ -7062,7 +7062,7 @@
                 "php": "^8.1.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.26.1",
+                "friendsofphp/php-cs-fixer": "^3.34.1",
                 "illuminate/view": "^10.23.1",
                 "laravel-zero/framework": "^10.1.2",
                 "mockery/mockery": "^1.6.6",
@@ -7104,7 +7104,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2023-09-19T15:55:02+00:00"
+            "time": "2023-10-10T15:39:09+00:00"
         },
         {
             "name": "laravel/sail",

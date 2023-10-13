@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
-            PricingSeeder::class,
-            BusinessFieldSeeder::class,
+//            PricingSeeder::class,
+//            BusinessFieldSeeder::class,
         ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
@@ -37,6 +37,10 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Tenant\Category::query()->create([
             "name" => "Quần"
+        ]);
+
+        \App\Models\Tenant\Brand::query()->create([
+            "name" => "Test model brand"
         ]);
 
         \App\Models\Tenant\Warranty::query()->create([

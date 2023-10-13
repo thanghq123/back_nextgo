@@ -6,7 +6,7 @@ use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\GroupCustomerController;
 use App\Http\Controllers\Tenant\CustomerController;
-
+use App\Http\Controllers\Tenant\BrandController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,6 +27,14 @@ Route::prefix('categories')->middleware('cors')->name('categories')->group(funct
     Route::post('show', [CategoryController::class, 'show'])->name('show');
     Route::post('update', [CategoryController::class, 'update'])->name('update');
     Route::post('delete', [CategoryController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('brands')->middleware('cors')->name('brands')->group(function (){
+    Route::post('/', [BrandController::class, 'list'])->name('list');
+    Route::post('store', [BrandController::class, 'store'])->name('store');
+    Route::post('show', [BrandController::class, 'show'])->name('show');
+    Route::post('update', [BrandController::class, 'update'])->name('update');
+    Route::post('delete', [BrandController::class, 'delete'])->name('delete');
 });
 
 Route::prefix('warranties')->middleware('cors')->name('warranties')->group(function (){

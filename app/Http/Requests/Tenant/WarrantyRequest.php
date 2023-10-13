@@ -28,53 +28,47 @@ class WarrantyRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Warranty,id"
+            ],
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Warranty,name"
+            ],
+            "unit" => [
+                "required",
+                "in:0,1,2"
+            ],
+            "period" => [
+                "required",
+                "gt:0",
+                "max:500"
+            ]
+        ];
+
         switch ($getUrl){
             case "store":
                 return [
-                    "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Warranty,name"
-                    ],
-                    "unit" => [
-                        "required",
-                        "in:0,1,2"
-                    ],
-                    "period" => [
-                        "required",
-                        "gt:0",
-                        "max:500"
-                    ]
+                    "name" => $rules["name"],
+                    "unit" => $rules["unit"],
+                    "period" => $rules["period"]
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Warranty,id"
-                    ],
+                    "id" => $rules["id"],
                     "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Warranty,name,".$this->id
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
                     ],
-                    "unit" => [
-                        "required",
-                        "in:0,1,2"
-                    ],
-                    "period" => [
-                        "required",
-                        "gt:0",
-                        "max:500"
-                    ]
+                    "unit" => $rules["unit"],
+                    "period" => $rules["period"]
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Warranty,id"
-                    ]
-                ];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

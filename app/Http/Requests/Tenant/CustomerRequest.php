@@ -29,93 +29,94 @@ class CustomerRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Customer,id"
+            ],
+            "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
+            "type" => "in:0,1",
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Customer,name"
+            ],
+            "gender" => "in:0,1,2",
+            "dob" => "date",
+            "email" => [
+                "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
+                "max" => "max:255",
+                "unique" => "unique:App\Models\Tenant\Customer,email"
+            ],
+            "tel" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Customer,tel",
+                "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+            ],
+            "status" => "in:0,1",
+            "province_code" => [
+                "nullable",
+                "numeric"
+            ],
+            "district_code" => [
+                "nullable",
+                "numeric"
+            ],
+            "ward_code" => [
+                "numeric",
+                "nullable"
+            ],
+            "address_detail" => "max:500",
+            "note" => "max:500"
+        ];
+
         switch ($getUrl){
             case "store":
                 return [
-                    "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
-                    "type" => "in:0,1",
-                    "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,name"
-                    ],
-                    "gender" => "in:0,1,2",
-                    "dob" => "date",
-                    "email" => [
-                        "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,email"
-                    ],
-                    "tel" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,tel",
-                        "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
-                    ],
-                    "status" => "in:0,1",
-                    "province_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "district_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "ward_code" => [
-                        "numeric",
-                        "nullable"
-                    ],
-                    "address_detail" => "max:1000"
+                    "group_customer_id" => $rules["group_customer_id"],
+                    "type" => $rules["type"],
+                    "name" => $rules["name"],
+                    "gender" => $rules["gender"],
+                    "dob" => $rules["dob"],
+                    "email" => $rules["email"],
+                    "tel" => $rules["tel"],
+                    "status" => $rules["status"],
+                    "province_code" => $rules["province_code"],
+                    "district_code" => $rules["district_code"],
+                    "ward_code" => $rules["ward_code"],
+                    "address_detail" => $rules["address_detail"],
+                    "note" => $rules['note']
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Customer,id"
-                    ],
-                    "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
-                    "type" => "in:0,1",
+                    "id" => $rules["id"],
+                    "group_customer_id" => $rules["group_customer_id"],
+                    "type" => $rules["type"],
                     "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,name,".$this->id
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
                     ],
-                    "gender" => "in:0,1,2",
-                    "dob" => "date",
+                    "gender" => $rules["gender"],
+                    "dob" => $rules["dob"],
                     "email" => [
-                        "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,email,".$this->id
+                        $rules["email"],
+                        $rules["email"]["unique"].",".$this->id
                     ],
                     "tel" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Customer,tel,".$this->id,
-                        "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+                        $rules["tel"],
+                        $rules["tel"]["unique"].",".$this->id
                     ],
-                    "status" => "in:0,1",
-                    "province_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "district_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "ward_code" => [
-                        "numeric",
-                        "nullable"
-                    ],
-                    "address_detail" => "max:1000"
+                    "status" => $rules["status"],
+                    "province_code" => $rules["province_code"],
+                    "district_code" => $rules["district_code"],
+                    "ward_code" => $rules["ward_code"],
+                    "address_detail" => $rules["address_detail"],
+                    "note" => $rules['note']
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Customer,id"
-                    ]
-                ];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

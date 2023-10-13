@@ -28,35 +28,36 @@ class GroupCustomerRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\GroupCustomer,id"
+            ],
+            "name" => [
+                "required",
+                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
+            ],
+            "description" => "max:500"
+        ];
+
         switch ($getUrl){
             case "store":
                 return [
-                    "name" => [
-                        "required",
-                        "unique:App\Models\Tenant\GroupCustomer,name"
-                    ],
-                    "description" => "max:1000"
+                    "name" => $rules["name"],
+                    "description" => $rules["description"]
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\GroupCustomer,id"
-                    ],
+                    "id" => $rules["id"],
                     "name" => [
-                        "required",
-                        "unique:App\Models\Tenant\GroupCustomer,name,".$this->id
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
                     ],
-                    "description" => "max:1000"
+                    "description" => $rules["description"]
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\GroupCustomer,id"
-                    ]
-                ];
+                return ["id" => $rules['id']];
             default:
                 return [];
         }

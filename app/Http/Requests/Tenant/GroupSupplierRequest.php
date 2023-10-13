@@ -28,35 +28,36 @@ class GroupSupplierRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\GroupSupplier,id"
+            ],
+            "name" => [
+                "required",
+                "unique" => "unique:App\Models\Tenant\GroupSupplier,name"
+            ],
+            "description" => "max:1000"
+        ];
+
         switch ($getUrl){
             case "store":
                 return [
-                    "name" => [
-                        "required",
-                        "unique:App\Models\Tenant\GroupSupplier,name"
-                    ],
-                    "description" => "max:1000"
+                    "name" => $rules["name"],
+                    "description" => $rules["description"]
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\GroupSupplier,id"
-                    ],
+                    "id" => $rules["id"],
                     "name" => [
-                        "required",
-                        "unique:App\Models\Tenant\GroupSupplier,name,".$this->id
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
                     ],
-                    "description" => "max:1000"
+                    "description" => $rules["description"]
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\GroupSupplier,id"
-                    ]
-                ];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

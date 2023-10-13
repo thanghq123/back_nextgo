@@ -28,35 +28,34 @@ class CategoryRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
+        $rules =  [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Category,id"
+            ],
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Category,name"
+            ]
+        ];
+
         switch ($getUrl){
             case "store":
                 return [
-                    "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Category,name"
-                    ],
+                    "name" => $rules["name"]
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Category,id"
-                    ],
+                    "id" => $rules["id"],
                     "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Category,name," . $this->id
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
                     ],
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Category,id"
-                    ]
-                ];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

@@ -27,92 +27,89 @@ class SupplierRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
+        $id = ",".$this->id;
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Supplier,id"
+            ],
+            "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
+            "type" => "in:0,1",
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Supplier,name"
+            ],
+            "email" => [
+                "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
+                "max" => "max:255",
+                "unique" => "unique:App\Models\Tenant\Supplier,email"
+            ],
+            "tel" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Supplier,tel",
+                "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+            ],
+            "status" => "in:0,1",
+            "province_code" => [
+                "nullable",
+                "numeric"
+            ],
+            "district_code" => [
+                "nullable",
+                "numeric"
+            ],
+            "ward_code" => [
+                "numeric",
+                "nullable"
+            ],
+            "address_detail" => "max:500",
+            "note" => "max:500"
+        ];
 
         switch ($getUrl){
             case "store":
                 return [
-                    "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
-                    "type" => "in:0,1",
-                    "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,name"
-                    ],
-                    "email" => [
-                        "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,email"
-                    ],
-                    "tel" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,tel",
-                        "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
-                    ],
-                    "status" => "in:0,1",
-                    "province_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "district_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "ward_code" => [
-                        "numeric",
-                        "nullable"
-                    ],
-                    "address_detail" => "max:500",
-                    "note" => "max:500"
+                    "group_supplier_id" => $rules['group_supplier_id'],
+                    "type" => $rules['type'],
+                    "name" => $rules['name'],
+                    "email" => $rules['email'],
+                    "tel" => $rules['tel'],
+                    "status" => $rules['status'],
+                    "province_code" => $rules['province_code'],
+                    "district_code" => $rules['district_code'],
+                    "ward_code" => $rules['ward_code'],
+                    "address_detail" => $rules['address_detail'],
+                    "note" => $rules['note']
                 ];
             case "update":
                 return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Supplier,id"
-                    ],
-                    "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
-                    "type" => "in:0,1",
+                    "id" => $rules['id'],
+                    "group_supplier_id" => $rules['group_supplier_id'],
+                    "type" => $rules['type'],
                     "name" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,name,".$this->id
+                        $rules['name'],
+                        $rules['name']['unique'].$id
                     ],
                     "email" => [
-                        "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,email,".$this->id
+                        $rules['email'],
+                        $rules['email']['unique'].$id
                     ],
                     "tel" => [
-                        "required",
-                        "max:255",
-                        "unique:App\Models\Tenant\Supplier,tel,".$this->id,
-                        "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+                        $rules['tel'],
+                        $rules['tel']['unique'].$id
                     ],
-                    "status" => "in:0,1",
-                    "province_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "district_code" => [
-                        "nullable",
-                        "numeric"
-                    ],
-                    "ward_code" => [
-                        "numeric",
-                        "nullable"
-                    ],
-                    "address_detail" => "max:500",
-                    "note" => "max:500"
+                    "status" => $rules['status'],
+                    "province_code" => $rules['province_code'],
+                    "district_code" => $rules['district_code'],
+                    "ward_code" => $rules['ward_code'],
+                    "address_detail" => $rules['address_detail'],
+                    "note" => $rules['note']
                 ];
             case "show":
             case "delete":
-                return [
-                    "id" => [
-                        "required",
-                        "exists:App\Models\Tenant\Supplier,id"
-                    ]
-                ];
+                return ["id" => $rules['id'],];
             default:
                 return [];
         }

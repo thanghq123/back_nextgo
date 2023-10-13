@@ -12,8 +12,7 @@ class BrandController extends Controller
     //
     public function __construct(
         private Brand $model,
-        private BrandRequest $request,
-        private string $module_name = "Thương hiệu",
+        private BrandRequest $request
     )
     {
     }

@@ -4,9 +4,11 @@ namespace App\Http\Requests\Tenant;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use App\Traits\TFailedValidation;
 
 class BrandRequest extends FormRequest
 {
+    use TFailedValidation;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,37 +26,48 @@ class BrandRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::afterLast($this->url(), '/');
+        $getUrl = Str::afterLast($this->url(), '/');
 
-        if($url == "store"){
-            return [
-                "name" => [
-                    "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Brand,name"
-                ],
-            ];
+        $rules =  [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Brand,id"
+            ],
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Brand,name"
+            ]
+        ];
+
+        switch ($getUrl){
+            case "store":
+                return [
+                    "name" => $rules["name"]
+                ];
+            case "update":
+                return [
+                    "id" => $rules["id"],
+                    "name" => [
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
+                    ],
+                ];
+            case "show":
+            case "delete":
+                return ["id" => $rules["id"]];
+            default:
+                return [];
         }
-
-        if($url == "update"){
-            return [
-                "name" => [
-                    "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Brand,name,".$this->id
-                ],
-            ];
-        }
-
-        return [];
     }
 
     public function messages()
     {
         return [
-            "name.required" => "Không được để trống!",
-            "name.unique" => "Tên đã tồn tại!",
-            "name.max" => "Bạn đã vượt quá ký tự cho phép!",
+            "required" => "Không được để trống!",
+            "exists" => "Dữ liệu không tồn tại!",
+            "unique" => "Dữ liệu đã tồn tại!",
+            "max" => "Bạn đã vượt quá ký tự cho phép!"
         ];
     }
 }

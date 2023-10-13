@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Tenant;
 
+use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
 class ItemUnitRequest extends FormRequest
 {
+    use TFailedValidation;
     /**
      * Determine if the user is authorized to make this request.
      *

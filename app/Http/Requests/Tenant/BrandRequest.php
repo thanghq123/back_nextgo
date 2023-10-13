@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Tenant;
 
-use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use App\Traits\TFailedValidation;
 
-class GroupCustomerRequest extends FormRequest
+class BrandRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -28,23 +28,22 @@ class GroupCustomerRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
 
-        $rules = [
+        $rules =  [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\GroupCustomer,id"
+                "exists:App\Models\Tenant\Brand,id"
             ],
             "name" => [
                 "required",
-                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
-            ],
-            "description" => "max:500"
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Brand,name"
+            ]
         ];
 
         switch ($getUrl){
             case "store":
                 return [
-                    "name" => $rules["name"],
-                    "description" => $rules["description"]
+                    "name" => $rules["name"]
                 ];
             case "update":
                 return [
@@ -53,11 +52,10 @@ class GroupCustomerRequest extends FormRequest
                         $rules["name"],
                         $rules["name"]["unique"].",".$this->id
                     ],
-                    "description" => $rules["description"]
                 ];
             case "show":
             case "delete":
-                return ["id" => $rules['id']];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

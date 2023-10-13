@@ -26,37 +26,48 @@ class CategoryRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::afterLast($this->url(), '/');
+        $getUrl = Str::afterLast($this->url(), '/');
 
-        if($url == "store"){
-            return [
-                "name" => [
-                    "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Category,name"
-                ],
-            ];
+        $rules =  [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\Category,id"
+            ],
+            "name" => [
+                "required",
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\Category,name"
+            ]
+        ];
+
+        switch ($getUrl){
+            case "store":
+                return [
+                    "name" => $rules["name"]
+                ];
+            case "update":
+                return [
+                    "id" => $rules["id"],
+                    "name" => [
+                        $rules["name"],
+                        $rules["name"]["unique"].",".$this->id
+                    ],
+                ];
+            case "show":
+            case "delete":
+                return ["id" => $rules["id"]];
+            default:
+                return [];
         }
-
-        if($url == "update"){
-            return [
-                "name" => [
-                    "required",
-                    "max:255",
-                    "unique:App\Models\Tenant\Category,name,".$this->id
-                ],
-            ];
-        }
-
-        return [];
     }
 
      public function messages()
      {
          return [
-             "name.required" => "Không được để trống!",
-             "name.unique" => "Tên đã tồn tại!",
-             "name.max" => "Bạn đã vượt quá ký tự cho phép!",
+             "required" => "Không được để trống!",
+             "exists" => "Dữ liệu không tồn tại!",
+             "unique" => "Dữ liệu đã tồn tại!",
+             "max" => "Bạn đã vượt quá ký tự cho phép!"
          ];
      }
 }

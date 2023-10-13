@@ -10,8 +10,7 @@ class GroupCustomerController extends Controller
 {
     public function __construct(
         private GroupCustomer $model,
-        private GroupCustomerRequest $request,
-        private string $module_name = "Nhóm khách hàng",
+        private GroupCustomerRequest $request
     )
     {
     }
@@ -27,11 +26,8 @@ class GroupCustomerController extends Controller
 
     public function store(){
         try {
-            if (!empty($this->request->validated())) {
-                $this->model::create($this->request->all());
-                return responseApi("Tạo thành công!", true);
-            }
-            return responseApi("Tạo thất bại!", false);
+            $this->model::create($this->request->all());
+            return responseApi("Tạo thành công!", true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -41,8 +37,6 @@ class GroupCustomerController extends Controller
     public function show()
     {
         try {
-            if (!$this->model::find($this->request->id))
-                return responseApi($this->module_name." không tồn tại!", false);
             return responseApi($this->model::find($this->request->id), true);
         }catch (\Throwable $throwable)
         {
@@ -53,14 +47,8 @@ class GroupCustomerController extends Controller
     public function update()
     {
         try {
-            if (!$this->model::find($this->request->id))
-                return responseApi($this->module_name." không tồn tại!", false);
-            if (!empty($this->request->validated())) {
-                $category = $this->model::find($this->request->id);
-                $category->update($this->request->all());
-                return responseApi("Cập nhật thành công!", true);
-            }
-            return responseApi("Cập nhật thất bại!", false);
+            $this->model::find($this->request->id)->update($this->request->all());
+            return responseApi("Cập nhật thành công!", true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -69,11 +57,7 @@ class GroupCustomerController extends Controller
 
     public function delete(){
         try {
-            if (!$this->model::find($this->request->id))
-                return responseApi($this->module_name." không tồn tại!", false);
-
             $this->model::find($this->request->id)->delete();
-
             return responseApi("Xóa thành công!", true);
         }catch (\Throwable $throwable)
         {

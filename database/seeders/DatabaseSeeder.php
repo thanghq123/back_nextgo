@@ -42,6 +42,10 @@ class DatabaseSeeder extends Seeder
         \App\Models\Tenant\ItemUnit::query()->create([
             "name" => fake()->name()
         ]);
+      
+        \App\Models\Tenant\Brand::query()->create([
+            "name" => "Test model brand"
+        ]);
 
         \App\Models\Tenant\Warranty::query()->create([
             "name" => "Bảo hành áo da",
@@ -68,6 +72,25 @@ class DatabaseSeeder extends Seeder
             "ward_code" => "10222",
             "address_detail" => "Nhà cách mặt đất 1m, xung quanh toàn đất là đất và đất",
             "note" => "Đang tuyển vợ"
+        ]);
+
+        $groupSupplier = \App\Models\Tenant\GroupSupplier::query()->create([
+            "name" => "Nhà cung cấp bia Hậu 02",
+            "description" => "Nhà có vườn bia"
+        ]);
+
+        \App\Models\Tenant\Supplier::query()->create([
+            "group_customer_id" => $groupCustomer->id,
+            "type" => 0,
+            "name" => "Đặng Văn Hậu",
+            "email" => "haudz@gmail.com",
+            "tel" => "0958658748",
+            "status" => 1,
+            "province_code" => 522,
+            "district_code" => 33,
+            "ward_code" => 22,
+            "address_detail" => "Vườn bia Đặng Hậu",
+            "note" => "Siêu uy tín NRO",
         ]);
     }
 

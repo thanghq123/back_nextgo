@@ -6,7 +6,7 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class GroupCustomerRequest extends FormRequest
+class GroupSupplierRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -31,13 +31,13 @@ class GroupCustomerRequest extends FormRequest
         $rules = [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\GroupCustomer,id"
+                "exists:App\Models\Tenant\GroupSupplier,id"
             ],
             "name" => [
                 "required",
-                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
+                "unique" => "unique:App\Models\Tenant\GroupSupplier,name"
             ],
-            "description" => "max:500"
+            "description" => "max:1000"
         ];
 
         switch ($getUrl){
@@ -57,7 +57,7 @@ class GroupCustomerRequest extends FormRequest
                 ];
             case "show":
             case "delete":
-                return ["id" => $rules['id']];
+                return ["id" => $rules["id"]];
             default:
                 return [];
         }

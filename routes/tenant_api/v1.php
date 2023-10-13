@@ -7,6 +7,9 @@ use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\GroupCustomerController;
 use App\Http\Controllers\Tenant\CustomerController;
 use App\Http\Controllers\Tenant\BrandController;
+use App\Http\Controllers\Tenant\GroupSupplierController;
+use App\Http\Controllers\Tenant\SupplierController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,7 +24,7 @@ use App\Http\Controllers\Tenant\BrandController;
 Route::post('/', function (Request $request) {
 });
 
-Route::prefix('categories')->middleware('cors')->name('categories')->group(function (){
+Route::prefix('categories')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
     Route::post('store', [CategoryController::class, 'store'])->name('store');
     Route::post('show', [CategoryController::class, 'show'])->name('show');
@@ -59,4 +62,20 @@ Route::prefix('customers')->name('customers')->group(function (){
     Route::post('show', [CustomerController::class, 'show'])->name('show');
     Route::post('update', [CustomerController::class, 'update'])->name('update');
     Route::post('delete', [CustomerController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('group_suppliers')->name('group_suppliers')->group(function (){
+    Route::post('/', [GroupSupplierController::class, 'list'])->name('list');
+    Route::post('store', [GroupSupplierController::class, 'store'])->name('store');
+    Route::post('show', [GroupSupplierController::class, 'show'])->name('show');
+    Route::post('update', [GroupSupplierController::class, 'update'])->name('update');
+    Route::post('delete', [GroupSupplierController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('suppliers')->name('suppliers')->group(function (){
+    Route::post('/', [SupplierController::class, 'list'])->name('list');
+    Route::post('store', [SupplierController::class, 'store'])->name('store');
+    Route::post('show', [SupplierController::class, 'show'])->name('show');
+    Route::post('update', [SupplierController::class, 'update'])->name('update');
+    Route::post('delete', [SupplierController::class, 'delete'])->name('delete');
 });

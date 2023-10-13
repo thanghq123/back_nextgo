@@ -37,7 +37,7 @@ Route::prefix('warranties')->middleware('cors')->name('warranties')->group(funct
     Route::post('delete', [WarrantyController::class, 'delete'])->name('delete');
 });
 
-Route::prefix('item-units')->middleware('cors')->name('item-units')->group(function (){
+Route::prefix('item_units')->middleware('cors')->name('item_units')->group(function (){
     Route::post('/', [ItemUnitController::class, 'list'])->name('list');
     Route::post('store', [ItemUnitController::class, 'store'])->name('store');
     Route::post('show', [ItemUnitController::class, 'show'])->name('show');

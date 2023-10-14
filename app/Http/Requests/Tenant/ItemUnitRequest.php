@@ -17,7 +17,7 @@ class ItemUnitRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-
+        $id = ",".$this->id;
         $rules =  [
             "id" => [
                 "required",
@@ -40,7 +40,7 @@ class ItemUnitRequest extends FormRequest
                     "id" => $rules["id"],
                     "name" => [
                         $rules["name"],
-                        $rules["name"]["unique"].",".$this->id
+                        $rules["name"]["unique"].$id
                     ],
                 ];
             case "show":

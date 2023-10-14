@@ -27,7 +27,7 @@ class BrandRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-
+        $id = ",".$this->id;
         $rules =  [
             "id" => [
                 "required",
@@ -50,7 +50,7 @@ class BrandRequest extends FormRequest
                     "id" => $rules["id"],
                     "name" => [
                         $rules["name"],
-                        $rules["name"]["unique"].",".$this->id
+                        $rules["name"]["unique"].$id
                     ],
                 ];
             case "show":

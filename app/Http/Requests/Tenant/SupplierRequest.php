@@ -33,8 +33,14 @@ class SupplierRequest extends FormRequest
                 "required",
                 "exists:App\Models\Tenant\Supplier,id"
             ],
-            "group_supplier_id" => "exists:App\Models\Tenant\GroupSupplier,id",
-            "type" => "in:0,1",
+            "group_supplier_id" => [
+                "exists:App\Models\Tenant\GroupSupplier,id",
+                "nullable"
+            ],
+            "type" => [
+                "in:0,1",
+                "nullable"
+            ],
             "name" => [
                 "required",
                 "max:255",
@@ -43,7 +49,8 @@ class SupplierRequest extends FormRequest
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique" => "unique:App\Models\Tenant\Supplier,email"
+                "unique" => "unique:App\Models\Tenant\Supplier,email",
+                "nullable"
             ],
             "tel" => [
                 "required",
@@ -51,21 +58,30 @@ class SupplierRequest extends FormRequest
                 "unique" => "unique:App\Models\Tenant\Supplier,tel",
                 "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
             ],
-            "status" => "in:0,1",
+            "status" => [
+                "in:0,1",
+                "nullable"
+            ],
             "province_code" => [
-                "nullable",
-                "numeric"
+                "numeric",
+                "nullable"
             ],
             "district_code" => [
-                "nullable",
-                "numeric"
+                "numeric",
+                "nullable"
             ],
             "ward_code" => [
                 "numeric",
                 "nullable"
             ],
-            "address_detail" => "max:500",
-            "note" => "max:500"
+            "address_detail" => [
+                "max:500",
+                "nullable"
+            ],
+            "note" => [
+                "max:500",
+                "nullable"
+            ]
         ];
 
         switch ($getUrl){

@@ -27,7 +27,7 @@ class WarrantyRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-
+        $id = ",".$this->id;
         $rules = [
             "id" => [
                 "required",
@@ -61,7 +61,7 @@ class WarrantyRequest extends FormRequest
                     "id" => $rules["id"],
                     "name" => [
                         $rules["name"],
-                        $rules["name"]["unique"].",".$this->id
+                        $rules["name"]["unique"].$id
                     ],
                     "unit" => $rules["unit"],
                     "period" => $rules["period"]

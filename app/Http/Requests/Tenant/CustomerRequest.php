@@ -28,25 +28,38 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-
+        $id = ",".$this->id;
         $rules = [
             "id" => [
                 "required",
                 "exists:App\Models\Tenant\Customer,id"
             ],
-            "group_customer_id" => "exists:App\Models\Tenant\GroupCustomer,id",
-            "type" => "in:0,1",
+            "group_customer_id" => [
+                "exists:App\Models\Tenant\GroupCustomer,id",
+                "nullable"
+            ],
+            "type" => [
+                "in:0,1",
+                "nullable"
+            ],
             "name" => [
                 "required",
                 "max:255",
                 "unique" => "unique:App\Models\Tenant\Customer,name"
             ],
-            "gender" => "in:0,1,2",
-            "dob" => "date",
+            "gender" => [
+                "in:0,1,2",
+                "nullable"
+            ],
+            "dob" => [
+                "date",
+                "nullable"
+            ],
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,email"
+                "unique" => "unique:App\Models\Tenant\Customer,email",
+                "nullable"
             ],
             "tel" => [
                 "required",
@@ -54,21 +67,30 @@ class CustomerRequest extends FormRequest
                 "unique" => "unique:App\Models\Tenant\Customer,tel",
                 "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
             ],
-            "status" => "in:0,1",
+            "status" => [
+                "in:0,1",
+                "nullable"
+            ],
             "province_code" => [
-                "nullable",
-                "numeric"
+                "numeric",
+                "nullable"
             ],
             "district_code" => [
-                "nullable",
-                "numeric"
+                "numeric",
+                "nullable"
             ],
             "ward_code" => [
                 "numeric",
                 "nullable"
             ],
-            "address_detail" => "max:500",
-            "note" => "max:500"
+            "address_detail" => [
+                "max:500",
+                "nullable"
+            ],
+            "note" => [
+                "max:500",
+                "nullable"
+            ]
         ];
 
         switch ($getUrl){
@@ -95,17 +117,17 @@ class CustomerRequest extends FormRequest
                     "type" => $rules["type"],
                     "name" => [
                         $rules["name"],
-                        $rules["name"]["unique"].",".$this->id
+                        $rules["name"]["unique"].$id
                     ],
                     "gender" => $rules["gender"],
                     "dob" => $rules["dob"],
                     "email" => [
                         $rules["email"],
-                        $rules["email"]["unique"].",".$this->id
+                        $rules["email"]["unique"].$id
                     ],
                     "tel" => [
                         $rules["tel"],
-                        $rules["tel"]["unique"].",".$this->id
+                        $rules["tel"]["unique"].$id
                     ],
                     "status" => $rules["status"],
                     "province_code" => $rules["province_code"],

@@ -27,7 +27,7 @@ class GroupCustomerRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-
+        $id = ",".$this->id;
         $rules = [
             "id" => [
                 "required",
@@ -37,7 +37,10 @@ class GroupCustomerRequest extends FormRequest
                 "required",
                 "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
             ],
-            "description" => "max:500"
+            "description" => [
+                "max:500",
+                "nullable"
+            ]
         ];
 
         switch ($getUrl){
@@ -51,7 +54,7 @@ class GroupCustomerRequest extends FormRequest
                     "id" => $rules["id"],
                     "name" => [
                         $rules["name"],
-                        $rules["name"]["unique"].",".$this->id
+                        $rules["name"]["unique"].$id
                     ],
                     "description" => $rules["description"]
                 ];

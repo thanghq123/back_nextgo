@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Tenant\ItemUnit::query()->create([
             "name" => fake()->name()
         ]);
-      
+
         \App\Models\Tenant\Brand::query()->create([
             "name" => "Test model brand"
         ]);
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Tenant\Supplier::query()->create([
-            "group_customer_id" => $groupCustomer->id,
+            "group_supplier_id" => $groupSupplier->id,
             "type" => 0,
             "name" => "Đặng Văn Hậu",
             "email" => "haudz@gmail.com",

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicApi\Addresscontroller;
+use App\Http\Controllers\BusinessFieldController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,8 +15,12 @@ use App\Http\Controllers\PublicApi\Addresscontroller;
 |
 */
 
-Route::get('/', function (Request $request) {
+Route::get('/',function (){
     return 1;
+});
+
+Route::prefix('business-field')->name('bf.')->group(function () {
+    Route::get('/', [BusinessFieldController::class, 'list']);
 });
 
 Route::prefix('areas')->middleware('cors')->group(function (){

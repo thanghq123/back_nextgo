@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\BusinessFieldController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +26,13 @@ Route::get('/rename',[TestController::class,'rename']);
 Route::get('/delete',[TestController::class,'delete']);
 Route::prefix('admin')->name('admin.')->group(function (){
     Route::view('/','admin.dashboard.index')->name('home');
+    Route::prefix('business-field')->name('bf.')->group(function (){
+        Route::get('/',[BusinessFieldController::class,'index'])->name('index');
+        Route::post('store',[BusinessFieldController::class,'store'])->name('create');
+        Route::get('show',[BusinessFieldController::class,'show'])->name('show');
+        Route::put('update',[BusinessFieldController::class,'update'])->name('update');
+        Route::delete('delete',[BusinessFieldController::class,'delete'])->name('delete');
+    });
     Route::prefix('pricing')->name('pricing.')->group(function (){
         Route::get('/',[PricingController::class,'index'])->name('index');
         Route::post('/store',[PricingController::class,'store'])->name('store');

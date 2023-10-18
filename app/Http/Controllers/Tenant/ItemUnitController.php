@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\WarrantyRequest;
-use App\Models\Tenant\Warranty;
+use App\Http\Requests\Tenant\ItemUnitRequest;
+use App\Models\Tenant\ItemUnit;
+use Illuminate\Http\Request;
 
-class WarrantyController extends Controller
+class ItemUnitController extends Controller
 {
+    //
     public function __construct(
-        private Warranty $model,
-        private WarrantyRequest $request
+        private ItemUnit $model,
+        private ItemUnitRequest $request
     )
     {
     }

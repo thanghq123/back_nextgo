@@ -26,44 +26,53 @@ class GroupCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        $url = Str::afterLast($this->url(), '/');
+        $getUrl = Str::afterLast($this->url(), '/');
+        $id = ",".$this->id;
+        $rules = [
+            "id" => [
+                "required",
+                "exists:App\Models\Tenant\GroupCustomer,id"
+            ],
+            "name" => [
+                "required",
+                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
+            ],
+            "description" => [
+                "max:500",
+                "nullable"
+            ]
+        ];
 
-        if($url == "store"){
-            return [
-                "name" => [
-                    "required",
-                    "unique:App\Models\Tenant\GroupCustomer,name"
-                ],
-                "description" => [
-                    "required",
-                    "max:1000"
-                ]
-            ];
+        switch ($getUrl){
+            case "store":
+                return [
+                    "name" => $rules["name"],
+                    "description" => $rules["description"]
+                ];
+            case "update":
+                return [
+                    "id" => $rules["id"],
+                    "name" => [
+                        $rules["name"],
+                        $rules["name"]["unique"].$id
+                    ],
+                    "description" => $rules["description"]
+                ];
+            case "show":
+            case "delete":
+                return ["id" => $rules['id']];
+            default:
+                return [];
         }
-
-        if($url == "update"){
-            return [
-                "name" => [
-                    "required",
-                    "unique:App\Models\Tenant\GroupCustomer,name,".$this->id
-                ],
-                "description" => [
-                    "required",
-                    "max:1000"
-                ]
-            ];
-        }
-
-        return [];
     }
 
     public function messages()
     {
         return [
-            "name.required" => "Không được để trống!",
-            "name.unique" => "Tên đã tồn tại!",
-            "description.required" => "Không được để trống!",
-            "description.max" => "Bạn đã vượt quá ký tự cho phép!"
+            "required" => "Không được để trống!",
+            "exists" => "Dữ liệu không tồn tại!",
+            "unique" => "Dữ liệu đã tồn tại!",
+            "max" => "Bạn đã vượt quá ký tự cho phép!"
         ];
     }
 }

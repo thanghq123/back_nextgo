@@ -11,7 +11,7 @@ use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\Auth\AuthController;
-
+use App\Http\Controllers\Tenant\InventoryTransactionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -122,4 +122,12 @@ Route::prefix('suppliers')->name('suppliers')->group(function (){
     Route::post('show', [SupplierController::class, 'show'])->name('show');
     Route::post('update', [SupplierController::class, 'update'])->name('update');
     Route::post('delete', [SupplierController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('storage/import')->name('storage.import')->group(function (){
+    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
+    Route::post('create', [InventoryTransactionController::class, 'store'])->name('store');
+    Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
+    Route::put('/{id}', [InventoryTransactionController::class, 'update'])->name('update');
+    Route::post('delete', [InventoryTransactionController::class, 'delete'])->name('delete');
 });

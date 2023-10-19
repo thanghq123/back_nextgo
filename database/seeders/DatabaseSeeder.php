@@ -16,11 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-        $this->call([
-//            PricingSeeder::class,
-//            BusinessFieldSeeder::class,
-        ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
             : $this->runLandlordSpecificSeeders();
@@ -96,7 +91,11 @@ class DatabaseSeeder extends Seeder
 
     public function runLandlordSpecificSeeders()
     {
-        // run landlord specific seeders
+        $this->call([
+            PricingSeeder::class,
+            BusinessFieldSeeder::class,
+        ]);
+//         run landlord specific seeders
         $user = User::query()->create([
             'name' => 'tenant_test',
             'email' => 'tenant_test@gmail.com',

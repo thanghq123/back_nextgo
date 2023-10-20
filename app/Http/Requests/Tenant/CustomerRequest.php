@@ -95,40 +95,36 @@ class CustomerRequest extends FormRequest
 
         switch ($getUrl){
             case "store":
-                return [
-                    "group_customer_id" => $rules["group_customer_id"],
-                    "type" => $rules["type"],
-                    "name" => $rules["name"],
-                    "gender" => $rules["gender"],
-                    "dob" => $rules["dob"],
-                    "email" => $rules["email"],
-                    "tel" => $rules["tel"],
-                    "status" => $rules["status"],
-                    "province_code" => $rules["province_code"],
-                    "district_code" => $rules["district_code"],
-                    "ward_code" => $rules["ward_code"],
-                    "address_detail" => $rules["address_detail"],
-                    "note" => $rules['note']
-                ];
             case "update":
+                $updateId = $getUrl == "update" ? $rules["id"] : [];
+
+                $updateName = $getUrl == "update" ? [
+                    $rules["name"],
+                    $rules["name"]["unique"].$id
+                ] :
+                    $rules["name"];
+
+                $updateEmail = $getUrl == "update" ? [
+                    $rules["email"],
+                    $rules["email"]["unique"].$id
+                ] :
+                    $rules["email"];
+
+                $updateTel = $getUrl == "update" ? [
+                    $rules["tel"],
+                    $rules["tel"]["unique"].$id
+                ] :
+                    $rules["tel"];
+
                 return [
-                    "id" => $rules["id"],
+                    "id" => $updateId,
                     "group_customer_id" => $rules["group_customer_id"],
                     "type" => $rules["type"],
-                    "name" => [
-                        $rules["name"],
-                        $rules["name"]["unique"].$id
-                    ],
+                    "name" => $updateName,
                     "gender" => $rules["gender"],
                     "dob" => $rules["dob"],
-                    "email" => [
-                        $rules["email"],
-                        $rules["email"]["unique"].$id
-                    ],
-                    "tel" => [
-                        $rules["tel"],
-                        $rules["tel"]["unique"].$id
-                    ],
+                    "email" => $updateEmail,
+                    "tel" => $updateTel,
                     "status" => $rules["status"],
                     "province_code" => $rules["province_code"],
                     "district_code" => $rules["district_code"],

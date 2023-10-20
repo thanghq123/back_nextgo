@@ -6,7 +6,7 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class GroupCustomerRequest extends FormRequest
+class InventoryTransactionRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -31,40 +31,37 @@ class GroupCustomerRequest extends FormRequest
         $rules = [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\GroupCustomer,id"
+                "exists:App\Models\Tenant\InventoryTransaction,id"
             ],
-            "name" => [
+            "inventory_id" => [
                 "required",
-                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
             ],
-            "description" => [
-                "max:500",
-                "nullable"
-            ]
+            "partner_id" => [
+                "required",
+            ],
+            "partner_type"=>[
+                "required",
+            ],
+            "trans_type"=>[
+                "required",
+            ],
+            "inventory_transaction_id"=>[
+                "required",
+            ],
+            "reason"=>[
+                "required",
+            ],
+            "note"=>[
+                "required",
+            ],
+            "status"=>[
+                "required",
+            ],
+            "created_by"=>[
+                "required",
+            ],
         ];
 
-        switch ($getUrl){
-            case "store":
-            case "update":
-                $updateId = $getUrl == "update" ? $rules["id"] : [];
-
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
-
-                return [
-                    "id" => $updateId,
-                    "name" => $updateName,
-                    "description" => $rules["description"]
-                ];
-            case "show":
-            case "delete":
-                return ["id" => $rules['id']];
-            default:
-                return [];
-        }
     }
 
     public function messages()

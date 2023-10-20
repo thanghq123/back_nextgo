@@ -17,24 +17,27 @@ class ProductController extends Controller
 
     public function list(){
         try {
-            return responseApi($this->model::query()
-                ->select('products.*')
-                ->selectRaw('(SELECT name FROM brands
-                                                   WHERE id = products.brand_id)
-                                                   as brand_name')
-                ->selectRaw('(SELECT name FROM warranties
-                                                   WHERE id = products.warranty_id)
-                                                   as warranty_name')
-                ->selectRaw('(SELECT name FROM item_units
-                                                   WHERE id = products.item_unit_id)
-                                                   as item_unit_name')
-                ->selectRaw('(SELECT name FROM categories
-                                                   WHERE id = products.category_id)
-                                                   as category_name')
-                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y %H:%i") as format_created_at')
-                ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
-                ->orderBy('id', 'desc')
-                ->paginate(10), true);
+            $data = $this->model::with(['brands','warranties', 'item_units', 'categories'])
+                ->orderBy('id', "desc")
+                ->get();
+
+            $dataMap = $data->map(function ($data){
+                return [
+                    'id' => $data->id,
+                    'name' => $data->name,
+                    'image' => $data->image,
+                    'weight' => $data->weight,
+                    'description' => $data->description,
+                    'manage_type' => $data->manage_type,
+                    'brand_id' => $data->brands->name ?? null,
+                    'warranty_id' => $data->warranties->name ?? null,
+                    'item_unit_id' => $data->item_units->name ?? null,
+                    'category_id' => $data->categories->name ?? null,
+                    'status' => $data->status
+                ];
+            });
+
+            return responseApi($dataMap, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -54,24 +57,28 @@ class ProductController extends Controller
     public function show()
     {
         try {
-            return responseApi($this->model::query()
-                ->select('products.*')
-                ->selectRaw('(SELECT name FROM brands
-                                                   WHERE id = products.brand_id)
-                                                   as brand_name')
-                ->selectRaw('(SELECT name FROM warranties
-                                                   WHERE id = products.warranty_id)
-                                                   as warranty_name')
-                ->selectRaw('(SELECT name FROM item_units
-                                                   WHERE id = products.item_unit_id)
-                                                   as item_unit_name')
-                ->selectRaw('(SELECT name FROM categories
-                                                   WHERE id = products.category_id)
-                                                   as category_name')
-                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y %H:%i") as format_created_at')
-                ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
+            $data = $this->model::with(['brands','warranties', 'item_units', 'categories'])
+                ->orderBy('id', "desc")
                 ->where('id', $this->request->id)
-                ->first(), true);
+                ->get();
+
+            $dataMap = $data->map(function ($data){
+                return [
+                    'id' => $data->id,
+                    'name' => $data->name,
+                    'image' => $data->image,
+                    'weight' => $data->weight,
+                    'description' => $data->description,
+                    'manage_type' => $data->manage_type,
+                    'brand_id' => $data->brands->name ?? null,
+                    'warranty_id' => $data->warranties->name ?? null,
+                    'item_unit_id' => $data->item_units->name ?? null,
+                    'category_id' => $data->categories->name ?? null,
+                    'status' => $data->status
+                ];
+            });
+
+            return responseApi($dataMap, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

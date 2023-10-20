@@ -25,4 +25,8 @@ class Supplier extends Model
         "address_detail",
         "note"
     ];
+
+    function group_supplier () {
+        return $this->belongsTo(GroupSupplier::class, 'group_supplier_id');
+    }
 }

@@ -25,6 +25,7 @@ Route::get('/list',[TestController::class,'list']);
 Route::post('/upload',[TestController::class,'upload'])->name('upload');
 Route::get('/rename',[TestController::class,'rename']);
 Route::get('/delete',[TestController::class,'delete']);
+
 Route::prefix('admin')->name('admin.')->group(function (){
     Route::view('/','admin.dashboard.index')->name('home');
     Route::prefix('business-field')->name('bf.')->group(function (){

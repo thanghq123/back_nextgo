@@ -12,6 +12,8 @@ use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\LocationController;
 
+use App\Http\Controllers\Tenant\Auth\AuthController;
+use App\Http\Controllers\Tenant\InventoryTransactionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,6 +27,40 @@ use App\Http\Controllers\Tenant\LocationController;
 
 Route::post('/', function (Request $request) {
 });
+
+Route::group(['prefix' => 'auth'], function () {
+
+    Route::post('register',     [AuthController::class,'register']);
+
+    /* ------------------------ For Personal Access Token ----------------------- */
+    Route::post('login',        [AuthController::class,'login']);
+    /* -------------------------------------------------------------------------- */
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('logout',     [AuthController::class,'logout']);
+        Route::get('user',       [AuthController::class,'getUser']);
+    });
+
+    /* ------------------------ For Password Grant Token ------------------------ */
+    Route::post('login_grant',   [AuthController::class,'loginGrant']);
+    Route::post('refresh',       [AuthController::class,'refreshToken']);
+    /* -------------------------------------------------------------------------- */
+
+    /* -------------------------------- Fallback -------------------------------- */
+    Route::any('{segment}', function () {
+        return response()->json([
+            'error' => 'Invalid url.'
+        ]);
+    })->where('segment', '.*');
+});
+
+Route::get('unauthorized', function () {
+    return response()->json([
+        'error' => 'Unauthorized.'
+    ], 401);
+})->name('unauthorized');
+
+
 
 Route::prefix('categories')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
@@ -89,10 +125,17 @@ Route::prefix('suppliers')->name('suppliers')->group(function (){
     Route::post('update', [SupplierController::class, 'update'])->name('update');
     Route::post('delete', [SupplierController::class, 'delete'])->name('delete');
 });
-Route::prefix('location')->name('location.')->group(function (){
-    Route::post('/',[LocationController::class,'list'])->name('list');
-    Route::post('show',[LocationController::class,'show'])->name('show');
-    Route::post('store',[LocationController::class,'store'])->name('store');
-    Route::post('update',[LocationController::class,'update'])->name('update');
-    Route::post('delete',[LocationController::class,'delete'])->name('delete');
+Route::prefix('location')->name('location.')->group(function () {
+    Route::post('/', [LocationController::class, 'list'])->name('list');
+    Route::post('show', [LocationController::class, 'show'])->name('show');
+    Route::post('store', [LocationController::class, 'store'])->name('store');
+    Route::post('update', [LocationController::class, 'update'])->name('update');
+    Route::post('delete', [LocationController::class, 'delete'])->name('delete');
+});
+Route::prefix('storage/import')->name('storage.import')->group(function (){
+    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
+    Route::post('create', [InventoryTransactionController::class, 'store'])->name('store');
+    Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
+    Route::put('/{id}', [InventoryTransactionController::class, 'update'])->name('update');
+    Route::post('delete', [InventoryTransactionController::class, 'delete'])->name('delete');
 });

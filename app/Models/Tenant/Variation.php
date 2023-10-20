@@ -6,23 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
-class Location extends Model
+class Variation extends Model
 {
     use HasFactory,UsesTenantConnection;
-    public $table = 'locations';
+    public $table = 'variations';
     protected $fillable=[
-        "name",
+        "product_id",
+        "sku",
+        "barcode",
+        "variation_name",
+        "display_name",
         "image",
-        "description",
-        "tel",
-        "email",
-        "province_code",
-        "district_code",
-        "ward_code",
-        "address_detail",
+        "price_import",
+        "price_export",
         "status",
-        "is_main",
-        "created_by"
     ];
     /**
      * The attributes that should be cast.
@@ -31,6 +28,5 @@ class Location extends Model
      */
     protected $casts = [
         'status' => 'boolean',
-        'is_main' => 'boolean',
     ];
 }

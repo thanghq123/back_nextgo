@@ -92,20 +92,6 @@ class DatabaseSeeder extends Seeder
             "address_detail" => "Vườn bia Đặng Hậu",
             "note" => "Siêu uy tín NRO",
         ]);
-        Tenant\Location::query()->create([
-            'name' => 'Bình Boong',
-            'image' => 'bingbong.exe',
-            'description' => 'Racing Boy Thái Bình',
-            'tel' => '0123456789',
-            'province_code' => 1,
-            'district_code' => 2,
-            'ward_code' => 3,
-            'address_detail' => 'không có',
-            'status' => 1,
-            'is_main' => 0,
-            'created_by' => 1
-        ]);
-
     }
 
     public function runLandlordSpecificSeeders()

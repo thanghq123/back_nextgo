@@ -10,6 +10,7 @@ use App\Http\Controllers\Tenant\ItemUnitController;
 use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
+use App\Http\Controllers\Tenant\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,4 +88,11 @@ Route::prefix('suppliers')->name('suppliers')->group(function (){
     Route::post('show', [SupplierController::class, 'show'])->name('show');
     Route::post('update', [SupplierController::class, 'update'])->name('update');
     Route::post('delete', [SupplierController::class, 'delete'])->name('delete');
+});
+Route::prefix('location')->name('location.')->group(function (){
+    Route::post('/',[LocationController::class,'list'])->name('list');
+    Route::post('show',[LocationController::class,'show'])->name('show');
+    Route::post('store',[LocationController::class,'store'])->name('store');
+    Route::post('update',[LocationController::class,'update'])->name('update');
+    Route::post('delete',[LocationController::class,'delete'])->name('delete');
 });

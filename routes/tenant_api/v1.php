@@ -28,40 +28,6 @@ use App\Http\Controllers\Tenant\InventoryTransactionController;
 Route::post('/', function (Request $request) {
 });
 
-Route::group(['prefix' => 'auth'], function () {
-
-    Route::post('register',     [AuthController::class,'register']);
-
-    /* ------------------------ For Personal Access Token ----------------------- */
-    Route::post('login',        [AuthController::class,'login']);
-    /* -------------------------------------------------------------------------- */
-
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('logout',     [AuthController::class,'logout']);
-        Route::get('user',       [AuthController::class,'getUser']);
-    });
-
-    /* ------------------------ For Password Grant Token ------------------------ */
-    Route::post('login_grant',   [AuthController::class,'loginGrant']);
-    Route::post('refresh',       [AuthController::class,'refreshToken']);
-    /* -------------------------------------------------------------------------- */
-
-    /* -------------------------------- Fallback -------------------------------- */
-    Route::any('{segment}', function () {
-        return response()->json([
-            'error' => 'Invalid url.'
-        ]);
-    })->where('segment', '.*');
-});
-
-Route::get('unauthorized', function () {
-    return response()->json([
-        'error' => 'Unauthorized.'
-    ], 401);
-})->name('unauthorized');
-
-
-
 Route::prefix('categories')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
     Route::post('store', [CategoryController::class, 'store'])->name('store');

@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.7",
         "league/flysystem": "^3.16",
         "masbug/flysystem-google-drive-ext": "^2.2",
-        "spatie/laravel-multitenancy": "^3.0"
+        "spatie/laravel-multitenancy": "^3.0",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

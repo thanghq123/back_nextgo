@@ -17,4 +17,21 @@ class VariationQuantity extends Model
         "price_import",
         "quantity"
     ];
+    public function variation()
+    {
+        return $this->belongsTo(Variation::class,'variation_id','id');
+    }
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class,'inventory_id','id');
+    }
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class,'batch_id','id');
+    }
+    public function inventoryTransactionDetail()
+    {
+        return $this->belongsTo(InventoryTransactionDetail::class,'variation_id','variation_id');
+    }
+
 }

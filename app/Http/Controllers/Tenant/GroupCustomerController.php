@@ -17,7 +17,9 @@ class GroupCustomerController extends Controller
 
     public function list(){
         try {
-            return responseApi($this->model::all(), true);
+            return responseApi($this->model::query()
+                ->orderBy('id','desc')
+                ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

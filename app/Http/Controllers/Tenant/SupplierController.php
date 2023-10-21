@@ -20,8 +20,9 @@ class SupplierController extends Controller
             return responseApi($this->model::query()
                 ->select('suppliers.*')
                 ->selectRaw('(SELECT name FROM group_suppliers
-                                                   WHERE group_suppliers.id = suppliers.group_supplier_id)
+                                                   WHERE id = suppliers.group_supplier_id)
                                                    as group_supplier_name')
+                ->orderBy('id', 'desc')
                 ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
@@ -45,8 +46,9 @@ class SupplierController extends Controller
             return responseApi($this->model::query()
                 ->select('suppliers.*')
                 ->selectRaw('(SELECT name FROM group_suppliers
-                                                   WHERE group_suppliers.id = suppliers.group_supplier_id)
+                                                   WHERE id = suppliers.group_supplier_id)
                                                    as group_supplier_name')
+                ->where('id', $this->request->id)
                 ->first(), true);
         }catch (\Throwable $throwable)
         {

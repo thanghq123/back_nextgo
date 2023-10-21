@@ -45,17 +45,18 @@ class GroupCustomerRequest extends FormRequest
 
         switch ($getUrl){
             case "store":
-                return [
-                    "name" => $rules["name"],
-                    "description" => $rules["description"]
-                ];
             case "update":
+                $updateId = $getUrl == "update" ? $rules["id"] : [];
+
+                $updateName = $getUrl == "update" ? [
+                    $rules["name"],
+                    $rules["name"]["unique"].$id
+                ] :
+                    $rules["name"];
+
                 return [
-                    "id" => $rules["id"],
-                    "name" => [
-                        $rules["name"],
-                        $rules["name"]["unique"].$id
-                    ],
+                    "id" => $updateId,
+                    "name" => $updateName,
                     "description" => $rules["description"]
                 ];
             case "show":

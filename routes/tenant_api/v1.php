@@ -11,6 +11,8 @@ use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\InventoryTransactionController;
+use App\Http\Controllers\Tenant\ProductController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -95,4 +97,12 @@ Route::prefix('storage/import')->name('storage.import')->group(function (){
     Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
     Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
 //    Route::post('delete', [InventoryTransactionController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('products')->name('products')->group(function (){
+    Route::post('/', [ProductController::class, 'list'])->name('list');
+    Route::post('store', [ProductController::class, 'store'])->name('store');
+    Route::post('show', [ProductController::class, 'show'])->name('show');
+    Route::post('update', [ProductController::class, 'update'])->name('update');
+    Route::post('delete', [ProductController::class, 'delete'])->name('delete');
 });

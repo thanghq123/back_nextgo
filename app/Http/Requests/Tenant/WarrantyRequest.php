@@ -51,18 +51,18 @@ class WarrantyRequest extends FormRequest
 
         switch ($getUrl){
             case "store":
-                return [
-                    "name" => $rules["name"],
-                    "unit" => $rules["unit"],
-                    "period" => $rules["period"]
-                ];
             case "update":
+                $updateId = $getUrl == "update" ? $rules["id"] : [];
+
+                $updateName = $getUrl == "update" ? [
+                    $rules["name"],
+                    $rules["name"]["unique"].$id
+                ] :
+                    $rules["name"];
+
                 return [
-                    "id" => $rules["id"],
-                    "name" => [
-                        $rules["name"],
-                        $rules["name"]["unique"].$id
-                    ],
+                    "id" => $updateId,
+                    "name" => $updateName,
                     "unit" => $rules["unit"],
                     "period" => $rules["period"]
                 ];

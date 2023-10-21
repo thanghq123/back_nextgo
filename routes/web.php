@@ -27,7 +27,7 @@ Route::post('/upload', [TestController::class, 'upload'])->name('upload');
 Route::get('/rename', [TestController::class, 'rename']);
 Route::get('/delete', [TestController::class, 'delete']);
 Route::match(['get', 'post'], 'login', [LoginController::class, 'login'])->name('login');
-Route::prefix('admin')->middleware('auth:web')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::view('/', 'admin.dashboard.index')->name('home');
     Route::prefix('business-field')->name('bf.')->group(function () {
         Route::get('/', [BusinessFieldController::class, 'index'])->name('index');

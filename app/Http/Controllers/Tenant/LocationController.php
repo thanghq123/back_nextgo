@@ -7,6 +7,7 @@ use App\Http\Requests\Tenant\LocationRequest;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -59,6 +60,7 @@ class LocationController extends Controller
 
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
             $this->validation($request);
             $location = Location::query()->create($request->all());
@@ -68,8 +70,10 @@ class LocationController extends Controller
                 'status' => $location->status,
                 'code' => Str::slug('Kho ' . $location->name)
             ]);
+            DB::commit();
             return responseApi('Thêm thành công', true);
         } catch (ValidationException $exception) {
+            DB::rollBack();
             return responseApi($exception->errors());
         }
 
@@ -77,6 +81,7 @@ class LocationController extends Controller
 
     public function update(Request $request)
     {
+        DB::beginTransaction();
         try {
             $this->validation($request);
             Location::query()->find($request->id)->update($request->all());
@@ -86,8 +91,10 @@ class LocationController extends Controller
                 'status' => $request->status,
                 'code' => Str::slug('Kho ' . $request->name)
             ]);
+            DB::commit();
             return responseApi('Cập nhật thành công', true);
         } catch (ValidationException $exception) {
+            DB::rollBack();
             return responseApi($exception->errors());
         }
     }

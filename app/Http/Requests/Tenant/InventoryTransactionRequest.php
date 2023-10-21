@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 class InventoryTransactionRequest extends FormRequest
 {
     use TFailedValidation;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,42 +27,51 @@ class InventoryTransactionRequest extends FormRequest
      */
     public function rules()
     {
-        $getUrl = Str::afterLast($this->url(), '/');
-        $id = ",".$this->id;
         $rules = [
-            "id" => [
-                "required",
-                "exists:App\Models\Tenant\InventoryTransaction,id"
-            ],
             "inventory_id" => [
                 "required",
             ],
             "partner_id" => [
                 "required",
             ],
-            "partner_type"=>[
+            "partner_type" => [
                 "required",
             ],
-            "trans_type"=>[
+            "trans_type" => [
                 "required",
             ],
-            "inventory_transaction_id"=>[
+            "reason" => [
                 "required",
             ],
-            "reason"=>[
+            "note" => [
                 "required",
             ],
-            "note"=>[
+            "status" => [
                 "required",
             ],
-            "status"=>[
+            "created_by" => [
                 "required",
             ],
-            "created_by"=>[
+            "inventory_transaction_details" => [
+                "required",
+            ],
+            "inventory_transaction_details.*.variation_id" => [
+                "required",
+            ],
+            "inventory_transaction_details.*.batch_id" => [
+                "required",
+            ],
+            "inventory_transaction_details.*.price" => [
+                "required",
+            ],
+            "inventory_transaction_details.*.price_type" => [
+                "required",
+            ],
+            "inventory_transaction_details.*.quantity" => [
                 "required",
             ],
         ];
-
+        return $rules;
     }
 
     public function messages()

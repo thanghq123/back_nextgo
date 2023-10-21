@@ -21,7 +21,19 @@ class InventoryTransactionDetail extends Model
 
     public function inventoryTransaction()
     {
-        return $this->belongsTo(InventoryTransaction::class);
+        return $this->belongsTo(InventoryTransaction::class,'inventory_transaction_id','id');
+    }
+    public function variation()
+    {
+        return $this->belongsTo(Variation::class,'variation_id','id');
+    }
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class,'batch_id','id');
+    }
+    public function variationQuantity()
+    {
+        return $this->hasOne(VariationQuantity::class,'variation_id','variation_id');
     }
 
 }

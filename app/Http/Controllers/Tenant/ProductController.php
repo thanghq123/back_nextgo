@@ -70,13 +70,13 @@ class ProductController extends Controller
                 'status' => $productData['status'],
             ]);
 
-            foreach ($productData['attribute'] as $data){
+            foreach ($productData['attributes'] as $data){
                 $attribute = $this->attributeModel::create([
                     'product_id' => $product->id,
                     'name' => $data['name']
                 ]);
 
-                foreach ($data['attribute_value'] as $valueData) {
+                foreach ($data['attribute_values'] as $valueData) {
                     // Tạo giá trị thuộc tính
                     $attributeValue = $this->attributeValueModel::create([
                         'attribute_id' => $attribute->id,
@@ -148,7 +148,65 @@ class ProductController extends Controller
     public function update()
     {
         try {
-            $this->productModel::find($this->request->id)->update($this->request->all());
+            $productData = json_decode($this->request->products, true);
+
+            $arrayAttributeValues = [];
+
+            $arrayVariations = [];
+
+            $product = $this->productModel::find($this->request->id)->update([
+                'name' => $productData['name'],
+                'image' => $productData['image'],
+                'weight' => $productData['weight'],
+                'description' => $productData['description'],
+                'manage_type' => $productData['manage_type'],
+                'brand_id' => $productData['brand_id'],
+                'warranty_id' => $productData['warranty_id'],
+                'item_unit_id' => $productData['item_unit_id'],
+                'category_id' => $productData['category_id'],
+                'status' => $productData['status'],
+            ]);
+
+            foreach ($productData['attributes'] as $data){
+                $attribute = $this->attributeModel::create([
+                    'product_id' => $product->id,
+                    'name' => $data['name']
+                ]);
+
+                foreach ($data['attribute_values'] as $valueData) {
+                    // Tạo giá trị thuộc tính
+                    $attributeValue = $this->attributeValueModel::create([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value']
+                    ]);
+                    array_push($arrayAttributeValues, $attributeValue->id);
+                }
+            }
+
+            foreach ($productData['variations'] as $data){
+                $variation = $this->variationModel::create([
+                    "product_id" => $product->id,
+                    "sku" => $data['sku'],
+                    "barcode" => $data['barcode'],
+                    "variation_name" => $data['variation_name'],
+                    "display_name" => $data['display_name'],
+                    "image" => $data['image'],
+                    "price_import" => $data['price_import'],
+                    "price_export" => $data['price_export'],
+                    "status" => $data['status']
+                ]);
+
+                array_push($arrayVariations, $variation->id);
+            }
+
+            foreach ($arrayVariations as $keyVariation => $valueVariation){
+                foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue){
+                    $this->variationAttributeModel::create([
+                        'variation_id' => $valueVariation,
+                        'attribute_value_id' => $valueAttributeValue
+                    ]);
+                }
+            }
             return responseApi("Cập nhật thành công!", true);
         }catch (\Throwable $throwable)
         {

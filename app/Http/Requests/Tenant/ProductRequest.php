@@ -72,6 +72,46 @@ class ProductRequest extends FormRequest
             "status" => [
                 "required",
                 "in:0,1"
+            ],
+            "attributes" => [
+                "required",
+            ],
+            "attributes.*.name" => [
+                "required",
+                "max:255"
+            ],
+            "attributes.*.attribute_values.*.value" => [
+                "required",
+                "max:255"
+            ],
+            "variations.*.sku" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.barcode" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.variation_name" => [
+                "required",
+                "max:255"
+            ],
+            "variations.*.display_name" => [
+                "required",
+                "max:255"
+            ],
+            "variations.*.image" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.price_import" => [
+                "required"
+            ],
+            "variations.*.price_export" => [
+                "required"
+            ],
+            "variations.*.status" => [
+                "required"
             ]
         ];
 
@@ -90,7 +130,18 @@ class ProductRequest extends FormRequest
                     "warranty_id" => $rules["warranty_id"],
                     "item_unit_id" => $rules["item_unit_id"],
                     "category_id" => $rules["category_id"],
-                    "status" => $rules["status"]
+                    "status" => $rules["status"],
+                    "attributes" => $rules['attributes'],
+                    "attributes.*.name" => $rules['attributes.*.name'],
+                    "attributes.*.attribute_values.*.value" => $rules['attributes.*.attribute_values.*.value'],
+                    "variations.*.sku" => $rules['variations.*.sku'],
+                    "variations.*.barcode" => $rules['variations.*.barcode'],
+                    "variations.*.variation_name" => $rules['variations.*.variation_name'],
+                    "variations.*.display_name" => $rules['variations.*.display_name'],
+                    "variations.*.image" => $rules['variations.*.image'],
+                    "variations.*.price_import" => $rules['variations.*.price_import'],
+                    "variations.*.price_export" => $rules['variations.*.price_export'],
+                    "variations.*.status" => $rules['variations.*.status']
                 ];
             case "show":
             case "delete":

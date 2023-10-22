@@ -29,4 +29,14 @@ class Variation extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function variationAttributeValues()
+    {
+        return $this->belongsToMany(AttributeValue::class, 'variation_quantities', 'variation_id', 'attribute_value_id');
+    }
 }

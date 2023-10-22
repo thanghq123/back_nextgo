@@ -17,29 +17,13 @@ class CustomerController extends Controller
 
     public function list(){
         try {
-            $data = $this->model::with(['group_customer'])
+            return responseApi($this->model::query()
+                ->select('customers.*')
+                ->selectRaw('(SELECT name FROM group_customers
+                                                   WHERE id = customers.group_customer_id)
+                                                   as group_customer_name')
                 ->orderBy('id', "desc")
-                ->get();
-
-            $dataMap = $data->map(function ($data){
-                return [
-                    'id' => $data->id,
-                    'type' => $data->type,
-                    'gender' => $data->gender,
-                    'dob' => $data->dob,
-                    'email' => $data->email,
-                    'tel' => $data->tel,
-                    'status' => $data->status,
-                    'province_code' => $data->province_code,
-                    'district_code' => $data->district_code,
-                    'ward_code' => $data->ward_code,
-                    'address_detail' => $data->address_detail,
-                    'note' => $data->note,
-                    'group_customer_name' => $data->group_customer->name ?? null
-                ];
-            });
-
-            return responseApi($dataMap, true);
+                ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -59,30 +43,13 @@ class CustomerController extends Controller
     public function show()
     {
         try {
-            $data = $this->model::with(['group_customer'])
-                ->orderBy('id', "desc")
+            return responseApi($this->model::query()
+                ->select('customers.*')
+                ->selectRaw('(SELECT name FROM group_customers
+                                                   WHERE id = customers.group_customer_id)
+                                                   as group_customer_name')
                 ->where('id', $this->request->id)
-                ->get();
-
-            $dataMap = $data->map(function ($data){
-                return [
-                    'id' => $data->id,
-                    'type' => $data->type,
-                    'gender' => $data->gender,
-                    'dob' => $data->dob,
-                    'email' => $data->email,
-                    'tel' => $data->tel,
-                    'status' => $data->status,
-                    'province_code' => $data->province_code,
-                    'district_code' => $data->district_code,
-                    'ward_code' => $data->ward_code,
-                    'address_detail' => $data->address_detail,
-                    'note' => $data->note,
-                    'group_customer_name' => $data->group_customer->name ?? null
-                ];
-            });
-
-            return responseApi($dataMap, true);
+                ->first(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

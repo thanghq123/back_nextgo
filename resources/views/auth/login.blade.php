@@ -56,7 +56,7 @@
         <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
             <div></div>
             <!--begin::Link-->
-            <a href="../../demo1/dist/authentication/layouts/corporate/reset-password.html" class="link-primary">Forgot Password ?</a>
+            <a href="{{ route('forgot-password') }}" class="link-primary">Forgot Password ?</a>
             <!--end::Link-->
         </div>
         <!--end::Wrapper-->
@@ -75,7 +75,7 @@
         <!--end::Submit button-->
         <!--begin::Sign up-->
         <div class="text-gray-500 text-center fw-semibold fs-6">Not a Member yet?
-            <a href="../../demo1/dist/authentication/layouts/corporate/sign-up.html" class="link-primary">Sign up</a></div>
+            <a href="{{ route('register') }}" class="link-primary">Sign up</a></div>
         <!--end::Sign up-->
     </form>
 @endsection

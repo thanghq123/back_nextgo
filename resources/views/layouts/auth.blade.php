@@ -164,6 +164,9 @@
 <!--end::Global Javascript Bundle-->
 <!--begin::Custom Javascript(used for this page only)-->
 <script src="{{ asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>
+<script src="{{ asset('assets/js/custom/authentication/sign-up/general.js')}}"></script>
+<script src="{{ asset('assets/js/custom/authentication/reset-password/new-password.js')}}"></script>
+<script src="{{ asset('assets/js/custom/authentication/reset-password/reset-password.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <!--end::Custom Javascript-->
 <!--end::Javascript-->

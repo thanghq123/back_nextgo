@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BusinessFieldController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\TestController;
@@ -27,6 +30,10 @@ Route::post('/upload', [TestController::class, 'upload'])->name('upload');
 Route::get('/rename', [TestController::class, 'rename']);
 Route::get('/delete', [TestController::class, 'delete']);
 Route::match(['get', 'post'], 'login', [LoginController::class, 'login'])->name('login');
+Route::match(['get', 'post'], 'register', [RegisterController::class, 'register'])->name('register');
+Route::match(['get', 'post'], 'forgot-password', [ForgotPasswordController::class, 'forgotPass'])->name('forgot-password');
+Route::get('reset-password/{token}/{email}', [ResetPasswordController::class, 'resetPass'])->name('reset-password');
+Route::put('reset-password', [ResetPasswordController::class, 'changePassword']);
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::view('/', 'admin.dashboard.index')->name('home');
     Route::prefix('business-field')->name('bf.')->group(function () {
@@ -43,4 +50,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::put('/update', [PricingController::class, 'update'])->name('update');
         Route::delete('/delete', [PricingController::class, 'delete'])->name('delete');
     });
+});
+Route::fallback(function () {
+    return view('errors.404');
 });

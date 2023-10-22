@@ -50,27 +50,25 @@ class ProductController extends Controller
     }
 
     public function store(){
+
         try {
-            $productData = json_decode($this->request->products, true);
-
             $arrayAttributeValues = [];
-
             $arrayVariations = [];
 
             $product = $this->productModel::create([
-                'name' => $productData['name'],
-                'image' => $productData['image'],
-                'weight' => $productData['weight'],
-                'description' => $productData['description'],
-                'manage_type' => $productData['manage_type'],
-                'brand_id' => $productData['brand_id'],
-                'warranty_id' => $productData['warranty_id'],
-                'item_unit_id' => $productData['item_unit_id'],
-                'category_id' => $productData['category_id'],
-                'status' => $productData['status'],
+                'name' => $this->request->name,
+                'image' => $this->request->image,
+                'weight' => $this->request->weight,
+                'description' => $this->request->description,
+                'manage_type' => $this->request->manage_type,
+                'brand_id' => $this->request->brand_id,
+                'warranty_id' => $this->request->warranty_id,
+                'item_unit_id' => $this->request->item_unit_id,
+                'category_id' => $this->request->category_id,
+                'status' => $this->request->status,
             ]);
 
-            foreach ($productData['attributes'] as $data){
+            foreach ($this->request['attributes'] as $data){
                 $attribute = $this->attributeModel::create([
                     'product_id' => $product->id,
                     'name' => $data['name']
@@ -86,7 +84,7 @@ class ProductController extends Controller
                 }
             }
 
-            foreach ($productData['variations'] as $data){
+            foreach ($this->request['variations'] as $data){
                 $variation = $this->variationModel::create([
                     "product_id" => $product->id,
                     "sku" => $data['sku'],
@@ -148,26 +146,23 @@ class ProductController extends Controller
     public function update()
     {
         try {
-            $productData = json_decode($this->request->products, true);
-
             $arrayAttributeValues = [];
-
             $arrayVariations = [];
 
-            $product = $this->productModel::find($this->request->id)->update([
-                'name' => $productData['name'],
-                'image' => $productData['image'],
-                'weight' => $productData['weight'],
-                'description' => $productData['description'],
-                'manage_type' => $productData['manage_type'],
-                'brand_id' => $productData['brand_id'],
-                'warranty_id' => $productData['warranty_id'],
-                'item_unit_id' => $productData['item_unit_id'],
-                'category_id' => $productData['category_id'],
-                'status' => $productData['status'],
+            $product = $this->productModel::create([
+                'name' => $this->request->name,
+                'image' => $this->request->image,
+                'weight' => $this->request->weight,
+                'description' => $this->request->description,
+                'manage_type' => $this->request->manage_type,
+                'brand_id' => $this->request->brand_id,
+                'warranty_id' => $this->request->warranty_id,
+                'item_unit_id' => $this->request->item_unit_id,
+                'category_id' => $this->request->category_id,
+                'status' => $this->request->status,
             ]);
 
-            foreach ($productData['attributes'] as $data){
+            foreach ($this->request['attributes'] as $data){
                 $attribute = $this->attributeModel::create([
                     'product_id' => $product->id,
                     'name' => $data['name']
@@ -183,7 +178,7 @@ class ProductController extends Controller
                 }
             }
 
-            foreach ($productData['variations'] as $data){
+            foreach ($this->request['variations'] as $data){
                 $variation = $this->variationModel::create([
                     "product_id" => $product->id,
                     "sku" => $data['sku'],

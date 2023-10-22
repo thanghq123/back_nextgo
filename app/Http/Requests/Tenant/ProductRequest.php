@@ -80,6 +80,9 @@ class ProductRequest extends FormRequest
                 "required",
                 "max:255"
             ],
+            "attributes.*.attribute_values" => [
+                "required"
+            ],
             "attributes.*.attribute_values.*.value" => [
                 "required",
                 "max:255"
@@ -133,6 +136,7 @@ class ProductRequest extends FormRequest
                     "status" => $rules["status"],
                     "attributes" => $rules['attributes'],
                     "attributes.*.name" => $rules['attributes.*.name'],
+                    "attributes.*.attribute_values" => $rules['attributes.*.attribute_values'],
                     "attributes.*.attribute_values.*.value" => $rules['attributes.*.attribute_values.*.value'],
                     "variations.*.sku" => $rules['variations.*.sku'],
                     "variations.*.barcode" => $rules['variations.*.barcode'],

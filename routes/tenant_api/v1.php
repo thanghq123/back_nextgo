@@ -12,7 +12,7 @@ use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\InventoryTransactionController;
 use App\Http\Controllers\Tenant\ProductController;
-
+use App\Http\Controllers\Tenant\Auth\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,6 +27,13 @@ use App\Http\Controllers\Tenant\ProductController;
 Route::post('/', function (Request $request) {
 });
 
+Route::prefix('auth')->name('auth.')->group(function (){
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::get('user', [AuthController::class, 'getUser'])->name('getUser');
 Route::prefix('categories')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
     Route::post('store', [CategoryController::class, 'store'])->name('store');

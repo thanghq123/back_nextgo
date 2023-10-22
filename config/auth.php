@@ -41,7 +41,7 @@ return [
             'provider' => 'users',
         ],
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'sanctum',
             'provider' => 'customer',
         ],
     ],
@@ -66,7 +66,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Tenant\User::class,
+            'model' => App\Models\User::class,
         ],
         'customer' => [
             'driver' => 'eloquent',

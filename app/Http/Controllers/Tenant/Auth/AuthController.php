@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Tenant\User;
@@ -15,21 +16,20 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:App\Models\Tenant\User,email',
             'password' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return responseApi($validator->errors(), false);
         }
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
-        return response()->json(['data' => $user]);
+        return responseApi($user, true);
     }
-
     public function login(Request $request)
     {
         $credentials = $request->only(['email', 'password']);
@@ -37,21 +37,20 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return responseApi($validator->errors(), false);
         }
-
-        if (!auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!Auth::guard('api')->attempt($credentials)) {
+            return responseApi('Unauthorized', false);
         }
-
         /* ------------ Create a new personal access token for the user. ------------ */
-        $token = auth()->user()->createToken('authToken')->plainTextToken;
-        return response()->json([
-            'access_token' => $token,
+        $token = Auth::guard('api')->user()->createToken('authToken')->plainTextToken;
+        $data = [
+            'user' => Auth::guard('api')->user(),
+            'token' => $token,
             'token_type' => 'Bearer',
-        ]);
+        ];
+        return responseApi($data, true);
     }
 
     public function getUser()
@@ -63,7 +62,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        $token = auth()->user()->currentAccessToken()->delete();
+        auth()->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
     }
 

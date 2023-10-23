@@ -41,7 +41,7 @@ return [
             'provider' => 'users',
         ],
         'api' => [
-            'driver' => 'sanctum',
+            'driver' => 'session',
             'provider' => 'customer',
         ],
     ],
@@ -101,7 +101,7 @@ return [
             'throttle' => 60,
         ],
         'customer' => [
-            'provider' => 'users',
+            'provider' => 'customer',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

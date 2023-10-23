@@ -43,4 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function inventoryTransactions()
+    {
+        return $this->hasMany(InventoryTransaction::class,'created_by','id');
+    }
 }

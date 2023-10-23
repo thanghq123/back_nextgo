@@ -33,9 +33,13 @@ class InventoryTransaction extends Model
     {
         return $this->belongsTo(Inventory::class);
     }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class,'created_by','id');
+    }
     public function partner()
     {
-        return $this->belongsTo(Partner::class);
+        return $this->belongsTo(Supplier::class,'partner_type','group_supplier_id');
     }
     public function inventoryTransactionDetails()
     {

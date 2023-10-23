@@ -109,11 +109,11 @@ Route::prefix('location')->name('location.')->group(function () {
     Route::post('delete', [LocationController::class, 'delete'])->name('delete');
 });
 Route::prefix('storage/import')->name('storage.import')->group(function (){
-//    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
-    Route::post('create', [InventoryTransactionController::class, 'store'])->name('store');
+    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
+    Route::post('/create', [InventoryTransactionController::class, 'store'])->name('store');
     Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
     Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
-//    Route::post('delete', [InventoryTransactionController::class, 'delete'])->name('delete');
+    Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
 });
 
 Route::prefix('products')->name('products')->group(function (){

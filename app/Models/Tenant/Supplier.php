@@ -25,4 +25,13 @@ class Supplier extends Model
         "address_detail",
         "note"
     ];
+
+    public function groupSupplier()
+    {
+        return $this->belongsTo(GroupSupplier::class);
+    }
+    public function inventoryTransactions()
+    {
+        return $this->hasMany(InventoryTransaction::class,'partner_id','group_supplier_id');
+    }
 }

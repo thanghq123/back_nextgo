@@ -230,17 +230,18 @@ class ProductController extends Controller
     {
         try {
             $arrayIdVariationAttribute = [];
-
             $variationAttribute = $this->productModel::query()
-                ->select('variation_attributes.id')
+                ->select('variation_attributes.variation_id')
                 ->join('variations', 'products.id', '=', 'variations.product_id')
                 ->join('variation_attributes', 'variations.id', '=', 'variation_attributes.variation_id')
                 ->where('products.id', $this->request->id)
                 ->get();
 
             foreach ($variationAttribute as $v){
-                array_push($arrayIdVariationAttribute, $v->id);
+                array_push($arrayIdVariationAttribute, $v->variation_id);
             }
+
+            $this->variationAttributeModel::whereIn('variation_id', $arrayIdVariationAttribute)->delete();
 
             $product = $this->productModel::find($this->request->id);
 

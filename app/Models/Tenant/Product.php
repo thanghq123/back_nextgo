@@ -24,12 +24,11 @@ class Product extends Model
         'status'
     ];
 
-    function attribute(){
+    public function attributes() {
         return $this->hasMany(Attribute::class);
     }
 
-    public function variations()
-    {
+    public function variations() {
         return $this->hasMany(Variation::class);
     }
 }

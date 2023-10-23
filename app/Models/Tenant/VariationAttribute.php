@@ -16,4 +16,9 @@ class VariationAttribute extends Model
         "variation_id",
         "attribute_value_id"
     ];
+
+    public function variations() {
+        return $this->belongsToMany(Variation::class, 'variation_attributes')
+            ->withPivot('id');
+    }
 }

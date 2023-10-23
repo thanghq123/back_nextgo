@@ -9,6 +9,7 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Variation;
 use App\Models\Tenant\VariationAttribute;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -19,13 +20,13 @@ class ProductController extends Controller
         private Variation $variationModel,
         private VariationAttribute $variationAttributeModel,
         private ProductRequest $request
-    )
-    {
+    ) {
     }
 
-    public function list(){
+    public function list()
+    {
         try {
-            return responseApi($this->productModel::with(['attribute','variations'])
+            return responseApi($this->productModel::with(['attribute', 'variations'])
                 ->select('products.*')
                 ->selectRaw('(SELECT name FROM brands
                                                    WHERE id = products.brand_id)
@@ -43,14 +44,13 @@ class ProductController extends Controller
                 ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
                 ->orderBy('id', 'desc')
                 ->paginate(10), true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function store(){
-
+    public function store()
+    {
         try {
             $arrayAttributeValues = [];
             $arrayVariations = [];
@@ -68,50 +68,50 @@ class ProductController extends Controller
                 'status' => $this->request->status,
             ]);
 
-            foreach ($this->request['attributes'] as $data){
-                $attribute = $this->attributeModel::create([
-                    'product_id' => $product->id,
-                    'name' => $data['name']
-                ]);
-
-                foreach ($data['attribute_values'] as $valueData) {
-                    // Tạo giá trị thuộc tính
-                    $attributeValue = $this->attributeValueModel::create([
-                        'attribute_id' => $attribute->id,
-                        'value' => $valueData['value']
+            if ($this->request['attributes']) {
+                foreach ($this->request['attributes'] as $dataAttribute) {
+                    $attribute = $this->attributeModel::create([
+                        'product_id' => $product->id,
+                        'name' => $dataAttribute['name']
                     ]);
-                    array_push($arrayAttributeValues, $attributeValue->id);
+
+                    foreach ($dataAttribute['attribute_values'] as $dataAttributeValue) {
+                        $attributeValue = $this->attributeValueModel::create([
+                            'attribute_id' => $attribute->id,
+                            'value' => $dataAttributeValue['value']
+                        ]);
+                        array_push($arrayAttributeValues, $attributeValue->id);
+                    }
                 }
-            }
 
-            foreach ($this->request['variations'] as $data){
-                $variation = $this->variationModel::create([
-                    "product_id" => $product->id,
-                    "sku" => $data['sku'],
-                    "barcode" => $data['barcode'],
-                    "variation_name" => $data['variation_name'],
-                    "display_name" => $data['display_name'],
-                    "image" => $data['image'],
-                    "price_import" => $data['price_import'],
-                    "price_export" => $data['price_export'],
-                    "status" => $data['status']
-                ]);
-
-                array_push($arrayVariations, $variation->id);
-            }
-
-            foreach ($arrayVariations as $keyVariation => $valueVariation){
-                foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue){
-                    $this->variationAttributeModel::create([
-                        'variation_id' => $valueVariation,
-                        'attribute_value_id' => $valueAttributeValue
+                foreach ($this->request['variations'] as $dataVariation) {
+                    $variation = $this->variationModel::create([
+                        "product_id" => $product->id,
+                        "sku" => $dataVariation['sku'],
+                        "barcode" => $dataVariation['barcode'],
+                        "variation_name" => $dataVariation['variation_name'],
+                        "display_name" => $dataVariation['display_name'],
+                        "image" => $dataVariation['image'],
+                        "price_import" => $dataVariation['price_import'],
+                        "price_export" => $dataVariation['price_export'],
+                        "status" => $dataVariation['status']
                     ]);
+
+                    array_push($arrayVariations, $variation->id);
+                }
+
+                foreach ($arrayVariations as $keyVariation => $valueVariation) {
+                    foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue) {
+                        $this->variationAttributeModel::create([
+                            'variation_id' => $valueVariation,
+                            'attribute_value_id' => $valueAttributeValue
+                        ]);
+                    }
                 }
             }
 
             return responseApi("Tạo thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
@@ -119,7 +119,7 @@ class ProductController extends Controller
     public function show()
     {
         try {
-            return responseApi($this->productModel::with(['attribute','variations'])
+            return responseApi($this->productModel::with(['attribute', 'variations'])
                 ->select('products.*')
                 ->selectRaw('(SELECT name FROM brands
                                                    WHERE id = products.brand_id)
@@ -137,8 +137,7 @@ class ProductController extends Controller
                 ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
                 ->where('id', $this->request->id)
                 ->first(), true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
@@ -149,7 +148,7 @@ class ProductController extends Controller
             $arrayAttributeValues = [];
             $arrayVariations = [];
 
-            $product = $this->productModel::create([
+            $this->productModel::find($this->request->id)->update([
                 'name' => $this->request->name,
                 'image' => $this->request->image,
                 'weight' => $this->request->weight,
@@ -162,59 +161,106 @@ class ProductController extends Controller
                 'status' => $this->request->status,
             ]);
 
-            foreach ($this->request['attributes'] as $data){
-                $attribute = $this->attributeModel::create([
-                    'product_id' => $product->id,
-                    'name' => $data['name']
-                ]);
+            foreach ($this->request['attributes'] as $dataAttribute) {
+            $this->attributeModel::find($dataAttribute['id'])->update(['name' => $dataAttribute['name']]);
 
-                foreach ($data['attribute_values'] as $valueData) {
-                    // Tạo giá trị thuộc tính
+                foreach ($dataAttribute['attribute_values'] as $dataAttributeValue) {
+                    isset($dataAttributeValue['id']) ?
+                    $this->attributeValueModel::find($dataAttributeValue['id'])->update([
+                        'value' => $dataAttributeValue['value']
+                    ]) :
                     $attributeValue = $this->attributeValueModel::create([
-                        'attribute_id' => $attribute->id,
-                        'value' => $valueData['value']
+                        'attribute_id' => $dataAttribute['id'],
+                        'value' => $dataAttributeValue['value']
                     ]);
-                    array_push($arrayAttributeValues, $attributeValue->id);
+
+                    $idArray = isset($attributeValue) ? $attributeValue->id : $dataAttributeValue['id'];
+                    array_push($arrayAttributeValues, $idArray);
                 }
             }
 
-            foreach ($this->request['variations'] as $data){
+            foreach ($this->request['variations'] as $dataVariation) {
+                isset($dataVariation['id']) ?
+                $this->variationModel::find($dataVariation['id'])->update([
+                    "sku" => $dataVariation['sku'],
+                    "barcode" => $dataVariation['barcode'],
+                    "variation_name" => $dataVariation['variation_name'],
+                    "display_name" => $dataVariation['display_name'],
+                    "image" => $dataVariation['image'],
+                    "price_import" => $dataVariation['price_import'],
+                    "price_export" => $dataVariation['price_export'],
+                    "status" => $dataVariation['status']
+                ]):
                 $variation = $this->variationModel::create([
-                    "product_id" => $product->id,
-                    "sku" => $data['sku'],
-                    "barcode" => $data['barcode'],
-                    "variation_name" => $data['variation_name'],
-                    "display_name" => $data['display_name'],
-                    "image" => $data['image'],
-                    "price_import" => $data['price_import'],
-                    "price_export" => $data['price_export'],
-                    "status" => $data['status']
+                    "product_id" => $this->request->id,
+                    "sku" => $dataVariation['sku'],
+                    "barcode" => $dataVariation['barcode'],
+                    "variation_name" => $dataVariation['variation_name'],
+                    "display_name" => $dataVariation['display_name'],
+                    "image" => $dataVariation['image'],
+                    "price_import" => $dataVariation['price_import'],
+                    "price_export" => $dataVariation['price_export'],
+                    "status" => $dataVariation['status']
                 ]);
 
-                array_push($arrayVariations, $variation->id);
+                $idArray = isset($variation) ? $variation->id : $dataVariation['id'];
+                array_push($arrayVariations, $idArray);
             }
 
-            foreach ($arrayVariations as $keyVariation => $valueVariation){
-                foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue){
-                    $this->variationAttributeModel::create([
+            foreach ($arrayVariations as $keyVariation => $valueVariation) {
+                foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue) {
+                    $findVariationAttributeValue = $this->variationAttributeModel::query()
+                        ->where('variation_id', $valueVariation)
+                        ->where('attribute_value_id', $valueAttributeValue)
+                        ->first();
+
+                    !isset($findVariationAttributeValue) && $this->variationAttributeModel::create([
                         'variation_id' => $valueVariation,
-                        'attribute_value_id' => $valueAttributeValue
-                    ]);
+                        'attribute_value_id' => $valueAttributeValue]);
                 }
             }
+
             return responseApi("Cập nhật thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function delete(){
+    public function delete()
+    {
         try {
-            $this->productModel::find($this->request->id)->delete();
+            $arrayIdVariationAttribute = [];
+
+            $variationAttribute = $this->productModel::query()
+                ->select('variation_attributes.id')
+                ->join('variations', 'products.id', '=', 'variations.product_id')
+                ->join('variation_attributes', 'variations.id', '=', 'variation_attributes.variation_id')
+                ->where('products.id', $this->request->id)
+                ->get();
+
+            foreach ($variationAttribute as $v){
+                array_push($arrayIdVariationAttribute, $v->id);
+            }
+
+            $product = $this->productModel::find($this->request->id);
+
+            $product->attributes()->each(function ($attribute) {
+                $attribute->attributeValues()->delete();
+                $attribute->delete();
+            });
+
+            $product->variations()->each(function ($variation) {
+                $variation->attributeValues()->each(function ($variationAttribute) {
+                    DB::table('variation_attributes')
+                        ->where('id', $variationAttribute->id)
+                        ->delete();
+                });
+                $variation->delete();
+            });
+
+            $product->delete();
             return responseApi("Xóa thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }

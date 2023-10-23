@@ -35,8 +35,9 @@ class Variation extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function variationAttributeValues()
-    {
-        return $this->belongsToMany(AttributeValue::class, 'variation_quantities', 'variation_id', 'attribute_value_id');
+
+    public function attributeValues() {
+        return $this->belongsToMany(AttributeValue::class, 'variation_attributes')
+            ->withPivot('id');
     }
 }

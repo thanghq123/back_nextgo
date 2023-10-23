@@ -74,7 +74,10 @@ class ProductRequest extends FormRequest
                 "in:0,1"
             ],
             "attributes" => [
-                "required",
+                "nullable"
+            ],
+            "attributes.*.id" => [
+                "exists:App\Models\Tenant\Attribute,id"
             ],
             "attributes.*.name" => [
                 "required",
@@ -83,9 +86,18 @@ class ProductRequest extends FormRequest
             "attributes.*.attribute_values" => [
                 "required"
             ],
+            "attributes.*.attribute_values.*.id" => [
+                "exists:App\Models\Tenant\AttributeValue,id"
+            ],
             "attributes.*.attribute_values.*.value" => [
                 "required",
                 "max:255"
+            ],
+            "variations" => [
+                "nullable"
+            ],
+            "variations.*.id" => [
+                "exists:App\Models\Tenant\Variation,id"
             ],
             "variations.*.sku" => [
                 "nullable",
@@ -121,7 +133,11 @@ class ProductRequest extends FormRequest
         switch ($getUrl){
             case "store":
             case "update":
-                $updateId = $getUrl == "update" ? $rules["id"] : [];
+                $nameUrl = "update";
+                $updateId = $getUrl == $nameUrl ? $rules["id"] : [];
+                $updateIdAttribute = $getUrl == $nameUrl ? $rules["attributes.*.id"] : [];
+                $updateIdAttributeValue = $getUrl == $nameUrl ? $rules['attributes.*.attribute_values.*.id'] : [];
+                $updateIdVariation = $getUrl == $nameUrl ? $rules['variations.*.id'] : [];
                 return [
                     "id" => $updateId,
                     "name" => $rules["name"],
@@ -135,9 +151,13 @@ class ProductRequest extends FormRequest
                     "category_id" => $rules["category_id"],
                     "status" => $rules["status"],
                     "attributes" => $rules['attributes'],
+                    "attributes.*.id" => $updateIdAttribute,
                     "attributes.*.name" => $rules['attributes.*.name'],
                     "attributes.*.attribute_values" => $rules['attributes.*.attribute_values'],
+                    "attributes.*.attribute_values.*.id" => $updateIdAttributeValue,
                     "attributes.*.attribute_values.*.value" => $rules['attributes.*.attribute_values.*.value'],
+                    "variations" => $rules['variations'],
+                    "variations.*.id" => $updateIdVariation,
                     "variations.*.sku" => $rules['variations.*.sku'],
                     "variations.*.barcode" => $rules['variations.*.barcode'],
                     "variations.*.variation_name" => $rules['variations.*.variation_name'],

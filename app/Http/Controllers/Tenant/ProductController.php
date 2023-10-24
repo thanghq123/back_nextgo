@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function list()
     {
         try {
-            return responseApi($this->productModel::with(['attribute', 'variations'])
+            return responseApi($this->productModel::with(['attributes', 'variations'])
                 ->select('products.*')
                 ->selectRaw('(SELECT name FROM brands
                                                    WHERE id = products.brand_id)

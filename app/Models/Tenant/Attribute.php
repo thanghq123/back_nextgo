@@ -24,4 +24,8 @@ class Attribute extends Model
     public function product() {
         return $this->belongsTo(Product::class);
     }
+
+    public function variationAttributes() {
+        return $this->hasMany(VariationAttribute::class);
+    }
 }

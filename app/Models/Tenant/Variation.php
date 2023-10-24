@@ -40,4 +40,8 @@ class Variation extends Model
         return $this->belongsToMany(AttributeValue::class, 'variation_attributes')
             ->withPivot('id');
     }
+
+    public function variationAttributes() {
+        return $this->hasMany(VariationAttribute::class);
+    }
 }

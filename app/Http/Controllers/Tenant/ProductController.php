@@ -252,9 +252,7 @@ class ProductController extends Controller
 
             $product->variations()->each(function ($variation) {
                 $variation->attributeValues()->each(function ($variationAttribute) {
-                    DB::table('variation_attributes')
-                        ->where('id', $variationAttribute->id)
-                        ->delete();
+                    $this->variationAttributeModel::where('id',$variationAttribute->id)->delete();
                 });
                 $variation->delete();
             });

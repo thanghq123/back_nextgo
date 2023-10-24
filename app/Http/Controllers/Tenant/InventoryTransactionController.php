@@ -19,11 +19,15 @@ class InventoryTransactionController extends Controller
     }
 
     /**
-     *
+     * @path /tenant/api/v1/storage/import/create
+     * @method POST
+     * @param InventoryTransactionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function store(InventoryTransactionRequest $request)
     {
-        $inventory_transaction_id=Carbon::now()->timestamp;
+        $inventory_transaction_id = Carbon::now()->timestamp;
         DB::beginTransaction();
         try {
             $inventoryTransaction = $this->model::create([
@@ -47,7 +51,40 @@ class InventoryTransactionController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
-
+    /**
+     * @path /tenant/api/v1/storage/import
+     * @method POST
+     * @param InventoryTransactionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function list()
+    {
+        try {
+            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->get();
+            $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
+                return [
+                    "inventory_transaction_id"=>$inventoryTransactionData->inventory_transaction_id,
+                    "partner_name"=>$inventoryTransactionData->partner->name,
+                    "inventory_name"=>$inventoryTransactionData->inventory->name,
+                    "created_by"=>$inventoryTransactionData->createdBy->name,
+                    "status"=>$inventoryTransactionData->status,
+                    "created_at"=>Carbon::make($inventoryTransactionData->created_at)->format('H:i d-m-Y'),
+                    "updated_at"=>Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
+                ];
+            });
+            return responseApi($data, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+    /**
+     * @path /tenant/api/v1/storage/import/{id}
+     * @method POST
+     * @param InventoryTransactionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function show($id)
     {
         try {
@@ -57,6 +94,13 @@ class InventoryTransactionController extends Controller
         }
     }
 
+    /**
+     * @path /tenant/api/v1/storage/import/update/{id}
+     * @method POST
+     * @param InventoryTransactionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function update($id)
     {
         DB::beginTransaction();
@@ -85,6 +129,23 @@ class InventoryTransactionController extends Controller
             return responseApi("Cập nhật thành công!", true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+
+    /**
+     * @path /tenant/api/v1/storage/import/cancel/{id}
+     * @method POST
+     * @param InventoryTransactionRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function cancel($id)
+    {
+        try {
+            $this->model::find($id)->update(["status" => 2]);
+            return responseApi("Huỷ thành công!", true);
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }

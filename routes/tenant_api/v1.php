@@ -10,9 +10,10 @@ use App\Http\Controllers\Tenant\ItemUnitController;
 use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\GroupSupplierController;
 use App\Http\Controllers\Tenant\SupplierController;
+use App\Http\Controllers\Tenant\LocationController;
 use App\Http\Controllers\Tenant\InventoryTransactionController;
 use App\Http\Controllers\Tenant\ProductController;
-
+use App\Http\Controllers\Tenant\Auth\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,6 +28,16 @@ use App\Http\Controllers\Tenant\ProductController;
 Route::post('/', function (Request $request) {
 });
 
+Route::prefix('auth')->name('auth.')->group(function (){
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+    Route::get('/unauthorized', function () {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    })->name('unauthorized');
+});
+
+Route::get('user', [AuthController::class, 'getUser'])->middleware('auth:sanctum')->name('getUser');
 Route::prefix('categories')->name('categories')->group(function (){
     Route::post('/', [CategoryController::class, 'list'])->name('list');
     Route::post('store', [CategoryController::class, 'store'])->name('store');
@@ -90,13 +101,19 @@ Route::prefix('suppliers')->name('suppliers')->group(function (){
     Route::post('update', [SupplierController::class, 'update'])->name('update');
     Route::post('delete', [SupplierController::class, 'delete'])->name('delete');
 });
-
+Route::prefix('location')->name('location.')->group(function () {
+    Route::post('/', [LocationController::class, 'list'])->name('list');
+    Route::post('show', [LocationController::class, 'show'])->name('show');
+    Route::post('store', [LocationController::class, 'store'])->name('store');
+    Route::post('update', [LocationController::class, 'update'])->name('update');
+    Route::post('delete', [LocationController::class, 'delete'])->name('delete');
+});
 Route::prefix('storage/import')->name('storage.import')->group(function (){
-//    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
-    Route::post('create', [InventoryTransactionController::class, 'store'])->name('store');
+    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
+    Route::post('/create', [InventoryTransactionController::class, 'store'])->name('store');
     Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
     Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
-//    Route::post('delete', [InventoryTransactionController::class, 'delete'])->name('delete');
+    Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
 });
 
 Route::prefix('products')->name('products')->group(function (){

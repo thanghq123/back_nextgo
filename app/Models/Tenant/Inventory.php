@@ -8,9 +8,9 @@ use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Inventory extends Model
 {
-    use HasFactory,UsesTenantConnection;
+    use HasFactory, UsesTenantConnection;
     public $table = 'inventories';
-    protected $fillable=[
+    protected $fillable = [
         "location_id",
         "name",
         "code",
@@ -25,4 +25,13 @@ class Inventory extends Model
         'status' => 'boolean',
     ];
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function inventoryTransactions()
+    {
+        return $this->hasMany(InventoryTransaction::class);
+    }
 }

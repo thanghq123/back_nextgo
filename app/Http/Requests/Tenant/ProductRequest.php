@@ -55,19 +55,19 @@ class ProductRequest extends FormRequest
             ],
             "brand_id" => [
                 "exists:App\Models\Tenant\Brand,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "warranty_id" => [
                 "exists:App\Models\Tenant\Warranty,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "item_unit_id" => [
                 "exists:App\Models\Tenant\ItemUnit,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "category_id" => [
                 "exists:App\Models\Tenant\Category,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "status" => [
                 "required",
@@ -138,6 +138,12 @@ class ProductRequest extends FormRequest
                 $updateIdAttribute = $getUrl == $nameUrl ? $rules["attributes.*.id"] : [];
                 $updateIdAttributeValue = $getUrl == $nameUrl ? $rules['attributes.*.attribute_values.*.id'] : [];
                 $updateIdVariation = $getUrl == $nameUrl ? $rules['variations.*.id'] : [];
+                $products = $this->request->all();
+                $brand_id = $products['brand_id'] == 0 ? $rules['brand_id']['nullable'] : $rules['brand_id'];
+                $warranty_id = $products['warranty_id'] == 0 ? $rules['warranty_id']['nullable'] : $rules['warranty_id'];
+                $item_unit_id = $products['item_unit_id'] == 0 ? $rules['item_unit_id']['nullable'] : $rules['item_unit_id'];
+                $category_id = $products['category_id'] == 0 ? $rules['category_id']['nullable'] : $rules['category_id'];
+
                 return [
                     "id" => $updateId,
                     "name" => $rules["name"],
@@ -145,10 +151,10 @@ class ProductRequest extends FormRequest
                     "weight" => $rules["weight"],
                     "description" => $rules["description"],
                     "manage_type" => $rules["manage_type"],
-                    "brand_id" => $rules["brand_id"],
-                    "warranty_id" => $rules["warranty_id"],
-                    "item_unit_id" => $rules["item_unit_id"],
-                    "category_id" => $rules["category_id"],
+                    "brand_id" => $brand_id,
+                    "warranty_id" => $warranty_id,
+                    "item_unit_id" => $item_unit_id,
+                    "category_id" => $category_id,
                     "status" => $rules["status"],
                     "attributes" => $rules['attributes'],
                     "attributes.*.id" => $updateIdAttribute,

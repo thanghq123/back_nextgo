@@ -21,9 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', [TestController::class, 'test']);
 Route::get('/mail', [TestController::class, 'index']);
 Route::get('/create', [TestController::class, 'create']);
 Route::get('/list', [TestController::class, 'list']);

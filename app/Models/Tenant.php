@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Spatie\Multitenancy\Actions\MigrateTenantAction;
@@ -12,6 +13,7 @@ use Spatie\Multitenancy\Models\Tenant as SpatieTenant;
 
 class Tenant extends SpatieTenant
 {
+    use SoftDeletes;
     protected $table = 'tenants';
 
     protected static function booted()
@@ -22,6 +24,10 @@ class Tenant extends SpatieTenant
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function business_field(){
+        return $this->belongsTo(BusinessField::class,'business_field_id');
     }
 
     public function createDatabase()

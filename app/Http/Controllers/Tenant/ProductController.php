@@ -9,7 +9,6 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Variation;
 use App\Models\Tenant\VariationAttribute;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -83,24 +82,26 @@ class ProductController extends Controller
                         array_push($arrayAttributeValues, $attributeValue->id);
                     }
                 }
+            }
 
-                if ($this->request['variations']) {
-                    foreach ($this->request['variations'] as $dataVariation) {
-                        $variation = $this->variationModel::create([
-                            "product_id" => $product->id,
-                            "sku" => $dataVariation['sku'],
-                            "barcode" => $dataVariation['barcode'],
-                            "variation_name" => $dataVariation['variation_name'],
-                            "display_name" => $dataVariation['display_name'],
-                            "image" => $dataVariation['image'],
-                            "price_import" => $dataVariation['price_import'],
-                            "price_export" => $dataVariation['price_export'],
-                            "status" => $dataVariation['status']
-                        ]);
+            if ($this->request['variations']) {
+                foreach ($this->request['variations'] as $dataVariation) {
+                    $variation = $this->variationModel::create([
+                        "product_id" => $product->id,
+                        "sku" => $dataVariation['sku'],
+                        "barcode" => $dataVariation['barcode'],
+                        "variation_name" => $dataVariation['variation_name'],
+                        "display_name" => $dataVariation['display_name'],
+                        "image" => $dataVariation['image'],
+                        "price_import" => $dataVariation['price_import'],
+                        "price_export" => $dataVariation['price_export'],
+                        "status" => $dataVariation['status']
+                    ]);
 
-                        array_push($arrayVariations, $variation->id);
-                    }
+                    array_push($arrayVariations, $variation->id);
+                }
 
+                if ($arrayAttributeValues) {
                     foreach ($arrayVariations as $keyVariation => $valueVariation) {
                         foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue) {
                             $this->variationAttributeModel::create([
@@ -163,63 +164,94 @@ class ProductController extends Controller
                 'status' => $this->request->status,
             ]);
 
-            foreach ($this->request['attributes'] as $dataAttribute) {
-                $this->attributeModel::find($dataAttribute['id'])->update(['name' => $dataAttribute['name']]);
+            if ($this->request->status_attributes == 1) {
+                if ($this->request['attributes']) {
+                    $arrayIdVariationAttribute = [];
 
-                foreach ($dataAttribute['attribute_values'] as $dataAttributeValue) {
-                    isset($dataAttributeValue['id']) ?
-                        $this->attributeValueModel::find($dataAttributeValue['id'])->update([
-                            'value' => $dataAttributeValue['value']
-                        ]) :
-                        $attributeValue = $this->attributeValueModel::create([
-                            'attribute_id' => $dataAttribute['id'],
-                            'value' => $dataAttributeValue['value']
+                    $variationAttribute = $this->productModel::query()
+                        ->select('variation_attributes.variation_id')
+                        ->join('variations', 'products.id', '=', 'variations.product_id')
+                        ->join('variation_attributes', 'variations.id', '=', 'variation_attributes.variation_id')
+                        ->where('products.id', $this->request->id)
+                        ->get();
+
+                    foreach ($variationAttribute as $v) {
+                        array_push($arrayIdVariationAttribute, $v->variation_id);
+                    }
+
+                    $this->variationAttributeModel::whereIn('variation_id', $arrayIdVariationAttribute)->delete();
+
+                    $product = $this->productModel::find($this->request->id);
+
+                    $product->variations()->each(function ($variation) {
+                        $variation->attributeValues()->each(function ($variationAttribute) {
+                            $this->variationAttributeModel::where('id', $variationAttribute->id)->delete();
+                        });
+                        $variation->delete();
+                    });
+
+                    foreach ($this->request['attributes'] as $dataAttribute) {
+                        $this->attributeModel::find($dataAttribute['id'])->update(['name' => $dataAttribute['name']]);
+
+                        foreach ($dataAttribute['attribute_values'] as $dataAttributeValue) {
+                            isset($dataAttributeValue['id']) ?
+                                $this->attributeValueModel::find($dataAttributeValue['id'])->update([
+                                    'value' => $dataAttributeValue['value']
+                                ]) :
+                                $attributeValue = $this->attributeValueModel::create([
+                                    'attribute_id' => $dataAttribute['id'],
+                                    'value' => $dataAttributeValue['value']
+                                ]);
+
+                            $idArray = isset($attributeValue) ? $attributeValue->id : $dataAttributeValue['id'];
+                            array_push($arrayAttributeValues, $idArray);
+                        }
+                    }
+
+                    foreach ($this->request['variations'] as $dataVariation) {
+                        $variation = $this->variationModel::create([
+                            "product_id" => $this->request->id,
+                            "sku" => $dataVariation['sku'],
+                            "barcode" => $dataVariation['barcode'],
+                            "variation_name" => $dataVariation['variation_name'],
+                            "display_name" => $dataVariation['display_name'],
+                            "image" => $dataVariation['image'],
+                            "price_import" => $dataVariation['price_import'],
+                            "price_export" => $dataVariation['price_export'],
+                            "status" => $dataVariation['status']
                         ]);
 
-                    $idArray = isset($attributeValue) ? $attributeValue->id : $dataAttributeValue['id'];
-                    array_push($arrayAttributeValues, $idArray);
+                        array_push($arrayVariations, $variation->id);
+                    }
+
+                    foreach ($arrayVariations as $keyVariation => $valueVariation) {
+                        foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue) {
+                            $findVariationAttributeValue = $this->variationAttributeModel::query()
+                                ->where('variation_id', $valueVariation)
+                                ->where('attribute_value_id', $valueAttributeValue)
+                                ->first();
+
+                            !isset($findVariationAttributeValue) && $this->variationAttributeModel::create([
+                                'variation_id' => $valueVariation,
+                                'attribute_value_id' => $valueAttributeValue
+                            ]);
+                        }
+                    }
                 }
-            }
-
-            foreach ($this->request['variations'] as $dataVariation) {
-                isset($dataVariation['id']) ?
-                    $this->variationModel::find($dataVariation['id'])->update([
-                        "sku" => $dataVariation['sku'],
-                        "barcode" => $dataVariation['barcode'],
-                        "variation_name" => $dataVariation['variation_name'],
-                        "display_name" => $dataVariation['display_name'],
-                        "image" => $dataVariation['image'],
-                        "price_import" => $dataVariation['price_import'],
-                        "price_export" => $dataVariation['price_export'],
-                        "status" => $dataVariation['status']
-                    ]) :
-                    $variation = $this->variationModel::create([
-                        "product_id" => $this->request->id,
-                        "sku" => $dataVariation['sku'],
-                        "barcode" => $dataVariation['barcode'],
-                        "variation_name" => $dataVariation['variation_name'],
-                        "display_name" => $dataVariation['display_name'],
-                        "image" => $dataVariation['image'],
-                        "price_import" => $dataVariation['price_import'],
-                        "price_export" => $dataVariation['price_export'],
-                        "status" => $dataVariation['status']
-                    ]);
-
-                $idArray = isset($variation) ? $variation->id : $dataVariation['id'];
-                array_push($arrayVariations, $idArray);
-            }
-
-            foreach ($arrayVariations as $keyVariation => $valueVariation) {
-                foreach ($arrayAttributeValues as $keyAttributeValue => $valueAttributeValue) {
-                    $findVariationAttributeValue = $this->variationAttributeModel::query()
-                        ->where('variation_id', $valueVariation)
-                        ->where('attribute_value_id', $valueAttributeValue)
-                        ->first();
-
-                    !isset($findVariationAttributeValue) && $this->variationAttributeModel::create([
-                        'variation_id' => $valueVariation,
-                        'attribute_value_id' => $valueAttributeValue
-                    ]);
+            } else {
+                if ($this->request['variations']) {
+                    foreach ($this->request['variations'] as $dataVariation) {
+                        $this->variationModel::find($dataVariation['id'])->update([
+                            "sku" => $dataVariation['sku'],
+                            "barcode" => $dataVariation['barcode'],
+                            "variation_name" => $dataVariation['variation_name'],
+                            "display_name" => $dataVariation['display_name'],
+                            "image" => $dataVariation['image'],
+                            "price_import" => $dataVariation['price_import'],
+                            "price_export" => $dataVariation['price_export'],
+                            "status" => $dataVariation['status']
+                        ]);
+                    }
                 }
             }
 

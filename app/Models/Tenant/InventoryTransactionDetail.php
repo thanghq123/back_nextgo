@@ -35,5 +35,4 @@ class InventoryTransactionDetail extends Model
     {
         return $this->hasOne(VariationQuantity::class,'variation_id','variation_id');
     }
-
 }

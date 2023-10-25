@@ -14,6 +14,7 @@ use App\Http\Controllers\Tenant\LocationController;
 use App\Http\Controllers\Tenant\InventoryTransactionController;
 use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\Auth\AuthController;
+use App\Http\Controllers\Tenant\ConfigController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -122,4 +123,10 @@ Route::prefix('products')->name('products')->group(function (){
     Route::post('show', [ProductController::class, 'show'])->name('show');
     Route::post('update', [ProductController::class, 'update'])->name('update');
     Route::post('delete', [ProductController::class, 'delete'])->name('delete');
+});
+
+Route::prefix('config')->name('config.')->group(function (){
+    Route::post('/store', [ConfigController::class, 'store'])->name('store');
+    Route::post('/show', [ConfigController::class, 'show'])->name('show');
+    Route::post('/update', [ConfigController::class, 'update'])->name('update');
 });

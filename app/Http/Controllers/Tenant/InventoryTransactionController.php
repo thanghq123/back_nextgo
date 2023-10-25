@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use App\Models\Tenant\InventoryTransaction;
 use App\Models\Tenant\VariationQuantity;
 use App\Http\Requests\Tenant\InventoryTransactionRequest;
-use App\Models\Tenant\Variation;
 use Illuminate\Support\Facades\DB;
 
 class InventoryTransactionController extends Controller
@@ -15,7 +14,6 @@ class InventoryTransactionController extends Controller
     public function __construct(
         private InventoryTransaction $model,
         private VariationQuantity    $variationQuantityModel,
-        private Variation            $variationModel
     )
     {
     }
@@ -47,7 +45,7 @@ class InventoryTransactionController extends Controller
             $details = collect($data)->toArray();
             $inventoryTransaction->inventoryTransactionDetails()->createMany($details);
             DB::commit();
-            return responseApi("Tạo thành công!", true);
+            return responseApi($inventory_transaction_id, true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
             return responseApi($throwable->getMessage(), false);
@@ -63,8 +61,8 @@ class InventoryTransactionController extends Controller
     public function list()
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->get();
-            $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
+            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->paginate(10);
+            $data=$inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData){
                 return [
                     "inventory_transaction_id"=>$inventoryTransactionData->inventory_transaction_id,
                     "partner_name"=>$inventoryTransactionData->partner->name,
@@ -75,7 +73,18 @@ class InventoryTransactionController extends Controller
                     "updated_at"=>Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi($data, true);
+            $response= new \Illuminate\Pagination\LengthAwarePaginator(
+                $data,
+                $inventoryTransactionData->total(),
+                $inventoryTransactionData->perPage(),
+                $inventoryTransactionData->currentPage(), [
+                    'path' => \Request::url(),
+                    'query' => [
+                        'page' => $inventoryTransactionData->currentPage()
+                    ]
+                ]
+            );
+            return responseApi($response, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -90,7 +99,7 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            $inventoryTransactionData=$this->model::with('inventoryTransactionDetails','inventory','partner','createdBy','inventoryTransactionDetails.variation:id,variation_name')->find($id)->get();
+            $inventoryTransactionData=$this->model::with('inventoryTransactionDetails','inventory','partner','createdBy','inventoryTransactionDetails.variation:id,variation_name')->where("inventory_transaction_id",$id)->get();
             $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
                 return [
                     "inventory_name"=>$inventoryTransactionData->inventory->name,

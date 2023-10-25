@@ -63,7 +63,7 @@ class InventoryTransactionController extends Controller
     public function list()
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->paginate(10);
+            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->get();
             $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
                 return [
                     "inventory_transaction_id"=>$inventoryTransactionData->inventory_transaction_id,
@@ -75,7 +75,7 @@ class InventoryTransactionController extends Controller
                     "updated_at"=>Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi($inventoryTransactionData, true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

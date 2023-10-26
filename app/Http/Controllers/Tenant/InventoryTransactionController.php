@@ -45,7 +45,7 @@ class InventoryTransactionController extends Controller
             $details = collect($data)->toArray();
             $inventoryTransaction->inventoryTransactionDetails()->createMany($details);
             DB::commit();
-            return responseApi("Tạo thành công!", true);
+            return responseApi($inventory_transaction_id, true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
             return responseApi($throwable->getMessage(), false);
@@ -61,8 +61,8 @@ class InventoryTransactionController extends Controller
     public function list()
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->get();
-            $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
+            $inventoryTransactionData = $this->model::with('inventory','partner','createdBy')->paginate(10);
+            $data=$inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData){
                 return [
                     "inventory_transaction_id"=>$inventoryTransactionData->inventory_transaction_id,
                     "partner_name"=>$inventoryTransactionData->partner->name,
@@ -73,7 +73,18 @@ class InventoryTransactionController extends Controller
                     "updated_at"=>Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi($data, true);
+            $response= new \Illuminate\Pagination\LengthAwarePaginator(
+                $data,
+                $inventoryTransactionData->total(),
+                $inventoryTransactionData->perPage(),
+                $inventoryTransactionData->currentPage(), [
+                    'path' => \Request::url(),
+                    'query' => [
+                        'page' => $inventoryTransactionData->currentPage()
+                    ]
+                ]
+            );
+            return responseApi($response, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -88,7 +99,31 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            return responseApi($this->model::with('inventoryTransactionDetails')->find($id), true);
+            $inventoryTransactionData=$this->model::with('inventoryTransactionDetails','inventory','partner','createdBy','inventoryTransactionDetails.variation:id,variation_name')->where("inventory_transaction_id",$id)->get();
+            $data=$inventoryTransactionData->map(function ($inventoryTransactionData){
+                return [
+                    "inventory_name"=>$inventoryTransactionData->inventory->name,
+                    "partner_name"=>$inventoryTransactionData->partner->name,
+                    "partner_type"=>$inventoryTransactionData->partner_type,
+                    "trans_type"=>$inventoryTransactionData->trans_type,
+                    "inventory_transaction_id"=>$inventoryTransactionData->inventory_transaction_id,
+                    "reason"=>$inventoryTransactionData->reason,
+                    "note"=>$inventoryTransactionData->note,
+                    "status"=>$inventoryTransactionData->status,
+                    "created_by"=>$inventoryTransactionData->createdBy->name,
+                    "inventory_transaction_details"=>$inventoryTransactionData->inventoryTransactionDetails->map(function ($inventoryTransactionDetails){
+                        return [
+                            "variation_name"=>$inventoryTransactionDetails->variation->variation_name,
+                            "batch_id"=>$inventoryTransactionDetails->batch_id,
+                            "quantity"=>$inventoryTransactionDetails->quantity,
+                            "price"=>$inventoryTransactionDetails->price,
+                        ];
+                    }),
+                    "created_at"=>Carbon::make($inventoryTransactionData->created_at)->format('H:i d-m-Y'),
+                    "updated_at"=>Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
+                ];
+            });
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

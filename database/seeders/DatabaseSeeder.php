@@ -92,7 +92,6 @@ class DatabaseSeeder extends Seeder
             "address_detail" => "Vườn bia Đặng Hậu",
             "note" => "Siêu uy tín NRO",
         ]);
-
         $product = \App\Models\Tenant\Product::query()->create([
             'name' => 'Dầu gội Đặng Hậu',
             'image' => null,
@@ -163,6 +162,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         \App\Models\Tenant\VariationAttribute::query()->insert($variation_attributes);
+
+        \App\Models\Tenant\Config::query()->create([
+            "business_name" => "Cửa hàng bán quần áo",
+            "tel" => "0985658741",
+            "email" => "tenant_test@gmail.com"
+        ]);
+
     }
 
     public function runLandlordSpecificSeeders()

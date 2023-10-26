@@ -11,9 +11,7 @@ class TestController extends Controller
 {
     public function test()
     {
-        $url = "";
-        $test = renameFolder('test5', 'test6');
-        dd($test);
+        $url = "https://lh3.google.com/d/1UjCGJfruXVBHK8bFAnaCSXvFWejI0M2u";
         return view('test', compact('url'));
     }
 

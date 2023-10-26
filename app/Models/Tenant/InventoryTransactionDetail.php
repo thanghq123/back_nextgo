@@ -21,7 +21,7 @@ class InventoryTransactionDetail extends Model
 
     public function inventoryTransaction()
     {
-        return $this->belongsTo(InventoryTransaction::class,'inventory_transaction_id','id');
+        return $this->belongsTo(InventoryTransaction::class,'inventory_transaction_id','inventory_transaction_id');
     }
     public function variation()
     {
@@ -35,5 +35,4 @@ class InventoryTransactionDetail extends Model
     {
         return $this->hasOne(VariationQuantity::class,'variation_id','variation_id');
     }
-
 }

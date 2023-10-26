@@ -178,7 +178,7 @@ class InventoryTransactionController extends Controller
     public function cancel($id)
     {
         try {
-            $this->model::find($id)->update(["status" => 2]);
+            $this->model::where("inventory_transaction_id",$id)->update(["status" => 2]);
             return responseApi("Huỷ thành công!", true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);

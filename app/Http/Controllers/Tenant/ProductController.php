@@ -61,9 +61,9 @@ class ProductController extends Controller
                 'description' => $this->request->description,
                 'manage_type' => $this->request->manage_type,
                 'brand_id' => $this->request->brand_id == 0 ? null : $this->request->brand_id,
-                'warranty_id' => $this->request->warranty_id == 0 ? null : $this->request->brand_id,
-                'item_unit_id' => $this->request->item_unit_id == 0 ? null : $this->request->brand_id,
-                'category_id' => $this->request->category_id == 0 ? null : $this->request->brand_id,
+                'warranty_id' => $this->request->warranty_id == 0 ? null : $this->request->warranty_id,
+                'item_unit_id' => $this->request->item_unit_id == 0 ? null : $this->request->item_unit_id,
+                'category_id' => $this->request->category_id == 0 ? null : $this->request->category_id,
                 'status' => $this->request->status,
             ]);
 
@@ -158,9 +158,9 @@ class ProductController extends Controller
                 'description' => $this->request->description,
                 'manage_type' => $this->request->manage_type,
                 'brand_id' => $this->request->brand_id == 0 ? null : $this->request->brand_id,
-                'warranty_id' => $this->request->warranty_id == 0 ? null : $this->request->brand_id,
-                'item_unit_id' => $this->request->item_unit_id == 0 ? null : $this->request->brand_id,
-                'category_id' => $this->request->category_id == 0 ? null : $this->request->brand_id,
+                'warranty_id' => $this->request->warranty_id == 0 ? null : $this->request->warranty_id,
+                'item_unit_id' => $this->request->item_unit_id == 0 ? null : $this->request->item_unit_id,
+                'category_id' => $this->request->category_id == 0 ? null : $this->request->category_id,
                 'status' => $this->request->status,
             ]);
 

@@ -20,4 +20,7 @@ class BusinessField extends Model
         'created_at',
         'updated_at'
     ];
+    public function tenants(){
+        return $this->hasMany(Tenant::class,'business_field_id');
+    }
 }

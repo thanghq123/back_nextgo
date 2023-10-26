@@ -21,7 +21,7 @@ var KTbusiness_fieldList = function () {
                         }
                     }).then((function (t) {
                             t.value ? $.ajax({
-                                url: '/admin/business-field/delete',
+                                url:  (window.location.href + '/delete' ).replace('#',''),
                                 type: 'DELETE',
                                 data: {
                                     _token: $('meta[name="csrf-token"]').attr('content'),
@@ -40,6 +40,54 @@ var KTbusiness_fieldList = function () {
                                 }
                             }) : "cancel" === t.dismiss && Swal.fire({
                                 text: business_field_name + " chưa được xoá.",
+                                icon: "error",
+                                buttonsStyling: !1,
+                                confirmButtonText: "Ok, đồng ý!",
+                                customClass: {confirmButton: "btn fw-bold btn-primary"}
+                            })
+                        }
+                    ))
+                }))
+            }))
+            o.querySelectorAll('[data-kt-business_field-table-filter="restore_row"]').forEach((t => {
+                t.addEventListener("click", (function (t) {
+                    t.preventDefault();
+                    const n = t.target.closest("tr");
+                    let business_field_id = n.attributes['data-id'].value;
+                    let business_field_name = n.querySelectorAll('td')[0].innerText;
+                    Swal.fire({
+                        text: "Bạn có chắc muốn khôi phục " + business_field_name + "?",
+                        icon: "warning",
+                        showCancelButton: !0,
+                        buttonsStyling: !1,
+                        confirmButtonText: "Đồng ý, khôi phục!",
+                        cancelButtonText: "Không, huỷ bỏ!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-danger",
+                            cancelButton: "btn fw-bold btn-active-light-primary"
+                        }
+                    }).then((function (t) {
+                            t.value ? $.ajax({
+                                url:  window.location.href.replace('trash','restore'),
+                                type: 'get',
+                                data: {
+                                    _token: $('meta[name="csrf-token"]').attr('content'),
+                                    id: business_field_id
+                                },
+                                success: function (data) {
+                                    console.log(data)
+                                    Swal.fire({
+                                        text: "Khôi phục thành công " + business_field_name + "!.",
+                                        icon: "success",
+                                        buttonsStyling: !1,
+                                        confirmButtonText: "Ok, đồng ý!",
+                                        customClass: {confirmButton: "btn fw-bold btn-primary"}
+                                    }).then((function () {
+                                        window.location.replace(window.location.href.replace('/trash',''));
+                                    }))
+                                }
+                            }) : "cancel" === t.dismiss && Swal.fire({
+                                text: business_field_name + " chưa được khôi phục.",
                                 icon: "error",
                                 buttonsStyling: !1,
                                 confirmButtonText: "Ok, đồng ý!",

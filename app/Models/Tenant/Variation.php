@@ -29,15 +29,11 @@ class Variation extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
-<<<<<<< HEAD
 
-=======
->>>>>>> 75bfce80a66da94335a8e36258147c687ef0a823
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-<<<<<<< HEAD
 
 
     public function attributeValues() {
@@ -45,16 +41,19 @@ class Variation extends Model
             ->withPivot('id');
     }
 
-    public function variationAttributes() {
+    public function variationAttributes()
+    {
         return $this->hasMany(VariationAttribute::class);
-=======
+    }
+
     public function variationQuantities()
     {
         return $this->hasMany(VariationQuantity::class,'variation_id','id');
     }
+
     public function inventoryTransactionDetails()
     {
         return $this->hasMany(InventoryTransactionDetail::class,'variation_id','variation_id');
->>>>>>> 75bfce80a66da94335a8e36258147c687ef0a823
+
     }
 }

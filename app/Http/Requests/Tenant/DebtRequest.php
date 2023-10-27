@@ -37,16 +37,20 @@ class DebtRequest extends FormRequest
                 "required"
             ],
             "partner_type" => [
-                "required"
+                "required",
+                "in:0,1"
             ],
             "debit_at" => [
                 "required",
+                "date"
             ],
             "due_at" => [
-                "required"
+                "required",
+                "date"
             ],
             "type" => [
-                "required"
+                "required",
+                "in:0,1"
             ],
             "name" => [
                 "required"
@@ -59,7 +63,7 @@ class DebtRequest extends FormRequest
                 "nullable"
             ],
             "status" => [
-                "in:0,1",
+                "in:0,1,2,3",
                 "nullable"
             ],
         ];

@@ -29,14 +29,14 @@ class DatabaseSeeder extends Seeder
     public function runTenantSpecificSeeders()
     {
         // run tenant specific seeders
-        \App\Models\Tenant\User::query()->create([
-            'name' => 'tenant1',
-            'email' => 'tenant1@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+//        \App\Models\Tenant\User::query()->create([
+//            'name' => 'tenant1',
+//            'email' => 'tenant1@gmail.com',
+//            'password' => Hash::make('12345678'),
+//        ]);
 
         \App\Models\Tenant\Category::query()->create([
-            "name" => "Quần"
+            "name" => fake()->name()
         ]);
 
         \App\Models\Tenant\ItemUnit::query()->create([
@@ -44,28 +44,28 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Tenant\Brand::query()->create([
-            "name" => "Test model brand"
+            "name" => fake()->name()
         ]);
 
         \App\Models\Tenant\Warranty::query()->create([
-            "name" => "Bảo hành áo da",
+            "name" => fake()->name(),
             "unit" => 1,
             "period" => 2
         ]);
 
         $groupCustomer = \App\Models\Tenant\GroupCustomer::query()->create([
-            "name" => "Bán lẻ",
+            "name" => fake()->name(),
             "description" => "Bán ở cửa hàng cá nhân"
         ]);
 
         \App\Models\Tenant\Customer::query()->create([
             "group_customer_id" => $groupCustomer->id,
             "type" => 0,
-            "name" => "Đặng Văn Hậu",
+            "name" => fake()->name(),
             "gender" => 1,
-            "dob" => "2023/10/10",
-            "email" => "a@gmail.com",
-            "tel" => "0985658741",
+            "dob" => "2023/10/10" ,
+            "email" => fake()->email(),
+            "tel" => fake()->phoneNumber(),
             "status" => 1,
             "province_code" => "100000",
             "district_code" => "29",
@@ -75,16 +75,16 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $groupSupplier = \App\Models\Tenant\GroupSupplier::query()->create([
-            "name" => "Nhà cung cấp bia Hậu 02",
+            "name" => fake()->name(),
             "description" => "Nhà có vườn bia"
         ]);
 
         \App\Models\Tenant\Supplier::query()->create([
             "group_supplier_id" => $groupSupplier->id,
             "type" => 0,
-            "name" => "Đặng Văn Hậu",
-            "email" => "haudz@gmail.com",
-            "tel" => "0958658748",
+            "name" => fake()->name(),
+            "email" => fake()->email(),
+            "tel" => fake()->phoneNumber(),
             "status" => 1,
             "province_code" => 522,
             "district_code" => 33,
@@ -96,6 +96,17 @@ class DatabaseSeeder extends Seeder
             "business_name" => "Cửa hàng bán quần áo",
             "tel" => "0985658741",
             "email" => "tenant_test@gmail.com"
+        ]);
+        \App\Models\Tenant\Debt::query()->create([
+           "partner_id" => 1,
+           "partner_type" => 0,
+            "debit_at" => fake()->date('Y-m-d', 'now'),
+            "due_at" => fake()->date('Y-m-d', 'now'),
+            "type" => 0,
+            "name" => 'Mua thiếu tiền',
+            "principal" => fake()->numberBetween(10000, 1000000),
+            "note" => 'khong text note',
+            "status" => 1
         ]);
     }
 

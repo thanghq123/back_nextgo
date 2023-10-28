@@ -15,6 +15,7 @@ use App\Http\Controllers\Tenant\InventoryTransactionController;
 use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\Auth\AuthController;
 use App\Http\Controllers\Tenant\ConfigController;
+use App\Http\Controllers\Tenant\DebtController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -129,4 +130,13 @@ Route::prefix('config')->name('config.')->group(function (){
     Route::post('/store', [ConfigController::class, 'store'])->name('store');
     Route::post('/show', [ConfigController::class, 'show'])->name('show');
     Route::post('/update', [ConfigController::class, 'update'])->name('update');
+});
+
+Route::prefix('debt')->name('debt')->group(function (){
+    Route::post('/recovery', [DebtController::class, 'listRecovery'])->name('listRecovery');
+    Route::post('/repay', [DebtController::class, 'listRepay'])->name('listRepay');
+    Route::post('/store', [DebtController::class, 'store'])->name('store');
+    Route::post('/show', [DebtController::class, 'show'])->name('show');
+    Route::post('/update', [DebtController::class, 'update'])->name('update');
+//    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
 });

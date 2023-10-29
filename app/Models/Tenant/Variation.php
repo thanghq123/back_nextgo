@@ -29,16 +29,31 @@ class Variation extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
+
+
+    public function attributeValues() {
+        return $this->belongsToMany(AttributeValue::class, 'variation_attributes')
+            ->withPivot('id');
+    }
+
+    public function variationAttributes()
+    {
+        return $this->hasMany(VariationAttribute::class);
+    }
+
     public function variationQuantities()
     {
         return $this->hasMany(VariationQuantity::class,'variation_id','id');
     }
+
     public function inventoryTransactionDetails()
     {
         return $this->hasMany(InventoryTransactionDetail::class,'variation_id','variation_id');
+
     }
 }

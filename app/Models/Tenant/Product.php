@@ -23,4 +23,12 @@ class Product extends Model
         'category_id',
         'status'
     ];
+
+    public function attributes() {
+        return $this->hasMany(Attribute::class);
+    }
+
+    public function variations() {
+        return $this->hasMany(Variation::class);
+    }
 }

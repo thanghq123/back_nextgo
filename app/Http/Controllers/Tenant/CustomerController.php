@@ -22,7 +22,7 @@ class CustomerController extends Controller
                 ->selectRaw('(SELECT name FROM group_customers
                                                    WHERE id = customers.group_customer_id)
                                                    as group_customer_name')
-                ->orderBy('id', 'desc')
+                ->orderBy('id', "desc")
                 ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
@@ -48,7 +48,7 @@ class CustomerController extends Controller
                 ->selectRaw('(SELECT name FROM group_customers
                                                    WHERE id = customers.group_customer_id)
                                                    as group_customer_name')
-                ->where('customers.id', $this->request->id)
+                ->where('id', $this->request->id)
                 ->first(), true);
         }catch (\Throwable $throwable)
         {

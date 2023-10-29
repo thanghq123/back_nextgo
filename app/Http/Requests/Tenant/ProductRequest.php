@@ -55,30 +55,95 @@ class ProductRequest extends FormRequest
             ],
             "brand_id" => [
                 "exists:App\Models\Tenant\Brand,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "warranty_id" => [
                 "exists:App\Models\Tenant\Warranty,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "item_unit_id" => [
                 "exists:App\Models\Tenant\ItemUnit,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "category_id" => [
                 "exists:App\Models\Tenant\Category,id",
-                "nullable"
+                "nullable" => "nullable"
             ],
             "status" => [
                 "required",
                 "in:0,1"
+            ],
+            "attributes" => [
+                "nullable"
+            ],
+            "attributes.*.id" => [
+                "exists:App\Models\Tenant\Attribute,id"
+            ],
+            "attributes.*.name" => [
+                "required",
+                "max:255"
+            ],
+            "attributes.*.attribute_values" => [
+                "required"
+            ],
+            "attributes.*.attribute_values.*.id" => [
+                "exists:App\Models\Tenant\AttributeValue,id"
+            ],
+            "attributes.*.attribute_values.*.value" => [
+                "required",
+                "max:255"
+            ],
+            "variations" => [
+                "nullable"
+            ],
+            "variations.*.id" => [
+                "exists:App\Models\Tenant\Variation,id"
+            ],
+            "variations.*.sku" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.barcode" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.variation_name" => [
+                "required",
+                "max:255"
+            ],
+            "variations.*.display_name" => [
+                "required",
+                "max:255"
+            ],
+            "variations.*.image" => [
+                "nullable",
+                "max:255"
+            ],
+            "variations.*.price_import" => [
+                "required"
+            ],
+            "variations.*.price_export" => [
+                "required"
+            ],
+            "variations.*.status" => [
+                "required"
             ]
         ];
 
         switch ($getUrl){
             case "store":
             case "update":
-                $updateId = $getUrl == "update" ? $rules["id"] : [];
+                $nameUrl = "update";
+                $updateId = $getUrl == $nameUrl ? $rules["id"] : [];
+                $updateIdAttribute = $getUrl == $nameUrl ? $rules["attributes.*.id"] : [];
+                $updateIdAttributeValue = $getUrl == $nameUrl ? $rules['attributes.*.attribute_values.*.id'] : [];
+                $updateIdVariation = $getUrl == $nameUrl ? $rules['variations.*.id'] : [];
+                $products = $this->request->all();
+                $brand_id = $products['brand_id'] == 0 ? $rules['brand_id']['nullable'] : $rules['brand_id'];
+                $warranty_id = $products['warranty_id'] == 0 ? $rules['warranty_id']['nullable'] : $rules['warranty_id'];
+                $item_unit_id = $products['item_unit_id'] == 0 ? $rules['item_unit_id']['nullable'] : $rules['item_unit_id'];
+                $category_id = $products['category_id'] == 0 ? $rules['category_id']['nullable'] : $rules['category_id'];
+
                 return [
                     "id" => $updateId,
                     "name" => $rules["name"],
@@ -86,11 +151,27 @@ class ProductRequest extends FormRequest
                     "weight" => $rules["weight"],
                     "description" => $rules["description"],
                     "manage_type" => $rules["manage_type"],
-                    "brand_id" => $rules["brand_id"],
-                    "warranty_id" => $rules["warranty_id"],
-                    "item_unit_id" => $rules["item_unit_id"],
-                    "category_id" => $rules["category_id"],
-                    "status" => $rules["status"]
+                    "brand_id" => $brand_id,
+                    "warranty_id" => $warranty_id,
+                    "item_unit_id" => $item_unit_id,
+                    "category_id" => $category_id,
+                    "status" => $rules["status"],
+                    "attributes" => $rules['attributes'],
+                    "attributes.*.id" => $updateIdAttribute,
+                    "attributes.*.name" => $rules['attributes.*.name'],
+                    "attributes.*.attribute_values" => $rules['attributes.*.attribute_values'],
+                    "attributes.*.attribute_values.*.id" => $updateIdAttributeValue,
+                    "attributes.*.attribute_values.*.value" => $rules['attributes.*.attribute_values.*.value'],
+                    "variations" => $rules['variations'],
+                    "variations.*.id" => $updateIdVariation,
+                    "variations.*.sku" => $rules['variations.*.sku'],
+                    "variations.*.barcode" => $rules['variations.*.barcode'],
+                    "variations.*.variation_name" => $rules['variations.*.variation_name'],
+                    "variations.*.display_name" => $rules['variations.*.display_name'],
+                    "variations.*.image" => $rules['variations.*.image'],
+                    "variations.*.price_import" => $rules['variations.*.price_import'],
+                    "variations.*.price_export" => $rules['variations.*.price_export'],
+                    "variations.*.status" => $rules['variations.*.status']
                 ];
             case "show":
             case "delete":

@@ -168,7 +168,7 @@ class DatabaseSeeder extends Seeder
             "tel" => "0985658741",
             "email" => "tenant_test@gmail.com"
         ]);
-      
+
         \App\Models\Tenant\Debt::query()->create([
            "partner_id" => 1,
            "partner_type" => 0,

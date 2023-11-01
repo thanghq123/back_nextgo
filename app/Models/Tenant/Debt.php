@@ -14,7 +14,6 @@ class Debt extends Model
 
     protected $fillable = [
         "partner_id",
-        "partner_type",
         "debit_at",
         "due_at",
         "type",
@@ -23,4 +22,12 @@ class Debt extends Model
         "note",
         "status"
     ];
+    public function partner()
+    {
+        return $this->morphTo();
+    }
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'paymentFor');
+    }
 }

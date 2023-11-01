@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('inventory_transaction_details', function (Blueprint $table) {
+        Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('inventory_transaction_id');
-            $table->index('inventory_transaction_id');
+            $table->unsignedBigInteger('order_id');
+            $table->index('order_id');
             $table->unsignedBigInteger('variation_id');
-            $table->unsignedBigInteger('batch_id');
-            $table->double('price');
-            $table->tinyInteger('price_type');
+            $table->unsignedBigInteger('batch_id')->nullable();
+            $table->double('discount')->nullable();
+            $table->tinyInteger('discount_type')->nullable();
+            $table->double('tax')->nullable();
             $table->integer('quantity');
+            $table->double('total_price');
             $table->timestamps();
         });
     }
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_transaction_details');
+        Schema::dropIfExists('order_details');
     }
 };

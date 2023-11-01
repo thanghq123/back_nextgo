@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('group_customer_id')->nullable();
             $table->tinyInteger('type')->nullable();
+            $table->index('type');
             $table->string('name')->unique();
             $table->tinyInteger('gender')->nullable();
             $table->date('dob')->nullable();

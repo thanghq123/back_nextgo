@@ -16,8 +16,8 @@ return new class extends Migration
         //
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('partner_id')->notNullable();
-            $table->tinyInteger('partner_type')->nullable();
+            $table->unsignedBigInteger('partner_id');
+            $table->index('partner_id');
             $table->date('debit_at')->notNullable();
             $table->date('due_at')->notNullable();
             $table->tinyInteger('type')->notNullable();

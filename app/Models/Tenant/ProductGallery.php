@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
-class GroupSupplier extends Model
+class ProductGallery extends Model
 {
     use HasFactory, UsesTenantConnection;
-    protected $table = "group_suppliers";
+    public $table = 'product_galleries';
     protected $fillable = [
-        "name",
-        "description"
+        "product_id",
+        "image",
     ];
-    public function suppliers()
+    public function product()
     {
-        return $this->hasMany(Supplier::class);
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

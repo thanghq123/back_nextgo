@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('customer_id');
+            $table->index('customer_id');
             $table->unsignedBigInteger('created_by');
             $table->double('discount')->nullable();
             $table->tinyInteger('discount_type')->nullable();

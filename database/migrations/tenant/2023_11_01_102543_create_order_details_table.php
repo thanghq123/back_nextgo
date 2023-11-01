@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->index('order_id');
             $table->unsignedBigInteger('variation_id');
             $table->unsignedBigInteger('batch_id')->nullable();
             $table->double('discount')->nullable();

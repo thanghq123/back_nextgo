@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('order_return_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_return_id');
+            $table->index('order_return_id');
             $table->tinyInteger('type');
             $table->unsignedBigInteger('variation_id');
             $table->unsignedBigInteger('batch_id');

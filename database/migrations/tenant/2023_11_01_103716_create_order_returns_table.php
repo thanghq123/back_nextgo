@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('order_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->index('order_id');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('customer_id');
             $table->string('reason');

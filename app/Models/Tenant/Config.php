@@ -25,6 +25,5 @@ class Config extends Model
         "ward_code",
         "address_detail",
         "logo",
-        "printed_form",
     ];
 }

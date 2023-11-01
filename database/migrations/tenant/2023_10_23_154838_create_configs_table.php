@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string("ward_code")->nullable();
             $table->text("address_detail")->nullable();
             $table->string("logo")->nullable();
-            $table->text("printed_form")->nullable();
             $table->timestamps();
         });
     }

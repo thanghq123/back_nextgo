@@ -39,7 +39,7 @@ class InventoryTransaction extends Model
     }
     public function partner()
     {
-        return $this->belongsTo(Supplier::class,'partner_type','group_supplier_id');
+        return $this->belongsTo(Supplier::class,'partner_id','id');
     }
     public function inventoryTransactionDetails()
     {

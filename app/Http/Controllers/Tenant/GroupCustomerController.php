@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\GroupCustomerRequest;
+use App\Models\Tenant\Customer;
 use App\Models\Tenant\GroupCustomer;
 
 class GroupCustomerController extends Controller
 {
     public function __construct(
         private GroupCustomer $model,
+        private Customer $customerModel,
         private GroupCustomerRequest $request
     )
     {
@@ -59,6 +61,9 @@ class GroupCustomerController extends Controller
 
     public function delete(){
         try {
+            $this->customerModel::query()
+                ->where('group_customer_id', $this->request->id)
+                ->update(['group_customer_id' => null]);
             $this->model::find($this->request->id)->delete();
             return responseApi("Xóa thành công!", true);
         }catch (\Throwable $throwable)

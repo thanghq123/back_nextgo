@@ -22,7 +22,7 @@ class SupplierController extends Controller
                 ->selectRaw('(SELECT name FROM group_suppliers
                                                    WHERE id = suppliers.group_supplier_id)
                                                    as group_supplier_name')
-                ->orderBy('id', 'desc')
+                ->orderBy('id', "desc")
                 ->paginate(10), true);
         }catch (\Throwable $throwable)
         {

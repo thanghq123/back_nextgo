@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('group_suppliers', function (Blueprint $table) {
+        Schema::create('printed_forms', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('name');
+            $table->text('form');
+            $table->tinyInteger('default')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_suppliers');
+        Schema::dropIfExists('printed_forms');
     }
 };

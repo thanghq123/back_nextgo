@@ -6,33 +6,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
-class Location extends Model
+class Payment extends Model
 {
     use HasFactory,UsesTenantConnection;
-    public $table = 'locations';
+    public $table = 'payments';
     protected $fillable=[
-        "name",
-        "image",
-        "description",
-        "tel",
-        "email",
-        "province_code",
-        "district_code",
-        "ward_code",
-        "address_detail",
-        "status",
-        "is_main",
+        "payment_for",
+        "payment_for_type",
+        "amount",
+        "amount_in",
+        "amount_refund",
+        "method",
+        "payment_at",
+        "reference_code",
+        "note",
         "created_by"
     ];
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
-        'status' => 'boolean',
-        'is_main' => 'boolean',
+        'payment_at' => 'timestamp',
     ];
+    public function paymentFor()
+    {
+        return $this->morphTo();
+    }
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by','id');

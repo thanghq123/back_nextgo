@@ -3,26 +3,44 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\CustomerRequest;
-use App\Models\Tenant\Customer;
+use App\Http\Requests\Tenant\DebtRequest;
+use Illuminate\Http\Request;
+use App\Models\Tenant\Debt;
 
-class CustomerController extends Controller
+class DebtController extends Controller
 {
+    //
     public function __construct(
-        private Customer $model,
-        private CustomerRequest $request
+        private Debt $model,
+        private DebtRequest $request
     )
     {
     }
 
-    public function list(){
+    public function listRecovery(){
         try {
             return responseApi($this->model::query()
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id)
-                                                   as group_customer_name')
-                ->orderBy('id', "desc")
+                ->select('debts.*')
+                ->where('type', '=', 0)
+                ->selectRaw('(SELECT name FROM suppliers
+                                                   WHERE id = debts.partner_id)
+                                                   as partner_name')
+                ->orderBy('id', 'desc')
+                ->paginate(10), true);
+        }catch (\Throwable $throwable)
+        {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+    public function listRepay(){
+        try {
+            return responseApi($this->model::query()
+                ->select('debts.*')
+                ->where('type', '=', 1)
+                ->selectRaw('(SELECT name FROM suppliers
+                                                   WHERE id = debts.partner_id)
+                                                   as partner_name')
+                ->orderBy('id', 'desc')
                 ->paginate(10), true);
         }catch (\Throwable $throwable)
         {
@@ -44,11 +62,11 @@ class CustomerController extends Controller
     {
         try {
             return responseApi($this->model::query()
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id)
-                                                   as group_customer_name')
-                ->where('id', $this->request->id)
+                ->select('debts.*')
+                ->selectRaw('(SELECT name FROM suppliers
+                                                   WHERE id = debts.partner_id)
+                                                   as partner_name')
+                ->where('debts.id', $this->request->id)
                 ->first(), true);
         }catch (\Throwable $throwable)
         {

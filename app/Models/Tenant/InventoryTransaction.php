@@ -25,9 +25,9 @@ class InventoryTransaction extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'status' => 'boolean',
-    ];
+//    protected $casts = [
+//        'status' => 'boolean',
+//    ];
 
     public function inventory()
     {
@@ -39,7 +39,7 @@ class InventoryTransaction extends Model
     }
     public function partner()
     {
-        return $this->belongsTo(Supplier::class,'partner_type','group_supplier_id');
+        return $this->belongsTo(Customer::class,'partner_id','id');
     }
     public function inventoryTransactionDetails()
     {

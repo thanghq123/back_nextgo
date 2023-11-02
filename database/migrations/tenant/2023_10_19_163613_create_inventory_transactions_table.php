@@ -20,6 +20,7 @@ return new class extends Migration
             $table->tinyInteger('partner_type');
             $table->tinyInteger('trans_type');
             $table->unsignedBigInteger('inventory_transaction_id');
+            $table->index('inventory_transaction_id');
             $table->string('reason');
             $table->text('note');
             $table->tinyInteger('status');

@@ -16,11 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-        $this->call([
-//            PricingSeeder::class,
-//            BusinessFieldSeeder::class,
-        ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
             : $this->runLandlordSpecificSeeders();
@@ -29,43 +24,43 @@ class DatabaseSeeder extends Seeder
     public function runTenantSpecificSeeders()
     {
         // run tenant specific seeders
-        \App\Models\Tenant\User::query()->create([
-            'name' => 'tenant1',
-            'email' => 'tenant1@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+//        \App\Models\Tenant\User::query()->create([
+//            'name' => 'tenant1',
+//            'email' => 'tenant1@gmail.com',
+//            'password' => Hash::make('12345678'),
+//        ]);
 
-        \App\Models\Tenant\Category::query()->create([
+        $category = \App\Models\Tenant\Category::query()->create([
             "name" => "Quần"
         ]);
 
-        \App\Models\Tenant\ItemUnit::query()->create([
+        $itemUnit = \App\Models\Tenant\ItemUnit::query()->create([
             "name" => fake()->name()
         ]);
 
-        \App\Models\Tenant\Brand::query()->create([
+        $brand = \App\Models\Tenant\Brand::query()->create([
             "name" => "Test model brand"
         ]);
 
-        \App\Models\Tenant\Warranty::query()->create([
+        $warranty = \App\Models\Tenant\Warranty::query()->create([
             "name" => "Bảo hành áo da",
             "unit" => 1,
             "period" => 2
         ]);
 
         $groupCustomer = \App\Models\Tenant\GroupCustomer::query()->create([
-            "name" => "Bán lẻ",
+            "name" => fake()->name(),
             "description" => "Bán ở cửa hàng cá nhân"
         ]);
 
         \App\Models\Tenant\Customer::query()->create([
             "group_customer_id" => $groupCustomer->id,
             "type" => 0,
-            "name" => "Đặng Văn Hậu",
+            "name" => fake()->name(),
             "gender" => 1,
-            "dob" => "2023/10/10",
-            "email" => "a@gmail.com",
-            "tel" => "0985658741",
+            "dob" => "2023/10/10" ,
+            "email" => fake()->email(),
+            "tel" => fake()->phoneNumber(),
             "status" => 1,
             "province_code" => "100000",
             "district_code" => "29",
@@ -74,28 +69,91 @@ class DatabaseSeeder extends Seeder
             "note" => "Đang tuyển vợ"
         ]);
 
-        $groupSupplier = \App\Models\Tenant\GroupSupplier::query()->create([
-            "name" => "Nhà cung cấp bia Hậu 02",
-            "description" => "Nhà có vườn bia"
+        $product = \App\Models\Tenant\Product::query()->create([
+            'name' => 'Dầu gội Đặng Hậu',
+            'image' => null,
+            'weight' => '10',
+            'description' => 'Siêu sạch',
+            'manage_type' => '1',
+            'brand_id' => $brand->id,
+            'warranty_id' => $warranty->id,
+            'item_unit_id' => $itemUnit->id,
+            'category_id' => $category->id,
+            'status' => 1
         ]);
 
-        \App\Models\Tenant\Supplier::query()->create([
-            "group_supplier_id" => $groupSupplier->id,
-            "type" => 0,
-            "name" => "Đặng Văn Hậu",
-            "email" => "haudz@gmail.com",
-            "tel" => "0958658748",
-            "status" => 1,
-            "province_code" => 522,
-            "district_code" => 33,
-            "ward_code" => 22,
-            "address_detail" => "Vườn bia Đặng Hậu",
-            "note" => "Siêu uy tín NRO",
+        $attribute = \App\Models\Tenant\Attribute::query()->create([
+            'product_id' => $product->id,
+            'name' => 'Màu sắc'
         ]);
+
+        $attributeValues = [
+            [
+              'attribute_id' => $attribute->id,
+              'value' => 'Đỏ'
+            ],
+            [
+                'attribute_id' => $attribute->id,
+                'value' => 'Xanh'
+            ]
+        ];
+
+        \App\Models\Tenant\AttributeValue::query()->insert($attributeValues);
+
+        $variations = [
+            [
+                'product_id' => $product->id,
+                'sku' => 'WW5K5174VN/SV',
+                'barcode' => 'D9VT5UF',
+                'variation_name' => 'Đỏ',
+                'display_name' => 'Đỏ',
+                'image' => null,
+                'price_import' => 1200000,
+                'price_export' => 800000,
+                'status' => 1
+            ],
+            [
+                'product_id' => $product->id,
+                'sku' => 'WW10K5233YW/SV',
+                'barcode' => '15_EOSF',
+                'variation_name' => 'Xanh',
+                'display_name' => 'Xanh',
+                'image' => null,
+                'price_import' => 700000,
+                'price_export' => 500000,
+                'status' => 1
+            ]
+        ];
+
+        \App\Models\Tenant\Variation::query()->insert($variations);
+
+        $variation_attributes = [
+            [
+                'variation_id' => 1,
+                'attribute_value_id' => 1
+            ],
+            [
+                'variation_id' => 1,
+                'attribute_value_id' => 2
+            ]
+        ];
+        \App\Models\Tenant\VariationAttribute::query()->insert($variation_attributes);
+
         \App\Models\Tenant\Config::query()->create([
             "business_name" => "Cửa hàng bán quần áo",
             "tel" => "0985658741",
             "email" => "tenant_test@gmail.com"
+        ]);
+
+        \App\Models\Tenant\Debt::query()->create([
+           "partner_id" => 1,
+            "debit_at" => fake()->date('Y-m-d', 'now'),
+            "due_at" => fake()->date('Y-m-d', 'now'),
+            "type" => 0,
+            "name" => 'Mua thiếu tiền',
+            "principal" => fake()->numberBetween(10000, 1000000),
+            "note" => 'khong text note',
+            "status" => 1
         ]);
     }
 
@@ -106,6 +164,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'tenant_test',
             'email' => 'tenant_test@gmail.com',
             'password' => Hash::make('12345678'),
+        ]);
+        $this->call([
+            PricingSeeder::class,
+            BusinessFieldSeeder::class,
         ]);
         DB::statement("DROP DATABASE IF EXISTS `tenant1`;");
         Tenant::query()->create([

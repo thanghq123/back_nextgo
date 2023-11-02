@@ -138,7 +138,12 @@ class DatabaseSeeder extends Seeder
             ]
         ];
         \App\Models\Tenant\VariationAttribute::query()->insert($variation_attributes);
-
+        Tenant\Inventory::create([
+            'location_id' => 1,
+            'name'=> 'Kho 1',
+            'code' => 'KHO1',
+            'status' => 1
+        ]);
         \App\Models\Tenant\Config::query()->create([
             "business_name" => "Cửa hàng bán quần áo",
             "tel" => "0985658741",
@@ -146,12 +151,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Tenant\Debt::query()->create([
-           "partner_id" => 1,
+            "partner_id" => 1,
+            "partner_type"=> 0,
             "debit_at" => date('Y-m-d', strtotime('-1 day')),
             "due_at" => date('Y-m-d', strtotime('+1 day')),
             "type" => 0,
             "name" => 'Mua thiếu tiền',
-            "principal" => fake()->numberBetween(10000, 1000000),
+            "amount_debt" => fake()->numberBetween(10000, 1000000),
+            "amount_paid" => 0,
             "note" => 'khong text note',
             "status" => 1
         ]);

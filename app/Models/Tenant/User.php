@@ -23,6 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'location_id',
+        'username',
+        'tel',
+        'status',
+        'created_by'
     ];
 
     /**
@@ -47,5 +52,9 @@ class User extends Authenticatable
     public function inventoryTransactions()
     {
         return $this->hasMany(InventoryTransaction::class,'created_by','id');
+    }
+    public function locations()
+    {
+        return $this->belongsTo(Location::class,'location_id');
     }
 }

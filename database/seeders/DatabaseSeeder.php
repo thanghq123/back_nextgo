@@ -147,8 +147,8 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Tenant\Debt::query()->create([
            "partner_id" => 1,
-            "debit_at" => fake()->date('Y-m-d', 'now'),
-            "due_at" => fake()->date('Y-m-d', 'now'),
+            "debit_at" => date('Y-m-d', strtotime('-1 day')),
+            "due_at" => date('Y-m-d', strtotime('+1 day')),
             "type" => 0,
             "name" => 'Mua thiếu tiền',
             "principal" => fake()->numberBetween(10000, 1000000),

@@ -22,12 +22,14 @@ class Debt extends Model
         "note",
         "status"
     ];
+
     public function partner()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Customer::class, 'partner_id', 'id');
     }
+
     public function payments()
     {
-        return $this->morphMany(Payment::class, 'paymentFor');
+        return $this->morphMany(Payment::class, 'paymentable');
     }
 }

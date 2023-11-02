@@ -89,8 +89,8 @@ class DatabaseSeeder extends Seeder
 
         $attributeValues = [
             [
-              'attribute_id' => $attribute->id,
-              'value' => 'Đỏ'
+                'attribute_id' => $attribute->id,
+                'value' => 'Đỏ'
             ],
             [
                 'attribute_id' => $attribute->id,

@@ -40,4 +40,10 @@ class Customer extends Model
     {
         return $this->hasMany(InventoryTransaction::class,'partner_id','id');
     }
+   public function debts()
+    {
+        return $this->hasMany(Debt::class,'partner_id','id');
+    }
+
+
 }

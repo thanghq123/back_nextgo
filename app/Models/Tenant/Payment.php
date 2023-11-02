@@ -11,8 +11,8 @@ class Payment extends Model
     use HasFactory,UsesTenantConnection;
     public $table = 'payments';
     protected $fillable=[
-        "payment_for",
-        "payment_for_type",
+        "paymentable_type",
+        "paymentable_id",
         "amount",
         "amount_in",
         "amount_refund",
@@ -25,10 +25,11 @@ class Payment extends Model
     protected $casts = [
         'payment_at' => 'timestamp',
     ];
-    public function paymentFor()
+    public function paymentable()
     {
         return $this->morphTo();
     }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by','id');

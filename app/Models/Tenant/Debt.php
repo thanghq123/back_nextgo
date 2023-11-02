@@ -14,11 +14,13 @@ class Debt extends Model
 
     protected $fillable = [
         "partner_id",
+        "partner_type",
         "debit_at",
         "due_at",
         "type",
         "name",
-        "principal",
+        "amount_debt",
+        "amount_paid",
         "note",
         "status"
     ];

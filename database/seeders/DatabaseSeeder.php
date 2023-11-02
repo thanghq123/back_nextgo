@@ -138,7 +138,12 @@ class DatabaseSeeder extends Seeder
             ]
         ];
         \App\Models\Tenant\VariationAttribute::query()->insert($variation_attributes);
-
+        \App\Models\Tenant\Inventory::create([
+            'location_id' => 1,
+            'name' => "Kho 1",
+            'code' => "KHO1",
+            'status' => 1
+        ]);
         \App\Models\Tenant\Config::query()->create([
             "business_name" => "Cửa hàng bán quần áo",
             "tel" => "0985658741",

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Tenant\PrintedFormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tenant\CategoryController;
@@ -139,4 +140,12 @@ Route::prefix('debt')->name('debt')->group(function (){
     Route::post('/show', [DebtController::class, 'show'])->name('show');
     Route::post('/update', [DebtController::class, 'update'])->name('update');
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
+});
+
+Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function (){
+    Route::post('/', [PrintedFormController::class, 'list'])->name('list');
+    Route::post('store', [PrintedFormController::class, 'store'])->name('store');
+    Route::post('show', [PrintedFormController::class, 'show'])->name('show');
+    Route::post('update', [PrintedFormController::class, 'update'])->name('update');
+    Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
 });

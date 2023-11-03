@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
+            $table->index('product_id');
             $table->string('name');
             $table->timestamps();
         });

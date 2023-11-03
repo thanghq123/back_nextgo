@@ -19,8 +19,19 @@ class Debt extends Model
         "due_at",
         "type",
         "name",
-        "principal",
+        "amount_debt",
+        "amount_paid",
         "note",
         "status"
     ];
+
+    public function partner()
+    {
+        return $this->belongsTo(Customer::class, 'partner_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'paymentable');
+    }
 }

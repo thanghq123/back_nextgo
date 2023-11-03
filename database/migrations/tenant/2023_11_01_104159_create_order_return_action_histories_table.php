@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('order_return_action_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_return_id');
+            $table->index('order_return_id');
             $table->string('action');
             $table->unsignedBigInteger('performed_by');
             $table->timestamps();

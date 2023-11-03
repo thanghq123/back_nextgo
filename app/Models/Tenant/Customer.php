@@ -36,4 +36,14 @@ class Customer extends Model
     function group_customer () {
         return $this->belongsTo(GroupCustomer::class, 'group_customer_id');
     }
+    public function inventoryTransactions()
+    {
+        return $this->hasMany(InventoryTransaction::class,'partner_id','id');
+    }
+   public function debts()
+    {
+        return $this->hasMany(Debt::class,'partner_id','id');
+    }
+
+
 }

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('product_galleries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
+            $table->index('product_id');
             $table->string('image');
             $table->timestamps();
         });

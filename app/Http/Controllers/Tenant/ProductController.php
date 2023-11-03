@@ -35,10 +35,10 @@ class ProductController extends Controller
     {
         try {
             $productData = $this->productModel::with([
-                'brands',
-                'warranties',
-                'itemUnits',
-                'categories',
+                'brand',
+                'warranty',
+                'itemUnit',
+                'category',
                 'attributes.attributeValues',
                 'variations'
             ])->paginate(10);
@@ -52,13 +52,13 @@ class ProductController extends Controller
                     'description' => $productData->description,
                     'manage_type' => $productData->manage_type,
                     'brand_id' => $productData->brand_id,
-                    'brand_name' => $productData->brands ? $productData->brands->name : null,
+                    'brand_name' => $productData->brand ? $productData->brand->name : null,
                     'warranty_id' => $productData->warranty_id,
-                    'warranty_name' => $productData->warranties ? $productData->warranties->name : null,
+                    'warranty_name' => $productData->warranty ? $productData->warranty->name : null,
                     'item_unit_id' => $productData->item_unit_id,
-                    'item_unit_name' => $productData->itemUnits ? $productData->itemUnits->name : null,
+                    'item_unit_name' => $productData->itemUnit ? $productData->itemUnit->name : null,
                     'category_id' => $productData->category_id,
-                    'category_name' => $productData->categories ? $productData->categories->name : null,
+                    'category_name' => $productData->category ? $productData->category->name : null,
                     'status' => $productData->status,
                     'attributes' => $productData->attributes ?
                         collect($productData->attributes)->map(function ($attributes){
@@ -190,10 +190,10 @@ class ProductController extends Controller
     {
         try {
             $productData = $this->productModel::with([
-                'brands',
-                'warranties',
-                'itemUnits',
-                'categories',
+                'brand',
+                'warranty',
+                'itemUnit',
+                'category',
                 'attributes.attributeValues',
                 'variations'
             ])
@@ -209,13 +209,13 @@ class ProductController extends Controller
                     'description' => $productData->description,
                     'manage_type' => $productData->manage_type,
                     'brand_id' => $productData->brand_id,
-                    'brand_name' => $productData->brands ? $productData->brands->name : null,
+                    'brand_name' => $productData->brand ? $productData->brand->name : null,
                     'warranty_id' => $productData->warranty_id,
-                    'warranty_name' => $productData->warranties ? $productData->warranties->name : null,
+                    'warranty_name' => $productData->warranty ? $productData->warranty->name : null,
                     'item_unit_id' => $productData->item_unit_id,
-                    'item_unit_name' => $productData->itemUnits ? $productData->itemUnits->name : null,
+                    'item_unit_name' => $productData->itemUnit ? $productData->itemUnit->name : null,
                     'category_id' => $productData->category_id,
-                    'category_name' => $productData->categories ? $productData->categories->name : null,
+                    'category_name' => $productData->category ? $productData->category->name : null,
                     'status' => $productData->status,
                     'attributes' => $productData->attributes ?
                         collect($productData->attributes)->map(function ($attributes){

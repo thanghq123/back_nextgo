@@ -16,13 +16,16 @@ return new class extends Migration
         //
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('partner_id')->notNullable();
-            $table->tinyInteger('partner_type')->nullable();
+            $table->unsignedBigInteger('partner_id');
+            $table->index('partner_id');
+            $table->tinyInteger('partner_type');
+            $table->index('partner_type');
             $table->date('debit_at')->notNullable();
             $table->date('due_at')->notNullable();
             $table->tinyInteger('type')->notNullable();
             $table->string('name')->notNullable();
-            $table->double('principal')->notNullable();
+            $table->double('amount_debt')->notNullable();
+            $table->double('amount_paid')->notNullable();
             $table->text('note')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

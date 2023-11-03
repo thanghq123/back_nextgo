@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attribute_id');
+            $table->index('attribute_id');
             $table->string('value');
             $table->timestamps();
         });

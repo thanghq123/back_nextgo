@@ -16,11 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-        $this->call([
-//            PricingSeeder::class,
-//            BusinessFieldSeeder::class,
-        ]);
         Tenant::checkCurrent()
             ? $this->runTenantSpecificSeeders()
             : $this->runLandlordSpecificSeeders();
@@ -74,24 +69,6 @@ class DatabaseSeeder extends Seeder
             "note" => "Đang tuyển vợ"
         ]);
 
-        $groupSupplier = \App\Models\Tenant\GroupSupplier::query()->create([
-            "name" => fake()->name(),
-            "description" => "Nhà có vườn bia"
-        ]);
-
-        \App\Models\Tenant\Supplier::query()->create([
-            "group_supplier_id" => $groupSupplier->id,
-            "type" => 0,
-            "name" => fake()->name(),
-            "email" => fake()->email(),
-            "tel" => fake()->phoneNumber(),
-            "status" => 1,
-            "province_code" => 522,
-            "district_code" => 33,
-            "ward_code" => 22,
-            "address_detail" => "Vườn bia Đặng Hậu",
-            "note" => "Siêu uy tín NRO",
-        ]);
         $product = \App\Models\Tenant\Product::query()->create([
             'name' => 'Dầu gội Đặng Hậu',
             'image' => null,
@@ -112,8 +89,8 @@ class DatabaseSeeder extends Seeder
 
         $attributeValues = [
             [
-              'attribute_id' => $attribute->id,
-              'value' => 'Đỏ'
+                'attribute_id' => $attribute->id,
+                'value' => 'Đỏ'
             ],
             [
                 'attribute_id' => $attribute->id,
@@ -160,9 +137,13 @@ class DatabaseSeeder extends Seeder
                 'attribute_value_id' => 2
             ]
         ];
-
         \App\Models\Tenant\VariationAttribute::query()->insert($variation_attributes);
-
+        Tenant\Inventory::create([
+            'location_id' => 1,
+            'name'=> 'Kho 1',
+            'code' => 'KHO1',
+            'status' => 1
+        ]);
         \App\Models\Tenant\Config::query()->create([
             "business_name" => "Cửa hàng bán quần áo",
             "tel" => "0985658741",
@@ -170,13 +151,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Tenant\Debt::query()->create([
-           "partner_id" => 1,
-           "partner_type" => 0,
-            "debit_at" => fake()->date('Y-m-d', 'now'),
-            "due_at" => fake()->date('Y-m-d', 'now'),
+            "partner_id" => 1,
+            "partner_type"=> 0,
+            "debit_at" => date('Y-m-d', strtotime('-1 day')),
+            "due_at" => date('Y-m-d', strtotime('+1 day')),
             "type" => 0,
             "name" => 'Mua thiếu tiền',
-            "principal" => fake()->numberBetween(10000, 1000000),
+            "amount_debt" => fake()->numberBetween(10000, 1000000),
+            "amount_paid" => 0,
             "note" => 'khong text note',
             "status" => 1
         ]);
@@ -189,6 +171,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'tenant_test',
             'email' => 'tenant_test@gmail.com',
             'password' => Hash::make('12345678'),
+        ]);
+        $this->call([
+            PricingSeeder::class,
+            BusinessFieldSeeder::class,
         ]);
         DB::statement("DROP DATABASE IF EXISTS `tenant1`;");
         Tenant::query()->create([

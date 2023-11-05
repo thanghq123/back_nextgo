@@ -13,13 +13,14 @@ use App\Models\Tenant\VariationAttribute;
 class ProductController extends Controller
 {
     public function __construct(
-        private Product $productModel,
-        private Attribute $attributeModel,
-        private AttributeValue $attributeValueModel,
-        private Variation $variationModel,
+        private Product            $productModel,
+        private Attribute          $attributeModel,
+        private AttributeValue     $attributeValueModel,
+        private Variation          $variationModel,
         private VariationAttribute $variationAttributeModel,
-        private ProductRequest $request
-    ) {
+        private ProductRequest     $request
+    )
+    {
     }
 
     public function list()
@@ -45,6 +46,75 @@ class ProductController extends Controller
                 ->paginate(10), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
+        }
+    }
+
+    public function getListProduct()
+    {
+        try {
+            if ($this->request->location_id) {
+                $query = Product::with([
+                    'variations',
+                    'variations.variationQuantities',
+                ])->whereHas('variations.variationQuantities.inventory', function ($query) {
+                    $query->where('location_id', $this->request->location_id);
+                })
+                    ->paginate(10);
+            } else {
+                $query = Product::with([
+                    'variations',
+                    'variations.variationQuantities'
+                ])->paginate(10);
+            }
+            $return = $query->map(function ($data) {
+                return [
+                    'id_product' => $data->id,
+                    'name' => $data->name,
+                    'description' => $data->description,
+                    'image_product' => $data->image,
+                    'weight' => $data->weight,
+                    'variation' => $data->variations,
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), true);
+        }
+    }
+
+    public function getListAttribute()
+    {
+        try {
+            if ($this->request->location_id) {
+                $query = Variation::with([
+                    'attributeValues',
+                    'variationQuantities',
+                    'attributeValues.attribute'
+                ])->whereHas('variationQuantities.inventory', function ($query) {
+                    $query->where('location_id', $this->request->location_id);
+                })->paginate(10);
+            } else {
+                $query = Variation::with([
+                    'attributeValues',
+                    'variationQuantities',
+                    'attributeValues.attribute'
+                ])->paginate(10);
+            }
+            $return = $query->map(function ($data){
+                return [
+                    'attribute' => $data->attributeValues->map(function ($attributeValue){
+                        return [
+                            $attributeValue->attribute->name => $attributeValue->value
+                        ];
+                    }),
+                    'quantity' => $data->variationQuantities,
+                    'price_import' => $data->price_import,
+                    'price_export' => $data->price_export
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), true);
         }
     }
 

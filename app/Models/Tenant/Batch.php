@@ -25,4 +25,7 @@ class Batch extends Model
         'manufacture_date' => 'date:d-m-Y',
         'expiration_date' => 'date:d-m-Y',
     ];
+    public function variation(){
+        return $this->belongsTo(Variation::class,'variation_id');
+    }
 }

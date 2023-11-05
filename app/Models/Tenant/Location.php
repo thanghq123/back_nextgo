@@ -37,4 +37,7 @@ class Location extends Model
     {
         return $this->belongsTo(User::class,'created_by','id');
     }
+    public function inventories(){
+        return $this->hasMany(Inventory::class,'location_id');
+    }
 }

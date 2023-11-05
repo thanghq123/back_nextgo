@@ -30,6 +30,52 @@ class CustomerController extends Controller
         }
     }
 
+    public function getListCustomer()
+    {
+        try {
+            if ($this->request->type){
+                $query = Customer::with(['province', 'district', 'commune'])->whereType($this->request->type)->paginate(10);
+            }else{
+                $query = Customer::with(['province', 'district', 'commune'])->paginate(10);
+            }
+            $return = $query->map(function ($data) {
+                return [
+                    'id' => $data->id,
+                    'name' => $data->name,
+                    'tel' => $data->tel,
+                    'email' => $data->email,
+                    'status' => $data->status,
+                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'created_at' => $data->created_at->format('H:i d-m-Y'),
+                    'updated_at' => $data->created_at->format('H:i d-m-Y'),
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage());
+        }
+    }
+    public function getCustomerWithStatus(){
+        try {
+            $query = Customer::with(['province', 'district', 'commune'])->whereStatus(1)->paginate(10);
+            $return = $query->map(function ($data) {
+                return [
+                    'id' => $data->id,
+                    'name' => $data->name,
+                    'tel' => $data->tel,
+                    'email' => $data->email,
+                    'status' => $data->status,
+                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'created_at' => $data->created_at->format('H:i d-m-Y'),
+                    'updated_at' => $data->created_at->format('H:i d-m-Y'),
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage());
+        }
+    }
+
     public function store(){
         try {
             $this->model::create($this->request->all());

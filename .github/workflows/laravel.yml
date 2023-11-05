@@ -19,6 +19,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           post: ${{ secrets.PORT }}
           script: |
+            sudo -i
             cd /www/wwwroot/${{ secrets.DOMAIN }}/duantn
             git pull
             composer update

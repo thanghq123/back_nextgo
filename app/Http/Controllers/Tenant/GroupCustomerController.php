@@ -45,8 +45,6 @@ class GroupCustomerController extends Controller
             return responseApi($throwable->getMessage());
         }
     }
-    public function getCustomerWithStatus()
-
     public function store(){
         try {
             $this->model::create($this->request->all());

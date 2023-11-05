@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\LocationRequest;
+use App\Models\Address\Commune;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -21,7 +22,7 @@ class LocationController extends Controller
                 "required",
                 "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
             ],
-            'address_detail' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0'
         ];
@@ -29,7 +30,10 @@ class LocationController extends Controller
             'name.required' => 'Tên phải được nhập',
             'tel.required' => 'Số điện thoại phải được nhập',
             'tel.regex' => 'Số điện thoại không hợp lệ',
-            'address_detail.required' => 'Địa chỉ cụ thể phải được nhập',
+            'image.required' => 'Ảnh phải được nhập',
+            'image.image' => 'Ảnh không đúng định dạng',
+            'image.mimes' => 'Ảnh không hợp lệ',
+            'image.max' => 'Ảnh không đc quá :max mb',
             'status.required' => 'Trạng thái phải được chọn',
             'status.integer' => 'Trạng thái không hợp lệ',
             'status.min' => 'Trạng thái không hợp lệ',
@@ -43,7 +47,21 @@ class LocationController extends Controller
     public function list()
     {
         try {
-            return responseApi(Location::all(), true);
+            $locations = Location::with(['province', 'district', 'commune'])->get();
+            $return = $locations->map(function ($data) {
+                return [
+                    'name' => $data->name,
+                    'image' => $data->image,
+                    'description' => $data->description,
+                    'tel' => $data->tel,
+                    'email' => $data->email,
+                    'address_detail' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'status' => $data->status,
+                    'is_main' => $data->is_main,
+                    'created_by' => $data->created_by
+                ];
+            });
+            return responseApi($return, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }
@@ -52,7 +70,19 @@ class LocationController extends Controller
     public function show(Request $request)
     {
         try {
-            return responseApi(Location::query()->find($request->id), true);
+            $data = Location::query()->findOrFail($request->id);
+            $return = [
+                'name' => $data->name,
+                'image' => $data->image,
+                'description' => $data->description,
+                'tel' => $data->tel,
+                'email' => $data->email,
+                'address_detail' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                'status' => $data->status,
+                'is_main' => $data->is_main,
+                'created_by' => $data->created_by
+            ];
+            return responseApi($return, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }
@@ -63,7 +93,25 @@ class LocationController extends Controller
         DB::beginTransaction();
         try {
             $this->validation($request);
-            $location = Location::query()->create($request->all());
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            $fullpath = $file->storeAs('images', $fileName, 'public');
+            $address = Commune::with(['district', 'district.province'])->whereId($request->ward_code)->first();
+            $data = [
+                'name' => $request->name,
+                'image' => $fullpath,
+                'description' => $request->description,
+                'tel' => $request->tel,
+                'email' => $request->email,
+                'province_code' => $request->province_code,
+                'district_code' => $request->district_code,
+                'ward_code' => $request->ward_code,
+                'address_detail' => $address->name . ', ' . $address->district->name . ', ' . $address->district->province->name,
+                'status' => $request->status,
+                'is_main' => $request->is_main,
+                'created_by' => $request->created_by
+            ];
+            $location = Location::query()->create($data);
             Inventory::query()->create([
                 'location_id' => $location->id,
                 'name' => 'Kho ' . $location->name,
@@ -84,7 +132,31 @@ class LocationController extends Controller
         DB::beginTransaction();
         try {
             $this->validation($request);
-            Location::query()->find($request->id)->update($request->all());
+            $location = Location::query()->find($request->id);
+            if ($request->hasFile('image')) {
+                Storage::delete('public/' . $location->image);
+                $file = $request->file('image');
+                $fileName = $file->getClientOriginalName();
+                $fullpath = $file->storeAs('images', $fileName, 'public');
+            } else {
+                $fullpath = $location->image;
+            }
+            $address = Commune::with(['district', 'district.province'])->whereId($request->ward_code)->first();
+            $data = [
+                'name' => $request->name,
+                'image' => $fullpath,
+                'description' => $request->description,
+                'tel' => $request->tel,
+                'email' => $request->email,
+                'province_code' => $request->province_code,
+                'district_code' => $request->district_code,
+                'ward_code' => $request->ward_code,
+                'address_detail' => $address->name . ', ' . $address->district->name . ', ' . $address->district->province->name,
+                'status' => $request->status,
+                'is_main' => $request->is_main,
+                'created_by' => $request->created_by
+            ];
+            $location->update($data);
             Inventory::query()->where('location_id', $request->id)->update([
                 'location_id' => $request->id,
                 'name' => 'Kho ' . $request->name,
@@ -104,7 +176,8 @@ class LocationController extends Controller
         try {
             $location = Location::query()->findOrFail($request->id);
             $location?->delete();
-            Inventory::query()->where('location_id',$request->id)->delete();
+            Storage::delete('public/' . $location->image);
+            Inventory::query()->where('location_id', $request->id)->delete();
             return responseApi('Xoá thành công', true);
         } catch (\Throwable $throwable) {
             responseApi($throwable->getMessage());

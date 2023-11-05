@@ -27,7 +27,24 @@ class GroupCustomerController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
-
+    public function getListCustomer()
+    {
+        try {
+            $query = Customer::with(['province', 'district', 'commune'])->whereType(0)->paginate(10);
+            $return = $query->map(function ($data) {
+                return [
+                    'id' => $data->id,
+                    'name' => $data->name,
+                    'tel' => $data->tel,
+                    'email' => $data->email,
+                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage());
+        }
+    }
     public function store(){
         try {
             $this->model::create($this->request->all());

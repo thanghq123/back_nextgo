@@ -9,105 +9,122 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Variation;
 use App\Models\Tenant\VariationAttribute;
-use Carbon\Carbon;
-use function Webmozart\Assert\Tests\StaticAnalysis\string;
 
 class ProductController extends Controller
 {
     public function __construct(
-        private Product $productModel,
-        private Attribute $attributeModel,
-        private AttributeValue $attributeValueModel,
-        private Variation $variationModel,
+        private Product            $productModel,
+        private Attribute          $attributeModel,
+        private AttributeValue     $attributeValueModel,
+        private Variation          $variationModel,
         private VariationAttribute $variationAttributeModel,
-        private ProductRequest $request
-    ) {
+        private ProductRequest     $request
+    )
+    {
     }
 
-    /**
-     * @path /tenant/api/v1/products
-     * @method POST
-     * @param ProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
     public function list()
     {
         try {
-            $productData = $this->productModel::with([
-                'brand',
-                'warranty',
-                'itemUnit',
-                'category',
-                'attributes.attributeValues',
-                'variations'
-            ])->paginate(10);
-
-            $data = $productData->getCollection()->transform(function ($productData){
-                return [
-                    'id' => $productData->id,
-                    'name' => $productData->name,
-                    'image' => $productData->image,
-                    'weight' => $productData->weight,
-                    'description' => $productData->description,
-                    'manage_type' => $productData->manage_type,
-                    'brand_id' => $productData->brand_id,
-                    'brand_name' => $productData->brand ? $productData->brand->name : null,
-                    'warranty_id' => $productData->warranty_id,
-                    'warranty_name' => $productData->warranty ? $productData->warranty->name : null,
-                    'item_unit_id' => $productData->item_unit_id,
-                    'item_unit_name' => $productData->itemUnit ? $productData->itemUnit->name : null,
-                    'category_id' => $productData->category_id,
-                    'category_name' => $productData->category ? $productData->category->name : null,
-                    'status' => $productData->status,
-                    'attributes' => $productData->attributes ?
-                        collect($productData->attributes)->map(function ($attributes){
-                        return [
-                            'id' => $attributes->id,
-                            'product_id' => $attributes->product_id,
-                            'name' => $attributes->name,
-                            'attribute_values' => collect($attributes->attribute_values)->map(function ($attribute_values){
-                                return [
-                                    'id' => $attribute_values->id,
-                                    'attribute_id' => $attribute_values->attribute_id,
-                                    'value' => $attribute_values->value
-                                ];
-                            }),
-                        ];
-                    }) : [],
-                    'variations' => $productData->variations ?
-                        collect($productData->variations)->map(function ($variations){
-                        return [
-                            'id' => $variations->id,
-                            'product_id' => $variations->product_id,
-                            'sku' => $variations->sku,
-                            'barcode' => $variations->barcode,
-                            'variation_name' => $variations->variation_name,
-                            'display_name' => $variations->display_name,
-                            'image' => $variations->image,
-                            'price_import' => $variations->price_import,
-                            'price_export' => $variations->price_export,
-                            'status' => $variations->status
-                        ];
-                    }) : [],
-                    "created_at"=>Carbon::make($productData->created_at)->format('d/m/Y H:i'),
-                    "updated_at"=>Carbon::make($productData->updated_at)->format('d/m/Y H:i')
-                ];
-            });
-
-            return responseApi(paginateCustom($data, $productData), true);
+            return responseApi($this->productModel::with(['attributes.attributeValues', 'variations'])
+                ->select('products.*')
+                ->selectRaw('(SELECT name FROM brands
+                                                   WHERE id = products.brand_id)
+                                                   as brand_name')
+                ->selectRaw('(SELECT name FROM warranties
+                                                   WHERE id = products.warranty_id)
+                                                   as warranty_name')
+                ->selectRaw('(SELECT name FROM item_units
+                                                   WHERE id = products.item_unit_id)
+                                                   as item_unit_name')
+                ->selectRaw('(SELECT name FROM categories
+                                                   WHERE id = products.category_id)
+                                                   as category_name')
+                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y %H:%i") as format_created_at')
+                ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
+                ->orderBy('id', 'desc')
+                ->paginate(10), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    /**
-     * @path /tenant/api/v1/products/store
-     * @method POST
-     * @param ProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
+    public function getListProduct()
+    {
+        try {
+            if ($this->request->location_id) {
+                $products = Product::with([
+                    'variations',
+                    'variations.variationQuantities.batch'
+                ])->whereHas('variations.variationQuantities.inventory', function ($query) {
+                    $query->where('location_id', $this->request->location_id);
+                })
+                    ->paginate(10);
+
+            } else {
+                $products = Product::with([
+                    'variations',
+                    'variations.variationQuantities.batch'
+                ])->paginate(10);
+            }
+            $return = $products->map(function ($data) {
+                return $data->variations->map(function ($variation) use ($data) {
+                    if (count($variation->variationQuantities) > 0) {
+                        return [
+                            'id_product' => $data->id,
+                            'name' => $data->name,
+                            'description' => $data->description,
+                            'image_product' => $data->image,
+                            'weight' => $data->weight,
+                            'variation' => $data->variations,
+                        ];
+                    }
+                })->filter()->values();
+            })->filter(function ($item) {
+                return count($item) > 0;
+            })->values();
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), true);
+        }
+    }
+
+    public function getListAttribute()
+    {
+        try {
+            if ($this->request->location_id) {
+                $query = Variation::with([
+                    'attributeValues',
+                    'variationQuantities',
+                    'attributeValues.attribute'
+                ])->whereHas('variationQuantities.inventory', function ($query) {
+                    $query->where('location_id', $this->request->location_id);
+                })->paginate(10);
+            } else {
+                $query = Variation::with([
+                    'attributeValues',
+                    'variationQuantities',
+                    'attributeValues.attribute'
+                ])->paginate(10);
+            }
+            $return = $query->map(function ($data) {
+                return [
+                    'attribute' => $data->attributeValues->map(function ($attributeValue) {
+                        return [
+                            $attributeValue->attribute->name => $attributeValue->value
+                        ];
+                    }),
+                    'quantity' => $data->variationQuantities,
+                    'price_import' => $data->price_import,
+                    'price_export' => $data->price_export
+                ];
+            });
+            return responseApi($return, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), true);
+        }
+    }
+
     public function store()
     {
         try {
@@ -124,7 +141,7 @@ class ProductController extends Controller
                 'warranty_id' => $this->request->warranty_id == 0 ? null : $this->request->warranty_id,
                 'item_unit_id' => $this->request->item_unit_id == 0 ? null : $this->request->item_unit_id,
                 'category_id' => $this->request->category_id == 0 ? null : $this->request->category_id,
-                'status' => $this->request->status
+                'status' => $this->request->status,
             ]);
 
             if ($this->request['attributes']) {
@@ -179,92 +196,32 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * @path /tenant/api/v1/products/show
-     * @method POST
-     * @param ProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
     public function show()
     {
         try {
-            $productData = $this->productModel::with([
-                'brand',
-                'warranty',
-                'itemUnit',
-                'category',
-                'attributes.attributeValues',
-                'variations'
-            ])
-            ->where('id', $this->request->id)
-            ->get();
-
-            $data = $productData->map(function ($productData) {
-                return [
-                    'id' => $productData->id,
-                    'name' => $productData->name,
-                    'image' => $productData->image,
-                    'weight' => $productData->weight,
-                    'description' => $productData->description,
-                    'manage_type' => $productData->manage_type,
-                    'brand_id' => $productData->brand_id,
-                    'brand_name' => $productData->brand ? $productData->brand->name : null,
-                    'warranty_id' => $productData->warranty_id,
-                    'warranty_name' => $productData->warranty ? $productData->warranty->name : null,
-                    'item_unit_id' => $productData->item_unit_id,
-                    'item_unit_name' => $productData->itemUnit ? $productData->itemUnit->name : null,
-                    'category_id' => $productData->category_id,
-                    'category_name' => $productData->category ? $productData->category->name : null,
-                    'status' => $productData->status,
-                    'attributes' => $productData->attributes ?
-                        collect($productData->attributes)->map(function ($attributes){
-                            return [
-                                'id' => $attributes->id,
-                                'product_id' => $attributes->product_id,
-                                'name' => $attributes->name,
-                                'attribute_values' => collect($attributes->attribute_values)->map(function ($attribute_values){
-                                    return [
-                                        'id' => $attribute_values->id,
-                                        'attribute_id' => $attribute_values->attribute_id,
-                                        'value' => $attribute_values->value
-                                    ];
-                                }),
-                            ];
-                        }) : [],
-                    'variations' => $productData->variations ?
-                        collect($productData->variations)->map(function ($variations){
-                            return [
-                                'id' => $variations->id,
-                                'product_id' => $variations->product_id,
-                                'sku' => $variations->sku,
-                                'barcode' => $variations->barcode,
-                                'variation_name' => $variations->variation_name,
-                                'display_name' => $variations->display_name,
-                                'image' => $variations->image,
-                                'price_import' => $variations->price_import,
-                                'price_export' => $variations->price_export,
-                                'status' => $variations->status
-                            ];
-                        }) : [],
-                    "created_at"=>Carbon::make($productData->created_at)->format('d/m/Y H:i'),
-                    "updated_at"=>Carbon::make($productData->updated_at)->format('d/m/Y H:i')
-                ];
-            });
-
-            return responseApi(collect($data)->collapse(), true);
+            return responseApi($this->productModel::with(['attributes.attributeValues', 'variations'])
+                ->select('products.*')
+                ->selectRaw('(SELECT name FROM brands
+                                                   WHERE id = products.brand_id)
+                                                   as brand_name')
+                ->selectRaw('(SELECT name FROM warranties
+                                                   WHERE id = products.warranty_id)
+                                                   as warranty_name')
+                ->selectRaw('(SELECT name FROM item_units
+                                                   WHERE id = products.item_unit_id)
+                                                   as item_unit_name')
+                ->selectRaw('(SELECT name FROM categories
+                                                   WHERE id = products.category_id)
+                                                   as category_name')
+                ->selectRaw('DATE_FORMAT(created_at, "%d/%m/%Y %H:%i") as format_created_at')
+                ->selectRaw('DATE_FORMAT(updated_at, "%d/%m/%Y %H:%i") as format_updated_at')
+                ->where('id', $this->request->id)
+                ->first(), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    /**
-     * @path /tenant/api/v1/products/update
-     * @method POST
-     * @param ProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
     public function update()
     {
         try {
@@ -381,13 +338,6 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * @path /tenant/api/v1/products/delete
-     * @method POST
-     * @param ProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
-     */
     public function delete()
     {
         try {

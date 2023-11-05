@@ -34,6 +34,7 @@ Route::post('get-customer', [CustomerController::class, 'getListCustomer']);
 Route::post('get-status-customer', [CustomerController::class, 'getCustomerWithStatus']);
 Route::post('get-product',[ProductController::class,'getListProduct']);
 Route::post('get-attribute',[ProductController::class,'getListAttribute']);
+Route::post('search-customer',[CustomerController::class,'searchCustomer']);
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');

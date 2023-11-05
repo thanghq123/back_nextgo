@@ -53,29 +53,36 @@ class ProductController extends Controller
     {
         try {
             if ($this->request->location_id) {
-                $query = Product::with([
+                $products = Product::with([
                     'variations',
-                    'variations.variationQuantities',
+                    'variations.variationQuantities.batch'
                 ])->whereHas('variations.variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
                     ->paginate(10);
+
             } else {
-                $query = Product::with([
+                $products = Product::with([
                     'variations',
-                    'variations.variationQuantities'
+                    'variations.variationQuantities.batch'
                 ])->paginate(10);
             }
-            $return = $query->map(function ($data) {
-                return [
-                    'id_product' => $data->id,
-                    'name' => $data->name,
-                    'description' => $data->description,
-                    'image_product' => $data->image,
-                    'weight' => $data->weight,
-                    'variation' => $data->variations,
-                ];
-            });
+            $return = $products->map(function ($data) {
+                return $data->variations->map(function ($variation) use ($data) {
+                    if (count($variation->variationQuantities) > 0) {
+                        return [
+                            'id_product' => $data->id,
+                            'name' => $data->name,
+                            'description' => $data->description,
+                            'image_product' => $data->image,
+                            'weight' => $data->weight,
+                            'variation' => $data->variations,
+                        ];
+                    }
+                })->filter()->values();
+            })->filter(function ($item) {
+                return count($item) > 0;
+            })->values();
             return responseApi($return, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), true);
@@ -100,9 +107,9 @@ class ProductController extends Controller
                     'attributeValues.attribute'
                 ])->paginate(10);
             }
-            $return = $query->map(function ($data){
+            $return = $query->map(function ($data) {
                 return [
-                    'attribute' => $data->attributeValues->map(function ($attributeValue){
+                    'attribute' => $data->attributeValues->map(function ($attributeValue) {
                         return [
                             $attributeValue->attribute->name => $attributeValue->value
                         ];

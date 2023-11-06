@@ -15,16 +15,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',function (){
-    return 1;
+Route::get('/', function () {
+    dd(\App\Models\User::query()->find(1)->hasRole('customer'));
+    return response()->json(
+        [
+//            'user' => \App\Models\User::query()->find(1)->with('roles')->get(),
+//            'token' => \App\Models\User::query()->find(1)->createToken('123')->plainTextToken,
+        ]
+    );
 });
 
-Route::prefix('business-field')->name('bf.')->group(function () {
-    Route::get('/', [BusinessFieldController::class, 'list']);
+Route::prefix('business - field')->name('bf . ')->group(function () {
+    Route::get(' / ', [BusinessFieldController::class, 'list']);
 });
 
 Route::prefix('areas')->middleware('cors')->group(function (){
     Route::get('provinces',[Addresscontroller::class,'getProvinces']);
-    Route::get('districts/{province_id}',[Addresscontroller::class,'getDistricts']);
-    Route::get('communes/{district_id}',[Addresscontroller::class,'getCommunes']);
+    Route::get('districts /{
+        province_id}',[Addresscontroller::class,'getDistricts']);
+    Route::get('communes /{
+        district_id}',[Addresscontroller::class,'getCommunes']);
 });

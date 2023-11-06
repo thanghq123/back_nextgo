@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -167,11 +168,18 @@ class DatabaseSeeder extends Seeder
     public function runLandlordSpecificSeeders()
     {
         // run landlord specific seeders
+        Role::create([
+            'name' => 'customer',
+            'guard_name' => 'web'
+        ]);
+
         $user = User::query()->create([
             'name' => 'tenant_test',
             'email' => 'tenant_test@gmail.com',
             'password' => Hash::make('12345678'),
         ]);
+        echo config('permission.models.role') . "\n";
+        $user->assignRole('customer');
         $this->call([
             PricingSeeder::class,
             BusinessFieldSeeder::class,
@@ -182,5 +190,6 @@ class DatabaseSeeder extends Seeder
             'database' => 'tenant1',
             'user_id' => $user->id,
         ]);
+
     }
 }

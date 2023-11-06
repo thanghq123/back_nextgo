@@ -14,6 +14,7 @@ use Spatie\Multitenancy\Models\Tenant as SpatieTenant;
 class Tenant extends SpatieTenant
 {
     use SoftDeletes;
+
     protected $table = 'tenants';
 
     protected static function booted()
@@ -26,8 +27,9 @@ class Tenant extends SpatieTenant
         return $this->belongsTo(User::class);
     }
 
-    public function business_field(){
-        return $this->belongsTo(BusinessField::class,'business_field_id');
+    public function business_field()
+    {
+        return $this->belongsTo(BusinessField::class, 'business_field_id');
     }
 
     public function createDatabase()
@@ -45,11 +47,20 @@ class Tenant extends SpatieTenant
                     '--tenant' => $this->id,
 
                 ]);
+
+                $role = Tenant\Role::create([
+                    'name' => 'admin',
+                    'guard_name' => 'tenant'
+                ]);
+
                 $user = $this->user;
-                \App\Models\Tenant\User::query()->create([
+                $userCreate = \App\Models\Tenant\User::query()->create([
                     'name' => $user->name,
                     'email' => $user->email,
+                    'username' => $user->name,
                 ]);
+//                dd(config('permission.models.role'));
+                $userCreate->roles()->attach($role->id);
 
             }
 

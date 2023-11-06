@@ -30,6 +30,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/', function (Request $request) {
 });
+Route::post('get-role-model', function () {
+//    $role = \App\Models\Tenant\Role::query()->create([
+//        'name' => 'manager',
+//        'guard_name' => 'api'
+//    ]);
+//    $user = \App\Models\Tenant\User::query()->find(1);
+//    $user->assignRole($role);
+//    dd(\request()->user()->hasRole('admin'));
+    return response()->json([
+        'user' => \request()->user()->with('roles')->get(),
+    ]);
+})->middleware(['auth:sanctum', 'role:staff']);
 Route::post('get-customer', [CustomerController::class, 'getListCustomer']);
 Route::post('get-status-customer', [CustomerController::class, 'getCustomerWithStatus']);
 Route::post('get-product',[ProductController::class,'getListProduct']);

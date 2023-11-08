@@ -148,7 +148,7 @@ class InventoryTransactionController extends Controller
         DB::beginTransaction();
         try {
             $inventoryTransaction = $this->model::with('inventoryTransactionDetails')->where('inventory_transaction_id', $id);
-            $inventoryTransaction->update(["status" => 1]);
+            $inventoryTransaction->update(["status" => 2]);
             $inventoryTransaction = $inventoryTransaction->get();
             foreach ($inventoryTransaction[0]->inventoryTransactionDetails as $item => $value) {
                 $variationQuantity = $this->variationQuantityModel::where('variation_id', $value->variation_id);

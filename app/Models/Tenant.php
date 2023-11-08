@@ -57,9 +57,8 @@ class Tenant extends SpatieTenant
                 $userCreate = \App\Models\Tenant\User::query()->create([
                     'name' => $user->name,
                     'email' => $user->email,
-                    'username' => $user->name,
+                    'username' => $user->username ?? '',
                 ]);
-//                dd(config('permission.models.role'));
                 $userCreate->roles()->attach($role->id);
 
             }

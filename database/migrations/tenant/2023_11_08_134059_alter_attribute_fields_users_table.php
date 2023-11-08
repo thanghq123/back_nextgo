@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('location_id');
-            $table->string('username');
-            $table->string('tel');
-            $table->tinyInteger('status');
-            $table->bigInteger('created_by')->nullable();
+            //
+            $table->bigInteger('location_id')->nullable()->change();
+            $table->string('username')->nullable()->change();
+            $table->string('tel')->nullable()->change();
+            $table->boolean('status')->default(1)->change();
         });
     }
 
@@ -30,7 +30,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->bigInteger('location_id')->nullable(false)->change();
+            $table->string('username')->nullable(false)->change();
+            $table->string('tel')->nullable(false)->change();
+            $table->tinyInteger('status')->change();
         });
     }
 };

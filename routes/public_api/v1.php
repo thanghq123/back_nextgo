@@ -16,13 +16,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    dd(\App\Models\User::query()->find(1)->hasRole('customer'));
-    return response()->json(
-        [
-//            'user' => \App\Models\User::query()->find(1)->with('roles')->get(),
-//            'token' => \App\Models\User::query()->find(1)->createToken('123')->plainTextToken,
-        ]
-    );
 });
 
 Route::prefix('business - field')->name('bf . ')->group(function () {

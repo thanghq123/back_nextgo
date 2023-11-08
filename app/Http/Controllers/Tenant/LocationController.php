@@ -50,6 +50,7 @@ class LocationController extends Controller
             $locations = Location::with(['province', 'district', 'commune'])->get();
             $return = $locations->map(function ($data) {
                 return [
+                    'id' => $data->id,
                     'name' => $data->name,
                     'image' => $data->image,
                     'description' => $data->description,

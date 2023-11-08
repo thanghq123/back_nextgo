@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception): \Illuminate\Http\JsonResponse
     {
-        $meta = ['errors' => $exception->errors(),];
+        $meta = ['errors' => $exception->errors()];
         return responseApi($meta, false, $exception->status);
     }
 

@@ -50,6 +50,7 @@ class LocationController extends Controller
             $locations = Location::with(['province', 'district', 'commune'])->get();
             $return = $locations->map(function ($data) {
                 return [
+                    'id' => $data->id,
                     'name' => $data->name,
                     'image' => $data->image,
                     'description' => $data->description,
@@ -180,7 +181,7 @@ class LocationController extends Controller
             Inventory::query()->where('location_id', $request->id)->delete();
             return responseApi('Xoá thành công', true);
         } catch (\Throwable $throwable) {
-            responseApi($throwable->getMessage());
+            return responseApi($throwable->getMessage());
         }
     }
 }

@@ -19,6 +19,7 @@ class CustomerController extends Controller
     {
         try {
             return responseApi($this->model::query()
+                ->where('customer_type', 0)
                 ->select('customers.*')
                 ->selectRaw('(SELECT name FROM group_customers
                                                    WHERE id = customers.group_customer_id)

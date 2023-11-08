@@ -3,16 +3,18 @@
 namespace App\Models\Tenant;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
+use Spatie\Permission\Traits\HasRoles;
 
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, UsesTenantConnection;
+    use HasApiTokens, HasFactory, Notifiable, UsesTenantConnection, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -64,4 +66,31 @@ class User extends Authenticatable
     {
         return $this->hasMany(Location::class,'created_by','id');
     }
+
+    /**
+     * A model may have multiple roles.
+     */
+//    public function roles (): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//    {
+//        return $this->belongsToMany(
+//            config('permission.models.role'), //This model uses the LandlordConnection
+//            Tenant::current()->getDatabaseName().'.'.config('permission.table_names.model_has_roles'),  //Just inserted the tenant DB name here
+//            'role_id',
+//            'model_id'
+//        );
+//    }
+
+    /**
+     * A model may have multiple direct permissions.
+     */
+//    public function permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+//    {
+//        return $this->morphToMany(
+//            config('permission.models.permission'),
+//            'model',
+//                Tenant::current()->getDatabaseName().'.'.config('permission.table_names.model_has_permissions'),
+//            config('permission.column_names.model_morph_key'),
+//            'permission_id'
+//        );
+//    }
 }

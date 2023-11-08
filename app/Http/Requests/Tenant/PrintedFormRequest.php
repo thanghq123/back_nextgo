@@ -6,7 +6,7 @@ use App\Traits\TFailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class GroupSupplierRequest extends FormRequest
+class PrintedFormRequest extends FormRequest
 {
     use TFailedValidation;
     /**
@@ -14,32 +14,22 @@ class GroupSupplierRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
         $id = ",".$this->id;
-        $rules = [
+        $rules =  [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\GroupCustomer,id"
+                "exists:App\Models\Tenant\PrintedForm,id"
             ],
             "name" => [
                 "required",
-                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
+                "max:255",
+                "unique" => "unique:App\Models\Tenant\PrintedForm,name"
             ],
-            "description" => [
-                "max:500",
-                "nullable"
+            "form" => [
+                "required",
             ]
         ];
 
@@ -54,10 +44,15 @@ class GroupSupplierRequest extends FormRequest
                 ] :
                     $rules["name"];
 
+                $updateForm = $getUrl == "update" ? [
+                    $rules["form"],
+                ] :
+                    $rules["form"];
+
                 return [
                     "id" => $updateId,
                     "name" => $updateName,
-                    "description" => $rules["description"]
+                    "form" => $updateForm
                 ];
             case "show":
             case "delete":

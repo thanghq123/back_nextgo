@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\AuthController;
+use App\Http\Controllers\Tenant\PrintedFormController;
 use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\ConfigController;
@@ -117,12 +118,17 @@ Route::prefix('location')->name('location.')->group(function () {
     Route::post('update', [LocationController::class, 'update'])->name('update');
     Route::post('delete', [LocationController::class, 'delete'])->name('delete');
 });
-Route::prefix('storage/import')->name('storage.import')->group(function () {
-    Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
-    Route::post('/create', [InventoryTransactionController::class, 'store'])->name('store');
-    Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
-    Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
-    Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
+Route::prefix('storage')->name('storage.')->group(function () {
+    Route::prefix('import')->name('.import.')->group(function () {
+        Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
+        Route::post('/create', [InventoryTransactionController::class, 'store'])->name('store');
+        Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
+        Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
+        Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
+    });
+    Route::prefix('update')->name('.update.')->group(function () {
+        Route::post('/{inventoryId}', [InventoryTransactionController::class, 'updateQuantity'])->name('updateQuantity');
+    });
 });
 
 Route::prefix('products')->name('products')->group(function () {
@@ -148,3 +154,10 @@ Route::prefix('debt')->name('debt')->group(function () {
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
 });
 
+Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function (){
+    Route::post('/', [PrintedFormController::class, 'list'])->name('list');
+    Route::post('store', [PrintedFormController::class, 'store'])->name('store');
+    Route::post('show', [PrintedFormController::class, 'show'])->name('show');
+    Route::post('update', [PrintedFormController::class, 'update'])->name('update');
+    Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
+});

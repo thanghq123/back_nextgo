@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\AuthController;
+use App\Http\Controllers\Tenant\PrintedFormController;
 use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\ConfigController;
@@ -148,3 +149,10 @@ Route::prefix('debt')->name('debt')->group(function () {
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
 });
 
+Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function (){
+    Route::post('/', [PrintedFormController::class, 'list'])->name('list');
+    Route::post('store', [PrintedFormController::class, 'store'])->name('store');
+    Route::post('show', [PrintedFormController::class, 'show'])->name('show');
+    Route::post('update', [PrintedFormController::class, 'update'])->name('update');
+    Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
+});

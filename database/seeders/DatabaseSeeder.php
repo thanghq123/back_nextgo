@@ -31,6 +31,11 @@ class DatabaseSeeder extends Seeder
 //            'password' => Hash::make('12345678'),
 //        ]);
 
+        Tenant\Role::create([
+            'name' => 'admin',
+            'guard_name' => 'api'
+        ]);
+
         $category = \App\Models\Tenant\Category::query()->create([
             "name" => "Quần"
         ]);

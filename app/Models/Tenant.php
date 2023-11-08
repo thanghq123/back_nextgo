@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Tenant\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,27 +41,22 @@ class Tenant extends SpatieTenant
             $this->makeCurrent();
             $status = DB::statement("CREATE DATABASE IF NOT EXISTS `{$this->database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
             if ($status) {
-                Artisan::call(TenantsArtisanCommand::class, [
+                $artisanStatus = Artisan::call(TenantsArtisanCommand::class, [
 
                     'artisanCommand' => 'migrate --path=database/migrations/tenant --database=tenant',
 
                     '--tenant' => $this->id,
 
                 ]);
-
-                $role = Tenant\Role::create([
-                    'name' => 'admin',
-                    'guard_name' => 'tenant'
-                ]);
-
-                $user = $this->user;
-                $userCreate = \App\Models\Tenant\User::query()->create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'username' => $user->username ?? '',
-                ]);
-                $userCreate->roles()->attach($role->id);
-
+                if ($artisanStatus):
+                    $user = $this->user;
+                    $userCreate = \App\Models\Tenant\User::query()->create([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'username' => $user->username ?? '',
+                    ]);
+                    $userCreate->roles()->attach(Role::query()->where('name', 'admin')->first()->id);
+                endif;
             }
 
         } catch (\Throwable $th) {

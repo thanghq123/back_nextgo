@@ -181,7 +181,7 @@ class LocationController extends Controller
             Inventory::query()->where('location_id', $request->id)->delete();
             return responseApi('Xoá thành công', true);
         } catch (\Throwable $throwable) {
-            responseApi($throwable->getMessage());
+            return responseApi($throwable->getMessage());
         }
     }
 }

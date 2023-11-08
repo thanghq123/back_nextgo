@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Tenant\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,6 +15,7 @@ use Spatie\Multitenancy\Models\Tenant as SpatieTenant;
 class Tenant extends SpatieTenant
 {
     use SoftDeletes;
+
     protected $table = 'tenants';
 
     protected static function booted()
@@ -26,8 +28,9 @@ class Tenant extends SpatieTenant
         return $this->belongsTo(User::class);
     }
 
-    public function business_field(){
-        return $this->belongsTo(BusinessField::class,'business_field_id');
+    public function business_field()
+    {
+        return $this->belongsTo(BusinessField::class, 'business_field_id');
     }
 
     public function createDatabase()
@@ -38,19 +41,22 @@ class Tenant extends SpatieTenant
             $this->makeCurrent();
             $status = DB::statement("CREATE DATABASE IF NOT EXISTS `{$this->database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
             if ($status) {
-                Artisan::call(TenantsArtisanCommand::class, [
+                $artisanStatus = Artisan::call(TenantsArtisanCommand::class, [
 
                     'artisanCommand' => 'migrate --path=database/migrations/tenant --database=tenant',
 
                     '--tenant' => $this->id,
 
                 ]);
-                $user = $this->user;
-                \App\Models\Tenant\User::query()->create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ]);
-
+                if ($artisanStatus):
+                    $user = $this->user;
+                    $userCreate = \App\Models\Tenant\User::query()->create([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'username' => $user->username ?? '',
+                    ]);
+                    $userCreate->roles()->attach(Role::query()->where('name', 'admin')->first()->id);
+                endif;
             }
 
         } catch (\Throwable $th) {

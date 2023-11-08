@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\Tenant\PrintedFormController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Tenant\Auth\AuthController;
+use App\Http\Controllers\Tenant\PrintedFormController;
 use App\Http\Controllers\Tenant\BrandController;
 use App\Http\Controllers\Tenant\CategoryController;
 use App\Http\Controllers\Tenant\ConfigController;

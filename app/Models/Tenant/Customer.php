@@ -29,7 +29,8 @@ class Customer extends Model
         "district_code",
         "ward_code",
         "address_detail",
-        "note"
+        "note",
+        'customer_type',
     ];
 
     protected $casts = [

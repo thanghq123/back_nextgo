@@ -19,7 +19,7 @@ return new class extends Migration
             $table->index('order_return_id');
             $table->tinyInteger('type');
             $table->unsignedBigInteger('variation_id');
-            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('batch_id')->nullable();
             $table->double('price');
             $table->integer('quantity');
             $table->double('total');

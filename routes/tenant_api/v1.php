@@ -122,7 +122,9 @@ Route::prefix('storage/import')->name('storage.import')->group(function () {
     Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
     Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
 });
-
+Route::prefix('storage/update')->name('storage.update.')->group(function () {
+    Route::post('/{inventoryId}', [InventoryTransactionController::class, 'updateQuantity'])->name('updateQuantity');
+});
 Route::prefix('products')->name('products')->group(function () {
     Route::post('/', [ProductController::class, 'list'])->name('list');
     Route::post('store', [ProductController::class, 'store'])->name('store');

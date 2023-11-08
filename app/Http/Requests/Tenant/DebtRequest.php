@@ -55,8 +55,9 @@ class DebtRequest extends FormRequest
             "name" => [
                 "required"
             ],
-            "principal" => [
+            "amount_debt" => [
                 "required",
+                "numeric"
             ],
             "note" => [
                 "max:500",
@@ -81,7 +82,7 @@ class DebtRequest extends FormRequest
                     "due_at" => $rules['due_at'],
                     "type" => $rules['type'],
                     "name" => $rules['name'],
-                    "principal" => $rules['principal'],
+                    "amount_debt" => $rules['amount_debt'],
                     "note" => $rules['note'],
                     "status" => $rules['status']
                 ];

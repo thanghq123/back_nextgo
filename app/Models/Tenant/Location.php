@@ -2,6 +2,9 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Address\Commune;
+use App\Models\Address\District;
+use App\Models\Address\Province;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
@@ -36,5 +39,17 @@ class Location extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by','id');
+    }
+    public function inventories(){
+        return $this->hasMany(Inventory::class,'location_id');
+    }
+    public function province(){
+        return $this->belongsTo(Province::class,'province_code');
+    }
+    public function district(){
+        return $this->belongsTo(District::class,'district_code');
+    }
+    public function commune(){
+        return $this->belongsTo(Commune::class,'ward_code');
     }
 }

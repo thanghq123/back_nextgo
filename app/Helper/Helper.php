@@ -111,3 +111,17 @@ if (!function_exists('responseApi')) {
         );
     }
 }
+
+function paginateCustom($data, $dataPaginate){
+    return new \Illuminate\Pagination\LengthAwarePaginator(
+        $data,
+        $dataPaginate->total(),
+        $dataPaginate->perPage(),
+        $dataPaginate->currentPage(), [
+            'path' => \Request::url(),
+            'query' => [
+                'page' => $dataPaginate->currentPage()
+            ]
+        ]
+    );
+}

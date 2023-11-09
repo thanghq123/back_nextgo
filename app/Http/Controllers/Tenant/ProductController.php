@@ -53,24 +53,21 @@ class ProductController extends Controller
     {
         try {
             if ($this->request->location_id) {
-                $products = Product::with([
-                    'variations',
-                    'variations.variationQuantities.batch'
-                ])->whereHas('variations.variationQuantities.inventory', function ($query) {
+                $products = Variation::with([
+                    'product',
+                    'variationQuantities'
+                ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
-                    ->get();
+                    ->get()->groupBy('product_id');
 
             } else {
-                $products = Product::with([
-                    'variations',
-                    'variations.variationQuantities.batch'
-                ])->get();
+                $products = Variation::with([
+                    'product',
+                    'variationQuantities'
+                ])->get()->groupBy('product_id');
             }
-            $return = $products->filter(function ($data) {
-                return count($data->variations) > 0;
-            });
-            return responseApi($return, true);
+            return responseApi($products, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), true);
         }

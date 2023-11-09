@@ -59,13 +59,13 @@ class ProductController extends Controller
                 ])->whereHas('variations.variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
-                    ->paginate(10);
+                    ->get();
 
             } else {
                 $products = Product::with([
                     'variations',
                     'variations.variationQuantities.batch'
-                ])->paginate(10);
+                ])->get();
             }
             $return = $products->map(function ($data) {
                 return $data->variations->map(function ($variation) use ($data) {
@@ -99,13 +99,13 @@ class ProductController extends Controller
                     'attributeValues.attribute'
                 ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
-                })->paginate(10);
+                })->get();
             } else {
                 $query = Variation::with([
                     'attributeValues',
                     'variationQuantities',
                     'attributeValues.attribute'
-                ])->paginate(10);
+                ])->get();
             }
             $return = $query->map(function ($data) {
                 return [

@@ -25,7 +25,7 @@ class CustomerController extends Controller
                                                    WHERE id = customers.group_customer_id)
                                                    as group_customer_name')
                 ->orderBy('id', "desc")
-                ->paginate(10), true);
+                ->get(), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -98,7 +98,11 @@ class CustomerController extends Controller
     {
         try {
             $this->model::create($this->request->all());
-            return responseApi("Tạo thành công!", true);
+            if ($this->request->statusCreate == 1) {
+                return $this->list();
+            }else{
+                return responseApi("Tạo thành công!", true);
+            }
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

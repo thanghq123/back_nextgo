@@ -67,22 +67,9 @@ class ProductController extends Controller
                     'variations.variationQuantities.batch'
                 ])->get();
             }
-            $return = $products->map(function ($data) {
-                return $data->variations->map(function ($variation) use ($data) {
-                    if (count($variation->variationQuantities) > 0) {
-                        return [
-                            'id_product' => $data->id,
-                            'name' => $data->name,
-                            'description' => $data->description,
-                            'image_product' => $data->image,
-                            'weight' => $data->weight,
-                            'variation' => $data->variations,
-                        ];
-                    }
-                })->filter()->values();
-            })->filter(function ($item) {
-                return count($item) > 0;
-            })->values();
+            $return = $products->filter(function ($data) {
+                return count($data->variations) > 0;
+            });
             return responseApi($return, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), true);

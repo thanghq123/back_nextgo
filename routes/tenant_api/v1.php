@@ -16,6 +16,7 @@ use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\VariationController;
+use App\Http\Controllers\Tenant\VariationQuantityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,7 @@ Route::post('get-product',[ProductController::class,'getListProduct']);
 Route::post('get-attribute',[ProductController::class,'getListAttribute']);
 Route::post('search-customer',[CustomerController::class,'searchCustomer']);
 Route::post('get-variation',[VariationController::class,'getListVariation']);
+Route::post('storage/list',[VariationQuantityController::class,'getVariationQuantity']);
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -161,3 +163,4 @@ Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group
     Route::post('update', [PrintedFormController::class, 'update'])->name('update');
     Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
 });
+

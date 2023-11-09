@@ -20,7 +20,7 @@ class LocationController extends Controller
             'name' => 'required',
             'tel' => [
                 "required",
-                "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+                "regex:/^0[0-9]{9}$/"
             ],
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',

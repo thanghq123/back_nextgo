@@ -27,8 +27,12 @@ class InventoryTransactionRequest extends FormRequest
      */
     public function rules()
     {
+        $getUrl = Str::afterLast($this->url(), '/');
         $rules = [
             "inventory_id" => [
+                "required",
+            ],
+            "inventory_id_out" => [
                 "required",
             ],
             "partner_id" => [
@@ -37,16 +41,10 @@ class InventoryTransactionRequest extends FormRequest
             "partner_type" => [
                 "required",
             ],
-            "trans_type" => [
-                "required",
-            ],
             "reason" => [
                 "required",
             ],
             "note" => [
-                "required",
-            ],
-            "status" => [
                 "required",
             ],
             "created_by" => [
@@ -71,7 +69,29 @@ class InventoryTransactionRequest extends FormRequest
                 "required",
             ],
         ];
-        return $rules;
+        switch ($getUrl) {
+            case "import/create":
+            case "trans/store":
+            $nameUrl = "trans/store";
+            $createTransfer = $getUrl == $nameUrl ? $rules["inventory_id_out"] : [];
+                return [
+                    "inventory_id"=>$rules["inventory_id"],
+                    "inventory_id_out"=>$createTransfer,
+                    "partner_id"=>$rules["partner_id"],
+                    "partner_type"=>$rules["partner_type"],
+                    "reason"=>$rules["reason"],
+                    "note"=>$rules["note"],
+                    "created_by"=>$rules["created_by"],
+                    "inventory_transaction_details"=>$rules["inventory_transaction_details"],
+                    "inventory_transaction_details.*.variation_id"=>$rules["inventory_transaction_details.*.variation_id"],
+                    "inventory_transaction_details.*.batch_id"=>$rules["inventory_transaction_details.*.batch_id"],
+                    "inventory_transaction_details.*.price"=>$rules["inventory_transaction_details.*.price"],
+                    "inventory_transaction_details.*.price_type"=>$rules["inventory_transaction_details.*.price_type"],
+                    "inventory_transaction_details.*.quantity"=>$rules["inventory_transaction_details.*.quantity"],
+                ];
+            default:
+                return [];
+        }
     }
 
     public function messages()

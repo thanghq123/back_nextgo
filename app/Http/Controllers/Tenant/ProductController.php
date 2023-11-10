@@ -54,8 +54,8 @@ class ProductController extends Controller
         try {
             if ($this->request->location_id) {
                 $products = Variation::with([
-                    'product',
-                    'variationQuantities'
+                    'product.itemUnit',
+                    'variationQuantities',
                 ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
@@ -63,8 +63,8 @@ class ProductController extends Controller
 
             } else {
                 $products = Variation::with([
-                    'product',
-                    'variationQuantities'
+                    'product.itemUnit',
+                    'variationQuantities',
                 ])->get()->groupBy('product_id');
             }
             return responseApi($products, true);

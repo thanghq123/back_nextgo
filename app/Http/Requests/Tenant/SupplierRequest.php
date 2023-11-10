@@ -31,10 +31,10 @@ class SupplierRequest extends FormRequest
         $rules = [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\Supplier,id"
+                "exists:App\Models\Tenant\Customer,id"
             ],
             "group_supplier_id" => [
-                "exists:App\Models\Tenant\GroupSupplier,id",
+                "exists:App\Models\Tenant\GroupCustomer,id",
                 "nullable"
             ],
             "type" => [
@@ -44,18 +44,18 @@ class SupplierRequest extends FormRequest
             "name" => [
                 "required",
                 "max:255",
-                "unique" => "unique:App\Models\Tenant\Supplier,name"
+                "unique" => "unique:App\Models\Tenant\Customer,name"
             ],
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique" => "unique:App\Models\Tenant\Supplier,email",
+                "unique" => "unique:App\Models\Tenant\Customer,email",
                 "nullable"
             ],
             "tel" => [
                 "required",
                 "max:255",
-                "unique" => "unique:App\Models\Tenant\Supplier,tel",
+                "unique" => "unique:App\Models\Tenant\Customer,tel",
                 "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
             ],
             "status" => [

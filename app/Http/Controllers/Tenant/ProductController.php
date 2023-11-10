@@ -53,37 +53,21 @@ class ProductController extends Controller
     {
         try {
             if ($this->request->location_id) {
-                $products = Product::with([
-                    'variations',
-                    'variations.variationQuantities.batch'
-                ])->whereHas('variations.variationQuantities.inventory', function ($query) {
+                $products = Variation::with([
+                    'product.itemUnit',
+                    'variationQuantities',
+                ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
-                    ->paginate(10);
+                    ->get()->groupBy('product_id');
 
             } else {
-                $products = Product::with([
-                    'variations',
-                    'variations.variationQuantities.batch'
-                ])->paginate(10);
+                $products = Variation::with([
+                    'product.itemUnit',
+                    'variationQuantities',
+                ])->get()->groupBy('product_id');
             }
-            $return = $products->map(function ($data) {
-                return $data->variations->map(function ($variation) use ($data) {
-                    if (count($variation->variationQuantities) > 0) {
-                        return [
-                            'id_product' => $data->id,
-                            'name' => $data->name,
-                            'description' => $data->description,
-                            'image_product' => $data->image,
-                            'weight' => $data->weight,
-                            'variation' => $data->variations,
-                        ];
-                    }
-                })->filter()->values();
-            })->filter(function ($item) {
-                return count($item) > 0;
-            })->values();
-            return responseApi($return, true);
+            return responseApi($products, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), true);
         }
@@ -99,13 +83,13 @@ class ProductController extends Controller
                     'attributeValues.attribute'
                 ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
-                })->paginate(10);
+                })->get();
             } else {
                 $query = Variation::with([
                     'attributeValues',
                     'variationQuantities',
                     'attributeValues.attribute'
-                ])->paginate(10);
+                ])->get();
             }
             $return = $query->map(function ($data) {
                 return [

@@ -31,11 +31,11 @@ class GroupSupplierRequest extends FormRequest
         $rules = [
             "id" => [
                 "required",
-                "exists:App\Models\Tenant\GroupSupplier,id"
+                "exists:App\Models\Tenant\GroupCustomer,id"
             ],
             "name" => [
                 "required",
-                "unique" => "unique:App\Models\Tenant\GroupSupplier,name"
+                "unique" => "unique:App\Models\Tenant\GroupCustomer,name"
             ],
             "description" => [
                 "max:500",

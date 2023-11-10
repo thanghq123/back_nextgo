@@ -33,9 +33,9 @@ Route::post('/', function (Request $request) {
 });
 Route::post('get-customer', [CustomerController::class, 'getListCustomer']);
 Route::post('get-status-customer', [CustomerController::class, 'getCustomerWithStatus']);
-Route::post('get-product',[ProductController::class,'getListProduct']);
-Route::post('get-attribute',[ProductController::class,'getListAttribute']);
-Route::post('search-customer',[CustomerController::class,'searchCustomer']);
+Route::post('get-product', [ProductController::class, 'getListProduct']);
+Route::post('get-attribute', [ProductController::class, 'getListAttribute']);
+Route::post('search-customer', [CustomerController::class, 'searchCustomer']);
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -121,11 +121,13 @@ Route::prefix('storage')->name('storage.')->group(function () {
         Route::post('/', [InventoryTransactionController::class, 'list'])->name('list');
         Route::post('/create', [InventoryTransactionController::class, 'store'])->name('store');
         Route::post('/{id}', [InventoryTransactionController::class, 'show'])->name('show');
-        Route::post('/update/{id}', [InventoryTransactionController::class, 'update'])->name('update');
         Route::post('/cancel/{id}', [InventoryTransactionController::class, 'cancel'])->name('cancel');
     });
-    Route::prefix('update')->name('.update.')->group(function () {
-        Route::post('/{inventoryId}', [InventoryTransactionController::class, 'updateQuantity'])->name('updateQuantity');
+    Route::post('update', [InventoryTransactionController::class, 'update'])->name('updateStatus');
+    Route::post('update-quantity/{inventoryId}', [InventoryTransactionController::class, 'updateQuantity'])->name('updateQuantity');
+    Route::prefix('trans')->name('.trans.')->group(function (){
+        Route::post('/', [InventoryTransactionController::class, 'listTransfer'])->name('listTransfer');
+        Route::post('store', [InventoryTransactionController::class, 'createTransfer'])->name('createTransfer');
     });
 });
 
@@ -152,7 +154,7 @@ Route::prefix('debt')->name('debt')->group(function () {
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
 });
 
-Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function (){
+Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function () {
     Route::post('/', [PrintedFormController::class, 'list'])->name('list');
     Route::post('store', [PrintedFormController::class, 'store'])->name('store');
     Route::post('show', [PrintedFormController::class, 'show'])->name('show');

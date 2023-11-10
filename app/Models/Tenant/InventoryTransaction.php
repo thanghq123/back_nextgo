@@ -11,6 +11,7 @@ class InventoryTransaction extends Model
     public $table = 'inventory_transactions';
     protected $fillable=[
         "inventory_id",
+        "inventory_id_out",
         "partner_id",
         "partner_type",
         "trans_type",
@@ -31,7 +32,11 @@ class InventoryTransaction extends Model
 
     public function inventory()
     {
-        return $this->belongsTo(Inventory::class);
+        return $this->belongsTo(Inventory::class,'inventory_id','id');
+    }
+    public function inventoryOut()
+    {
+        return $this->belongsTo(Inventory::class,'inventory_id_out','id');
     }
     public function createdBy()
     {
@@ -45,5 +50,4 @@ class InventoryTransaction extends Model
     {
         return $this->hasMany(InventoryTransactionDetail::class,'inventory_transaction_id','inventory_transaction_id');
     }
-
 }

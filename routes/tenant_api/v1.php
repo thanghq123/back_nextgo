@@ -13,6 +13,7 @@ use App\Http\Controllers\Tenant\InventoryTransactionController;
 use App\Http\Controllers\Tenant\ItemUnitController;
 use App\Http\Controllers\Tenant\LocationController;
 use App\Http\Controllers\Tenant\ProductController;
+use App\Http\Controllers\Tenant\OrderController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\VariationController;
@@ -156,6 +157,13 @@ Route::prefix('debt')->name('debt')->group(function () {
     Route::post('/show', [DebtController::class, 'show'])->name('show');
     Route::post('/update', [DebtController::class, 'update'])->name('update');
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
+});
+
+
+Route::prefix('orders')->name('orders')->group(function (){
+    Route::post('/', [OrderController::class, 'list'])->name('list');
+    Route::post('store', [OrderController::class, 'store'])->name('store');
+    Route::post('show', [OrderController::class, 'show'])->name('show');
 });
 
 Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group(function () {

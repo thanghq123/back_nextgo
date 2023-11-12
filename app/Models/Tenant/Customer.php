@@ -8,7 +8,6 @@ use App\Models\Address\Province;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
-use Illuminate\Database\Eloquent\Builder;
 
 class Customer extends Model
 {

@@ -16,6 +16,7 @@ use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\Auth\AuthController;
 use App\Http\Controllers\Tenant\ConfigController;
 use App\Http\Controllers\Tenant\DebtController;
+use App\Http\Controllers\Tenant\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -139,4 +140,10 @@ Route::prefix('debt')->name('debt')->group(function (){
     Route::post('/show', [DebtController::class, 'show'])->name('show');
     Route::post('/update', [DebtController::class, 'update'])->name('update');
 //    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
+});
+
+Route::prefix('orders')->name('orders')->group(function (){
+    Route::post('/', [OrderController::class, 'list'])->name('list');
+    Route::post('store', [OrderController::class, 'store'])->name('store');
+    Route::post('show', [OrderController::class, 'show'])->name('show');
 });

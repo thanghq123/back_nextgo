@@ -37,6 +37,7 @@ return [
          \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
         // \Spatie\Multitenancy\Tasks\SwitchRouteCacheTask::class,
         \App\Multitenancy\Tasks\SetSanctumPersonAccessTokenModelTask::class,
+        \App\Multitenancy\Tasks\SwitchPackagesTask::class,
     ],
 
     /*

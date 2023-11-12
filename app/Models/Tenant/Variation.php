@@ -56,4 +56,7 @@ class Variation extends Model
         return $this->hasMany(InventoryTransactionDetail::class,'variation_id','variation_id');
 
     }
+    public function batchs(){
+        return $this->hasMany(Batch::class,'variation_id');
+    }
 }

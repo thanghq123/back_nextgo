@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->double('amount');
             $table->double('amount_in');
             $table->double('amount_refund');
-            $table->tinyInteger('method');
+            $table->tinyInteger('payment_method');
             $table->timestamp('payment_at');
             $table->string('reference_code')->nullable();
             $table->text('note')->nullable();

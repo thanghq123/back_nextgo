@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('variation_id');
             $table->index('variation_id');
             $table->unsignedBigInteger('inventory_id');
-            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('batch_id')->nullable();
             $table->double('price_import');
             $table->integer('quantity');
             $table->timestamps();

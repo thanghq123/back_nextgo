@@ -16,7 +16,7 @@ class Payment extends Model
         "amount",
         "amount_in",
         "amount_refund",
-        "method",
+        "payment_method",
         "payment_at",
         "reference_code",
         "note",

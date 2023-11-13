@@ -106,7 +106,7 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name')->where("id", $id)->get();
+            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name')->where("inventory_transaction_id", $id)->get();
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "id" => $inventoryTransactionData->id,

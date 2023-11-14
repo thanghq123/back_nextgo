@@ -85,7 +85,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             $order = $this->model::create([
-                "location_id" => $this->request->location_id,
+                "location_id" => $this->request->location,
                 "customer_id" => $this->request->customer_id,
                 "created_by" => $this->request->created_by,
                 "discount" => $this->request->discount,
@@ -131,7 +131,7 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return responseApi("Tạo thành công!", true);
+            return responseApi(['id' =>  $order->id], true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
             return responseApi($throwable->getMessage(), false);

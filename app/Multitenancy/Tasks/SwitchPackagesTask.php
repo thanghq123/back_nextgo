@@ -29,7 +29,7 @@ class SwitchPackagesTask implements SwitchTenantTask
 
     public function forgetCurrent(): void
     {
-        PermissionRegistrar::$cacheKey = $this->originalSpatiePermissionCacheKey;
+        // PermissionRegistrar::$cacheKey = $this->originalSpatiePermissionCacheKey;
 
         config()->set('permission.models.role', Role::class);
         config()->set('permission.models.permission', Permission::class);

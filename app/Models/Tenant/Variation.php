@@ -59,4 +59,8 @@ class Variation extends Model
     public function batchs(){
         return $this->hasMany(Batch::class,'variation_id');
     }
+
+    public function productName(){
+        return $this->hasMany(Product::class,'id', 'product_id');
+    }
 }

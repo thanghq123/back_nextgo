@@ -20,9 +20,13 @@ jobs:
           post: ${{ secrets.PORT }}
           script: |
             sudo -i
+            pwd
             cd /www/wwwroot/${{ secrets.DOMAIN }}/duantn
+            pwd
             git pull
-            composer update
+            git branch -a
+            composer install
             php artisan migrate
             php artisan tenants:artisan "migrate --path=database/migrations/tenant --database=tenant"
             php artisan optimize:clear
+            whoami && pwd

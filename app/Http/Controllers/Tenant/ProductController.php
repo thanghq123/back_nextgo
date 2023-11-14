@@ -108,6 +108,7 @@ class ProductController extends Controller
                 $products = Variation::with([
                     'product.itemUnit',
                     'variationQuantities',
+                    'batchs'
                 ])->whereHas('variationQuantities.inventory', function ($query) {
                     $query->where('location_id', $this->request->location_id);
                 })
@@ -117,6 +118,7 @@ class ProductController extends Controller
                 $products = Variation::with([
                     'product.itemUnit',
                     'variationQuantities',
+                    'batchs'
                 ])->get()->groupBy('product_id');
             }
             return responseApi($products, true);

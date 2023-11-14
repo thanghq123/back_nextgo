@@ -138,10 +138,10 @@ class InventoryTransactionController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/storage/import/update
+     * @path /tenant/api/v1/storage/update
      * @desciption cập nhật trạng thái hoàn thành đơn nhập kho, xuất kho và cập nhật số lượng tồn kho
      * @method POST
-     * @param Request $request
+     * @param Request $request [id,tranType]
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */

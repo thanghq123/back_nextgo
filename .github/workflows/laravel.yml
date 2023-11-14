@@ -20,6 +20,7 @@ jobs:
           post: ${{ secrets.PORT }}
           script: |
             sudo -i
+            pwd
             cd /www/wwwroot/${{ secrets.DOMAIN }}/duantn
             pwd
             git pull

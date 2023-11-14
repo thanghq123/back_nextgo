@@ -21,6 +21,7 @@ class PaymentController extends Controller
 
     /**
      * @path /tenant/api/v1/payment
+     * @desciption Danh sách thanh toán
      * @method POST
      * @param PaymentRequest $request
      * @return \Illuminate\Http\JsonResponse
@@ -47,18 +48,7 @@ class PaymentController extends Controller
                     "paymentable" => collect($item->paymentable)->merge(['partner_name'=>$item->paymentable->partner->name])->all(),
                 ];
             });
-            $response = new \Illuminate\Pagination\LengthAwarePaginator(
-                $data,
-                $payment->total(),
-                $payment->perPage(),
-                $payment->currentPage(), [
-                    'path' => \Request::url(),
-                    'query' => [
-                        'page' => $payment->currentPage()
-                    ]
-                ]
-            );
-            return responseApi($response, true);
+            return responseApi(paginateCustom($data,$payment), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -66,8 +56,9 @@ class PaymentController extends Controller
 
     /**
      * @path /tenant/api/v1/payment/store/debt/{id}
+     * @desciption Thanh toán công nợ
      * @method POST
-     * @param PaymentRequest $request
+     * @param PaymentRequest $request id
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
@@ -93,16 +84,17 @@ class PaymentController extends Controller
 
     /**
      * @path /tenant/api/v1/payment/store/order/{id}
+     * @desciption Thanh toán đơn hàng
      * @method POST
-     * @param PaymentRequest $request
+     * @param PaymentRequest $request id
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
     public function storeOrder(PaymentRequest $request, $id)
     {
         try {
-            $debt = $this->orderModel::find($id);
-            $payment = $debt->payments()->create([
+            $order = $this->orderModel::find($id);
+            $payment = $order->payments()->create([
                 'amount' => $request->amount,
                 'amount_in' => $request->amount_in,
                 'amount_refund' => $request->amount_refund,

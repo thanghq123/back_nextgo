@@ -96,7 +96,6 @@ class DebtController extends Controller
         try {
             $debt = $this->model::with('partner')->where('id', $this->request->id)->get();
             $response = $debt->map(function ($item) {
-                dd($item);
                 return [
                     "id" => $item->id,
                     "partner_name" => $item->partner->name,

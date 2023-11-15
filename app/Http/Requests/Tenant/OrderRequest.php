@@ -26,6 +26,7 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
+        return [];
         $getUrl = Str::afterLast($this->url(), '/');
         $id = ",".$this->id;
         $rules =  [

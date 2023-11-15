@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\SupplierRequest;
 use App\Models\Tenant\Customer;
-use App\Models\Tenant\Supplier;
 
 class SupplierController extends Controller
 {
@@ -18,14 +17,37 @@ class SupplierController extends Controller
 
     public function list(){
         try {
-            return responseApi($this->model::query()
+            $supplierData = $this->model::with(['group_customer' => function ($query) {
+                $query->where('type', 1);
+            }])
                 ->where('customer_type', 1)
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id and type = 1)
-                                                   as group_supplier_name')
-                ->orderBy('id', "desc")
-                ->paginate(10), true);
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+
+            $data = $supplierData->getCollection()->transform(function ($supplierData){
+                return [
+                    'id' => $supplierData->id,
+                    'group_customer_id' => $supplierData->group_customer_id,
+                    'group_customer_name' => $supplierData->group_customer->name,
+                    'type' => $supplierData->type,
+                    'name' => $supplierData->name,
+                    'gender' => $supplierData->gender,
+                    'dob' => $supplierData->dob,
+                    'email' => $supplierData->email,
+                    'tel' => $supplierData->tel,
+                    'status' => $supplierData->status,
+                    'province_code' => $supplierData->province_code,
+                    'district_code' => $supplierData->district_code,
+                    'ward_code' => $supplierData->ward_code,
+                    'address_detail' => $supplierData->address_detail,
+                    'note' => $supplierData->note,
+                    'created_at' => $supplierData->created_at,
+                    'updated_at' => $supplierData->updated_at,
+                    'customer_type' => $supplierData->customer_type
+                ];
+            });
+
+            return responseApi(paginateCustom($data, $supplierData), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -48,14 +70,36 @@ class SupplierController extends Controller
     public function show()
     {
         try {
-            return responseApi($this->model::query()
+            $supplierData = $this->model::with(['group_customer' => function ($query) {
+                $query->where('type', 1);
+            }])
                 ->where('customer_type', 1)
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id and type = 1)
-                                                   as group_supplier_name')
-                ->where('id', $this->request->id)
-                ->first(), true);
+                ->where('id', $this->request->id)->get();
+
+            $data = $supplierData->map(function ($supplierData) {
+                return [
+                    'id' => $supplierData->id,
+                    'group_customer_id' => $supplierData->group_customer_id,
+                    'group_customer_name' => $supplierData->group_customer->name,
+                    'type' => $supplierData->type,
+                    'name' => $supplierData->name,
+                    'gender' => $supplierData->gender,
+                    'dob' => $supplierData->dob,
+                    'email' => $supplierData->email,
+                    'tel' => $supplierData->tel,
+                    'status' => $supplierData->status,
+                    'province_code' => $supplierData->province_code,
+                    'district_code' => $supplierData->district_code,
+                    'ward_code' => $supplierData->ward_code,
+                    'address_detail' => $supplierData->address_detail,
+                    'note' => $supplierData->note,
+                    'created_at' => $supplierData->created_at,
+                    'updated_at' => $supplierData->updated_at,
+                    'customer_type' => $supplierData->customer_type
+                ];
+            });
+
+            return responseApi(collect($data)->collapse(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

@@ -66,13 +66,14 @@ class ProductController extends Controller
                                 'id' => $attributes->id,
                                 'product_id' => $attributes->product_id,
                                 'name' => $attributes->name,
-                                'attribute_values' => collect($attributes->attribute_values)->map(function ($attribute_values){
+                                'attribute_values' => $attributes->attributeValues ?
+                                    collect($attributes->attributeValues)->map(function ($attributeValues){
                                     return [
-                                        'id' => $attribute_values->id,
-                                        'attribute_id' => $attribute_values->attribute_id,
-                                        'value' => $attribute_values->value
+                                        'id' => $attributeValues->id,
+                                        'attribute_id' => $attributeValues->attribute_id,
+                                        'value' => $attributeValues->value
                                     ];
-                                }),
+                                }) : [],
                             ];
                         }) : [],
                     'variations' => $productData->variations ?
@@ -258,9 +259,7 @@ class ProductController extends Controller
                 'category',
                 'attributes.attributeValues',
                 'variations'
-            ])
-                ->where('id', $this->request->id)
-                ->get();
+            ])->where('id', $this->request->id)->get();
 
             $data = $productData->map(function ($productData) {
                 return [
@@ -285,13 +284,14 @@ class ProductController extends Controller
                                 'id' => $attributes->id,
                                 'product_id' => $attributes->product_id,
                                 'name' => $attributes->name,
-                                'attribute_values' => collect($attributes->attribute_values)->map(function ($attribute_values){
-                                    return [
-                                        'id' => $attribute_values->id,
-                                        'attribute_id' => $attribute_values->attribute_id,
-                                        'value' => $attribute_values->value
-                                    ];
-                                }),
+                                'attribute_values' => $attributes->attributeValues ?
+                                    collect($attributes->attributeValues)->map(function ($attributeValues){
+                                        return [
+                                            'id' => $attributeValues->id,
+                                            'attribute_id' => $attributeValues->attribute_id,
+                                            'value' => $attributeValues->value
+                                        ];
+                                    }) : [],
                             ];
                         }) : [],
                     'variations' => $productData->variations ?

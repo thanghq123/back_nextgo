@@ -320,7 +320,6 @@ class InventoryTransactionController extends Controller
                     "inventory_id_out" => $listTransfer->inventoryOut->id,
                     "location_id_out" => $listTransfer->inventoryOut->location->id,
                     "inventory_name_out" => $listTransfer->inventoryOut->name,
-                    "location_id_out" => $listTransfer->inventoryOut->location->id,
                     "location_name_out" => $listTransfer->inventoryOut->location->name,
                     "reason" => $listTransfer->reason,
                     "status" => $listTransfer->status,

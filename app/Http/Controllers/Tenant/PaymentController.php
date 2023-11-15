@@ -55,7 +55,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/payment/store/debt/{id}
+     * @path /tenant/api/v1/payment/debt/{id}
      * @desciption Thanh toán công nợ
      * @method POST
      * @param PaymentRequest $request id
@@ -83,7 +83,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/payment/store/order/{id}
+     * @path /tenant/api/v1/payment/order/{id}
      * @desciption Thanh toán đơn hàng
      * @method POST
      * @param PaymentRequest $request id

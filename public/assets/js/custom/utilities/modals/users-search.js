@@ -1,19 +1,44 @@
 "use strict";
-var KTModalUserSearch = function () {
-    var e, t, n, s, a, r = function (e) {
-        setTimeout((function () {
-            var a = KTUtil.getRandomInt(1, 3);
-            t.classList.add("d-none"), 3 === a ? (n.classList.add("d-none"), s.classList.remove("d-none")) : (n.classList.remove("d-none"), s.classList.add("d-none")), e.complete()
-        }), 1500)
-    }, o = function (e) {
-        t.classList.remove("d-none"), n.classList.add("d-none"), s.classList.add("d-none")
+var ModalUserSearch = function () {
+    var modalHandler, searchWrapper, suggestions, results, empty, processSearch, clearSearch;
+
+    processSearch = function (event) {
+        setTimeout(function () {
+            var randomInt = KTUtil.getRandomInt(1, 3);
+            suggestions.classList.add("d-none");
+            if (randomInt === 3) {
+                results.classList.add("d-none");
+                empty.classList.remove("d-none");
+            } else {
+                results.classList.remove("d-none");
+                empty.classList.add("d-none");
+            }
+            event.complete();
+        }, 1500);
     };
+
+    clearSearch = function () {
+        suggestions.classList.remove("d-none");
+        results.classList.add("d-none");
+        empty.classList.add("d-none");
+    };
+
     return {
         init: function () {
-            (e = document.querySelector("#kt_modal_pricing_search_handler")) && (e.querySelector('[data-kt-search-element="wrapper"]'), t = e.querySelector('[data-kt-search-element="suggestions"]'), n = e.querySelector('[data-kt-search-element="results"]'), s = e.querySelector('[data-kt-search-element="empty"]'), (a = new KTSearch(e)).on("kt.search.process", r), a.on("kt.search.clear", o))
+            modalHandler = document.querySelector("#kt_modal_users_search_handler");
+            if (modalHandler) {
+                searchWrapper = modalHandler.querySelector('[data-kt-search-element="wrapper"]');
+                suggestions = modalHandler.querySelector('[data-kt-search-element="suggestions"]');
+                results = modalHandler.querySelector('[data-kt-search-element="results"]');
+                empty = modalHandler.querySelector('[data-kt-search-element="empty"]');
+                var search = new KTSearch(modalHandler);
+                search.on("kt.search.process", processSearch);
+                search.on("kt.search.clear", clearSearch);
+            }
         }
-    }
+    };
 }();
-KTUtil.onDOMContentLoaded((function () {
-    KTModalUserSearch.init()
-}));
+
+KTUtil.onDOMContentLoaded(function () {
+    ModalUserSearch.init();
+});

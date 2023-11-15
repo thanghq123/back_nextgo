@@ -9,7 +9,8 @@ use App\Http\Controllers\PricingController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\SeedController;
+use App\Http\Controllers\DataSeedController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', [TestController::class, 'test']);
+Route::get('/', function (){
+   return 'hello';
+})->name('home');
 Route::get('/mail', [TestController::class, 'index']);
 Route::get('/create', [TestController::class, 'create']);
 Route::get('/list', [TestController::class, 'list']);
@@ -42,6 +45,21 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::get('show', [BusinessFieldController::class, 'show'])->name('show');
         Route::put('update', [BusinessFieldController::class, 'update'])->name('update');
         Route::delete('delete', [BusinessFieldController::class, 'delete'])->name('delete');
+    });
+    Route::prefix('seed')->name('seed.')->group(function () {
+        Route::get('/', [SeedController::class, 'index'])->name('index');
+        Route::get('/show', [SeedController::class, 'show'])->name('show');
+        Route::post('/store', [SeedController::class, 'store'])->name('store');
+        Route::put('/update', [SeedController::class, 'update'])->name('update');
+        Route::delete('/delete', [SeedController::class, 'delete'])->name('delete');
+        Route::get('/test', [SeedController::class, 'test'])->name('test');
+    });
+    Route::prefix('data-seed')->name('data-seed.')->group(function () {
+        Route::get('/', [DataSeedController::class, 'index'])->name('index');
+        Route::get('/show', [DataSeedController::class, 'show'])->name('show');
+        Route::post('/store', [DataSeedController::class, 'store'])->name('store');
+        Route::put('/update', [DataSeedController::class, 'update'])->name('update');
+        Route::delete('/delete', [DataSeedController::class, 'delete'])->name('delete');
     });
     Route::prefix('pricing')->name('pricing.')->group(function () {
         Route::get('/', [PricingController::class, 'index'])->name('index');

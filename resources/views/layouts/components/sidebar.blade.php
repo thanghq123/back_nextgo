@@ -50,7 +50,7 @@
                                                         <span class="path4"></span>
                                                     </i>
 												</span>
-                                <span class="menu-title">Dashboard</span>
+                                <span class="menu-title">Bảng điều khiển</span>
                             </a>
                             <!--end:Menu link-->
                         </div>
@@ -61,7 +61,7 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Trang</span>
                         </div>
                         <!--end:Menu content-->
                     </div>
@@ -77,7 +77,7 @@
 														<span class="path4"></span>
 													</i>
 												</span>
-												<span class="menu-title">Business Field</span>
+												<span class="menu-title">Lĩnh vực kinh doanh</span>
 												<span class="menu-arrow"></span>
 											</span>
                         <!--end:Menu link-->
@@ -90,7 +90,19 @@
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
-                                    <span class="menu-title">List</span>
+                                    <span class="menu-title">DS Lĩnh vực kinh doanh</span>
+                                </a>
+                                <a class="menu-link" href="{{ route('admin.seed.index') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+                                    <span class="menu-title">DS Loại dữ liệu mẫu</span>
+                                </a>
+                                <a class="menu-link" href="{{ route('admin.data-seed.index') }}">
+														<span class="menu-bullet">
+															<span class="bullet bullet-dot"></span>
+														</span>
+                                    <span class="menu-title">DS Dữ liệu mẫu</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -110,7 +122,7 @@
 														<span class="path4"></span>
 													</i>
 												</span>
-												<span class="menu-title">Pricing</span>
+												<span class="menu-title">Bảng giá</span>
 												<span class="menu-arrow"></span>
 											</span>
                         <!--end:Menu link-->
@@ -123,7 +135,7 @@
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
-                                    <span class="menu-title">List</span>
+                                    <span class="menu-title">Danh sách bảng giá</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -143,7 +155,7 @@
 														<span class="path4"></span>
 													</i>
 												</span>
-												<span class="menu-title">Users</span>
+												<span class="menu-title">Người dùng</span>
 												<span class="menu-arrow"></span>
 											</span>
                         <!--end:Menu link-->
@@ -156,7 +168,7 @@
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
-                                    <span class="menu-title">List</span>
+                                    <span class="menu-title">Danh sách người dùng</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class BusinessFieldSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database list.
      *
      * @return void
      */

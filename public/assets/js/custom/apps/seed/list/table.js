@@ -1,17 +1,17 @@
 "use strict";
-var PricingList = function () {
+var SeedList = function () {
     var dataTable, deleteRow;
 
     deleteRow = () => {
-        dataTable.querySelectorAll('[data-kt-pricing-table-filter="delete_row"]').forEach((element => {
+        dataTable.querySelectorAll('[data-kt-seed-table-filter="delete_row"]').forEach((element => {
             element.addEventListener("click", (function (event) {
                 event.preventDefault();
                 const row = event.target.closest("tr");
-                let pricing_id = row.attributes['data-id'].value;
-                let pricing_name = row.querySelectorAll('td')[0].innerText;
+                let seed_id = row.attributes['data-id'].value;
+                let seed_name = row.querySelectorAll('td')[0].innerText;
 
                 Swal.fire({
-                    text: "Bạn có chắc muốn xoá " + pricing_name + "?",
+                    text: "Bạn có chắc muốn xoá " + seed_name + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -24,15 +24,15 @@ var PricingList = function () {
                 }).then((function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: '/admin/pricing/delete',
+                            url: (window.location.href + '/delete').replace('#', ''),
                             type: 'DELETE',
                             data: {
                                 _token: $('meta[name="csrf-token"]').attr('content'),
-                                id: pricing_id
+                                id: seed_id
                             },
                             success: function (data) {
                                 Swal.fire({
-                                    text: "Xoá thành công " + pricing_name + "!.",
+                                    text: "Xoá thành công " + seed_name + "!.",
                                     icon: "success",
                                     buttonsStyling: false,
                                     confirmButtonText: "Ok, đồng ý!",
@@ -44,7 +44,7 @@ var PricingList = function () {
                         });
                     } else if (result.dismiss === "cancel") {
                         Swal.fire({
-                            text: pricing_name + " chưa được xoá.",
+                            text: seed_name + " chưa được xoá.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, đồng ý!",
@@ -58,7 +58,7 @@ var PricingList = function () {
 
     return {
         init: function () {
-            dataTable = document.getElementById("kt_table_pricing");
+            dataTable = document.getElementById("kt_table_seed");
 
             if (dataTable) {
                 dataTable = $(dataTable).DataTable({
@@ -66,7 +66,7 @@ var PricingList = function () {
                     order: [],
                     pageLength: 10,
                     lengthChange: false,
-                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 4}]
+                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 3}]
                 });
 
                 dataTable.on("draw", (function () {
@@ -75,7 +75,7 @@ var PricingList = function () {
 
                 deleteRow();
 
-                document.querySelector('[data-kt-pricing-table-filter="search"]').addEventListener("keyup", (function (event) {
+                document.querySelector('[data-kt-seed-table-filter="search"]').addEventListener("keyup", (function (event) {
                     dataTable.search(event.target.value).draw();
                 }));
             }
@@ -84,5 +84,5 @@ var PricingList = function () {
 }();
 
 KTUtil.onDOMContentLoaded((function () {
-    PricingList.init();
+    SeedList.init();
 }));

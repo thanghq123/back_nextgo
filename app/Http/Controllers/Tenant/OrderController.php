@@ -14,7 +14,7 @@ class OrderController extends Controller
 {
     public function __construct(
         private Order $model,
-        private OrderDetail $orderDetailmodel,
+        private OrderDetail $orderDetailModel,
         private VariationQuantity $variationQuantityModel,
         private OrderRequest $request
     ) {
@@ -99,7 +99,7 @@ class OrderController extends Controller
             ]);
 
             foreach ($this->request->order_details as $order_detail) {
-                $this->orderDetailmodel::create([
+                $this->orderDetailModel::create([
                     'order_id' => $order->id,
                     'variation_id' => $order_detail['id'],
                     'batch_id' => $order_detail['batchs'] ? $order_detail['batches_focus']['id'] : null,
@@ -191,14 +191,14 @@ class OrderController extends Controller
         }
     }
 
-//    public function update()
-//    {
-//        try {
-//            $this->model::find($this->request->id)->update($this->request->all());
-//            return responseApi("Cập nhật thành công!", true);
-//        }catch (\Throwable $throwable)
-//        {
-//            return responseApi($throwable->getMessage(), false);
-//        }
-//    }
+    public function update()
+    {
+        try {
+            $this->model::find($this->request->id)->update($this->request->all());
+            return responseApi("Cập nhật thành công!", true);
+        }catch (\Throwable $throwable)
+        {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
 }

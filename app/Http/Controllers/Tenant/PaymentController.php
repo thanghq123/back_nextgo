@@ -55,17 +55,17 @@ class PaymentController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/payment/debt/{id}
+     * @path /tenant/api/v1/payment/debt
      * @desciption Thanh toán công nợ
      * @method POST
-     * @param PaymentRequest $request id
+     * @param PaymentRequest $request [id, amount, amount_in, amount_refund, payment_method, payment_at, reference_code, note]
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function storeDebt(PaymentRequest $request, $id)
+    public function storeDebt(PaymentRequest $request)
     {
         try {
-            $debt = $this->debtModel::find($id);
+            $debt = $this->debtModel::find($request->id);
             $payment = $debt->payments()->create([
                 'amount' => $request->amount,
                 'amount_in' => $request->amount_in,
@@ -83,17 +83,17 @@ class PaymentController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/payment/order/{id}
+     * @path /tenant/api/v1/payment/order
      * @desciption Thanh toán đơn hàng
      * @method POST
-     * @param PaymentRequest $request id
+     * @param PaymentRequest $request [id, amount, amount_in, amount_refund, payment_method, payment_at, reference_code, note]
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function storeOrder(PaymentRequest $request, $id)
+    public function storeOrder(PaymentRequest $request)
     {
         try {
-            $order = $this->orderModel::find($id);
+            $order = $this->orderModel::find($request->id);
             $payment = $order->payments()->create([
                 'amount' => $request->amount,
                 'amount_in' => $request->amount_in,

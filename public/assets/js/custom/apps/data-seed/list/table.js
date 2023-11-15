@@ -57,31 +57,6 @@ var CustomerList = function () {
         }))
     };
 
-    var updateToolbar = () => {
-        const baseToolbar = document.querySelector('[data-kt-customer-table-toolbar="base"]');
-        const selectedToolbar = document.querySelector('[data-kt-customer-table-toolbar="selected"]');
-        const selectedCount = document.querySelector('[data-kt-customer-table-select="selected_count"]');
-        const checkboxes = tableElement.querySelectorAll('tbody [type="checkbox"]');
-        let hasChecked = false;
-        let checkedCount = 0;
-
-        checkboxes.forEach((checkbox => {
-            if (checkbox.checked) {
-                hasChecked = true;
-                checkedCount++;
-            }
-        }));
-
-        if (hasChecked) {
-            selectedCount.innerHTML = checkedCount;
-            baseToolbar.classList.add("d-none");
-            selectedToolbar.classList.remove("d-none");
-        } else {
-            baseToolbar.classList.remove("d-none");
-            selectedToolbar.classList.add("d-none");
-        }
-    };
-
     return {
         init: function () {
             tableElement = document.querySelector("#kt_customers_table");
@@ -94,7 +69,6 @@ var CustomerList = function () {
 
                 table.on("draw", (function () {
                     initDeleteRowEvent();
-                    updateToolbar();
                 }));
 
                 initDeleteRowEvent();

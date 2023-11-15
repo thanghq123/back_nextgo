@@ -152,12 +152,11 @@ Route::prefix('config')->name('config.')->group(function () {
 });
 
 Route::prefix('debt')->name('debt')->group(function () {
-    Route::post('/recovery', [DebtController::class, 'listRecovery'])->name('listRecovery');
-    Route::post('/repay', [DebtController::class, 'listRepay'])->name('listRepay');
+    Route::post('/', [DebtController::class, 'index'])->name('list');
     Route::post('/store', [DebtController::class, 'store'])->name('store');
     Route::post('/show', [DebtController::class, 'show'])->name('show');
     Route::post('/update', [DebtController::class, 'update'])->name('update');
-//    Route::post('recovery/delete', [DebtController::class, 'deleteRecovery'])->name('deleteRecovery');
+    Route::post('/delete', [DebtController::class, 'delete'])->name('delete');
 });
 
 
@@ -176,7 +175,7 @@ Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group
 });
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::post('/', [PaymentController::class, 'index'])->name('list');
-    Route::post('/debt/{id}', [PaymentController::class, 'storeDebt'])->name('storeDebt');
-    Route::post('/order/{id}', [PaymentController::class, 'storeOrder'])->name('storeOrder');
+    Route::post('/debt', [PaymentController::class, 'storeDebt'])->name('storeDebt');
+    Route::post('/order', [PaymentController::class, 'storeOrder'])->name('storeOrder');
 });
 

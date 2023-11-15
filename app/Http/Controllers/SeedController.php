@@ -40,10 +40,10 @@ class SeedController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
-    public function update(SeedRequest $request,){
+    public function update(SeedRequest $request){
         try {
             if (!$this->model::find($request->id)) return responseApi($this->module_name." không tồn tại!", false);
-            if (!empty($this->request->validated())) {
+            if (!empty($request->validated())) {
                 $category = $this->model::find($request->id);
                 $category->update($request->all());
                 return responseApi("Cập nhật thành công!", true);

@@ -1,22 +1,21 @@
 "use strict";
-var SeedList = function () {
-    var dataTable, deleteRow;
+var CustomerList = function () {
+    var table, tableElement;
 
-    deleteRow = () => {
-        dataTable.querySelectorAll('[data-kt-seed-table-filter="delete_row"]').forEach((element => {
+    var initDeleteRowEvent = () => {
+        tableElement.querySelectorAll('[data-kt-customer-table-filter="delete_row"]').forEach((element => {
             element.addEventListener("click", (function (event) {
                 event.preventDefault();
                 const row = event.target.closest("tr");
-                let seed_id = row.attributes['data-id'].value;
-                let seed_name = row.querySelectorAll('td')[0].innerText;
-
+                const seed_id = row.attributes['data-id'].value;
+                const seedName = row.querySelectorAll("td")[1].innerText;
                 Swal.fire({
-                    text: "Bạn có chắc muốn xoá " + seed_name + "?",
+                    text: "Bạn có chắc chắn muốn xoá " + seedName + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
                     confirmButtonText: "Đồng ý, xoá!",
-                    cancelButtonText: "Không, huỷ bỏ!",
+                    cancelButtonText: "Không, huỷ",
                     customClass: {
                         confirmButton: "btn fw-bold btn-danger",
                         cancelButton: "btn fw-bold btn-active-light-primary"
@@ -24,27 +23,29 @@ var SeedList = function () {
                 }).then((function (result) {
                     if (result.value) {
                         $.ajax({
-                            url: (window.location.href + '/delete').replace('#', ''),
+                            url: '/admin/seed/delete',
                             type: 'DELETE',
                             data: {
                                 _token: $('meta[name="csrf-token"]').attr('content'),
                                 id: seed_id
                             },
                             success: function (data) {
-                                Swal.fire({
-                                    text: "Xoá thành công " + seed_name + "!.",
-                                    icon: "success",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, đồng ý!",
-                                    customClass: {confirmButton: "btn fw-bold btn-primary"}
-                                }).then((function () {
-                                    dataTable.row($(row)).remove().draw();
-                                }));
+                                if (data.status === true) {
+                                    Swal.fire({
+                                        text: "Xoá thành công " + seedName + "!.",
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, đồng ý!",
+                                        customClass: {confirmButton: "btn fw-bold btn-primary"}
+                                    }).then((function () {
+                                        table.row($(row)).remove().draw();
+                                    }));
+                                }
                             }
                         });
                     } else if (result.dismiss === "cancel") {
                         Swal.fire({
-                            text: seed_name + " chưa được xoá.",
+                            text: seedName + " chưa xoá được.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, đồng ý!",
@@ -52,37 +53,45 @@ var SeedList = function () {
                         });
                     }
                 }));
-            }));
-        }));
+            }))
+        }))
     };
 
     return {
         init: function () {
-            dataTable = document.getElementById("kt_table_seed");
-
-            if (dataTable) {
-                dataTable = $(dataTable).DataTable({
+            tableElement = document.querySelector("#kt_customers_table");
+            if (tableElement) {
+                table = $(tableElement).DataTable({
                     info: false,
                     order: [],
-                    pageLength: 10,
-                    lengthChange: false,
                     columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 3}]
                 });
 
-                dataTable.on("draw", (function () {
-                    deleteRow();
+                table.on("draw", (function () {
+                    initDeleteRowEvent();
                 }));
 
-                deleteRow();
+                initDeleteRowEvent();
 
-                document.querySelector('[data-kt-seed-table-filter="search"]').addEventListener("keyup", (function (event) {
-                    dataTable.search(event.target.value).draw();
+                document.querySelector('[data-kt-customer-table-filter="search"]').addEventListener("keyup", (function (event) {
+                    table.search(event.target.value).draw();
                 }));
+
+                (()=>{
+                    const businessFieldFilter = document.querySelector('[data-kt-ecommerce-order-filter="type"]');
+                    $(businessFieldFilter).on("change", (event => {
+                        let business_field_name = event.target.value;
+                        if (business_field_name === "all") {
+                            business_field_name = "";
+                        }
+                        table.column(2).search(business_field_name).draw();
+                    }))
+                })();
             }
         }
-    };
+    }
 }();
 
 KTUtil.onDOMContentLoaded((function () {
-    SeedList.init();
+    CustomerList.init();
 }));

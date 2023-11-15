@@ -27,8 +27,8 @@ class PaymentRequest extends FormRequest
             'amount' => 'required|numeric',
             'amount_in' => 'required|numeric',
             'amount_refund' => 'required|numeric',
-            'method' => 'required|in:0,1,2',
-            'created_by' => 'required',
+            'payment_method' => 'required|in:0,1,2',
+//            'created_by' => 'required',
         ];
     }
     public function messages()

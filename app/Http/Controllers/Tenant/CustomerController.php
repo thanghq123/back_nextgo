@@ -9,7 +9,7 @@ use App\Models\Tenant\Customer;
 class CustomerController extends Controller
 {
     public function __construct(
-        private Customer        $model,
+        private Customer $model,
         private CustomerRequest $request
     )
     {
@@ -18,14 +18,33 @@ class CustomerController extends Controller
     public function list()
     {
         try {
-            return responseApi($this->model::query()
-                ->where('customer_type', 0)
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id)
-                                                   as group_customer_name')
-                ->orderBy('id', "desc")
-                ->get(), true);
+            $customerData = $this->model::with(['group_customer'])
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+            $data = $customerData->getCollection()->transform(function ($customerData){
+                return [
+                    'id' => $customerData->id,
+                    'group_customer_id' => $customerData->group_customer_id,
+                    'group_customer_name' => $customerData->group_customer->name,
+                    'type' => $customerData->type,
+                    'name' => $customerData->name,
+                    'gender' => $customerData->gender,
+                    'dob' => $customerData->dob,
+                    'email' => $customerData->email,
+                    'tel' => $customerData->tel,
+                    'status' => $customerData->status,
+                    'province_code' => $customerData->province_code,
+                    'district_code' => $customerData->district_code,
+                    'ward_code' => $customerData->ward_code,
+                    'address_detail' => $customerData->address_detail,
+                    'note' => $customerData->note,
+                    'created_at' => $customerData->created_at,
+                    'updated_at' => $customerData->updated_at,
+                    'customer_type' => $customerData->customer_type
+                ];
+            });
+
+            return responseApi(paginateCustom($data, $customerData), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -111,13 +130,32 @@ class CustomerController extends Controller
     public function show()
     {
         try {
-            return responseApi($this->model::query()
-                ->select('customers.*')
-                ->selectRaw('(SELECT name FROM group_customers
-                                                   WHERE id = customers.group_customer_id)
-                                                   as group_customer_name')
-                ->where('id', $this->request->id)
-                ->first(), true);
+            $customerData = $this->model::with(['group_customer'])->where('id', $this->request->id)->get();
+
+            $data = $customerData->map(function ($customerData) {
+                return [
+                    'id' => $customerData->id,
+                    'group_customer_id' => $customerData->group_customer_id,
+                    'group_customer_name' => $customerData->group_customer->name,
+                    'type' => $customerData->type,
+                    'name' => $customerData->name,
+                    'gender' => $customerData->gender,
+                    'dob' => $customerData->dob,
+                    'email' => $customerData->email,
+                    'tel' => $customerData->tel,
+                    'status' => $customerData->status,
+                    'province_code' => $customerData->province_code,
+                    'district_code' => $customerData->district_code,
+                    'ward_code' => $customerData->ward_code,
+                    'address_detail' => $customerData->address_detail,
+                    'note' => $customerData->note,
+                    'created_at' => $customerData->created_at,
+                    'updated_at' => $customerData->updated_at,
+                    'customer_type' => $customerData->customer_type
+                ];
+            });
+
+            return responseApi(collect($data)->collapse(), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

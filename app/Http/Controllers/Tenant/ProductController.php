@@ -258,9 +258,7 @@ class ProductController extends Controller
                 'category',
                 'attributes.attributeValues',
                 'variations'
-            ])
-                ->where('id', $this->request->id)
-                ->get();
+            ])->where('id', $this->request->id)->get();
 
             $data = $productData->map(function ($productData) {
                 return [

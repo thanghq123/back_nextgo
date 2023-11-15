@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\GroupSupplierRequest;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\GroupCustomer;
-use App\Models\Tenant\GroupSupplier;
-use App\Models\Tenant\Supplier;
 
 class GroupSupplierController extends Controller
 {

@@ -18,14 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
 });
 
-Route::prefix('business - field')->name('bf . ')->group(function () {
-    Route::get(' / ', [BusinessFieldController::class, 'list']);
+Route::prefix('business-field')->name('bf . ')->group(function () {
+    Route::get('/', [BusinessFieldController::class, 'list']);
 });
 
 Route::prefix('areas')->middleware('cors')->group(function (){
     Route::get('provinces',[Addresscontroller::class,'getProvinces']);
-    Route::get('districts /{
-        province_id}',[Addresscontroller::class,'getDistricts']);
-    Route::get('communes /{
-        district_id}',[Addresscontroller::class,'getCommunes']);
+    Route::get('districts/{province_id}',[Addresscontroller::class,'getDistricts']);
+    Route::get('communes/{district_id}',[Addresscontroller::class,'getCommunes']);
 });

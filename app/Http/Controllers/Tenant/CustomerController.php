@@ -20,8 +20,8 @@ class CustomerController extends Controller
         try {
             $customerData = $this->model::with(['group_customer'])
                 ->orderBy('id', 'desc')
-                ->paginate(10);
-            $data = $customerData->getCollection()->transform(function ($customerData){
+                ->get();
+            $data = $customerData->map(function ($customerData){
                 return [
                     'id' => $customerData->id,
                     'group_customer_id' => $customerData->group_customer_id,
@@ -44,7 +44,7 @@ class CustomerController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data, $customerData), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

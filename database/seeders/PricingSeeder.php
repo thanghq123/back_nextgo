@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class PricingSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database list.
      *
      * @return void
      */

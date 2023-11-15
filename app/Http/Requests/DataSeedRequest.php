@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Tenant;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
-class PaymentRequest extends FormRequest
+class DataSeedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +25,16 @@ class PaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required|numeric',
-            'amount_in' => 'required|numeric',
-            'amount_refund' => 'required|numeric',
-            'payment_method' => 'required|in:0,1,2',
-//            'created_by' => 'required',
+            'business_field_id' => 'required',
+            'seed_id' => 'required',
         ];
     }
+
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "in" => "Giá trị không hợp lệ!",
-            "numeric" => "Chỉ được nhập số!"
+            "business_field_id.required" => "Ngành hàng không được để trống!",
+            "seed_id.required" => "Loại dữ liệu mẫu không được để trống!",
         ];
     }
 }

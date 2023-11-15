@@ -44,6 +44,6 @@ class Order extends Model
         return $this->hasMany(OrderReturn::class,'order_id','id');
     }
    public function payments(){
-        return $this->morphMany(Payment::class, 'paymentFor');
+        return $this->morphMany(Payment::class, 'paymentable');
    }
 }

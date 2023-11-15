@@ -68,9 +68,11 @@ class DebtRequest extends FormRequest
 
                 return [
                     "id" => $updateId,
-                    "partner_id" => $rules['partner_id'],
-                    "partner_type" => $rules['partner_type'],
-                    "type" => $rules['type'],
+//                    "partner_id" => $rules['partner_id'],
+//                    "partner_type" => $rules['partner_type'],
+                    "debit_at" => $rules['debit_at'],
+                    "due_at" => $rules['due_at'],
+//                    "type" => $rules['type'],
                     "name" => $rules['name'],
                     "amount_debt" => $rules['amount_debt'],
                     "note" => $rules['note'],

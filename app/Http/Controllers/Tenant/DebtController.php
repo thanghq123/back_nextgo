@@ -99,7 +99,7 @@ class DebtController extends Controller
                 return [
                     "id" => $item->id,
                     "partner_id" => $item->partner->id,
-                    "partner_type" => $item->partner->type,
+                    "partner_type" => $item->partner_type,
                     "partner_name" => $item->partner->name,
                     "debit_at" => $item->debit_at,
                     "due_at" => $item->due_at,

@@ -56,7 +56,7 @@ class LocationController extends Controller
                     'description' => $data->description,
                     'tel' => $data->tel,
                     'email' => $data->email,
-                    'address_detail' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'address_detail' => $data->address_detail,
                     'status' => $data->status,
                     'is_main' => $data->is_main,
                     'created_by' => $data->created_by
@@ -78,7 +78,7 @@ class LocationController extends Controller
                 'description' => $data->description,
                 'tel' => $data->tel,
                 'email' => $data->email,
-                'address_detail' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                'address_detail' => $data->address_detail,
                 'status' => $data->status,
                 'is_main' => $data->is_main,
                 'created_by' => $data->created_by
@@ -107,7 +107,7 @@ class LocationController extends Controller
                 'province_code' => $request->province_code,
                 'district_code' => $request->district_code,
                 'ward_code' => $request->ward_code,
-                'address_detail' => $address->name . ', ' . $address->district->name . ', ' . $address->district->province->name,
+                'address_detail' => $request->address_detail,
                 'status' => $request->status,
                 'is_main' => $request->is_main,
                 'created_by' => $request->created_by
@@ -152,7 +152,7 @@ class LocationController extends Controller
                 'province_code' => $request->province_code,
                 'district_code' => $request->district_code,
                 'ward_code' => $request->ward_code,
-                'address_detail' => $address->name . ', ' . $address->district->name . ', ' . $address->district->province->name,
+                'address_detail' => $request->address_detail,
                 'status' => $request->status,
                 'is_main' => $request->is_main,
                 'created_by' => $request->created_by

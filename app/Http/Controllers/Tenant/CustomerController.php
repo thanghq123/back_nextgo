@@ -67,7 +67,7 @@ class CustomerController extends Controller
                     'email' => $data->email,
                     'status' => $data->status,
                     'customer_type' => $data->customer_type,
-                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'address' => $data->address_detail,
                     'created_at' => $data->created_at->format('H:i d-m-Y'),
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];
@@ -89,7 +89,7 @@ class CustomerController extends Controller
                     'tel' => $data->tel,
                     'email' => $data->email,
                     'status' => $data->status,
-                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'address' => $data->address_detail,
                     'created_at' => $data->created_at->format('H:i d-m-Y'),
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];

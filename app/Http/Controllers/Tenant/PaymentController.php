@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Order;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Debt;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\Tenant\PaymentRequest;
 
@@ -40,7 +41,7 @@ class PaymentController extends Controller
                     "amount_in" => $item->amount_in,
                     "amount_refund" => $item->amount_refund,
                     "payment_method" => $item->payment_method,
-                    "payment_at" => $item->payment_at,
+                    "payment_at" => Carbon::make($item->payment_at)->format('d-m-Y'),
                     "reference_code" => $item->reference_code,
                     "note" => $item->note,
                     "created_by" => $item->createdBy->name,

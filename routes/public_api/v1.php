@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
 });
 
-Route::prefix('business-field')->name('bf . ')->group(function () {
+Route::prefix('business-field')->name('bf.')->group(function () {
     Route::get('/', [BusinessFieldController::class, 'list']);
 });
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\DebtRequest;
 use Carbon\Carbon;
 use App\Models\Tenant\Debt;
+use Illuminate\Http\Request;
+
 class DebtController extends Controller
 {
     //
@@ -17,16 +19,21 @@ class DebtController extends Controller
         $this->checkTimeDebt();
         $this->checkAmountDebt();
     }
+
     /**
      * @path /tenant/api/v1/debt
      * @method POST
+     * @param DebtRequest $request type||null
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $debt = $this->model::with('partner')->paginate(10);
+            if($request->has('type')){
+                $debt = $this->model::with('partner')->where('type',$request->type)->paginate(10);
+            }
             $data = $debt->getCollection()->transform(function ($item) {
                 return [
                     "partner_name" => $item->partner->name,
@@ -40,39 +47,41 @@ class DebtController extends Controller
                     "status" => $item->status,
                 ];
             });
-            $response = new \Illuminate\Pagination\LengthAwarePaginator(
-                $data,
-                $debt->total(),
-                $debt->perPage(),
-                $debt->currentPage(), [
-                    'path' => \Request::url(),
-                    'query' => [
-                        'page' => $debt->currentPage()
-                    ]
-                ]
-            );
-            return responseApi($response, true);
+            return responseApi(paginateCustom($data,$debt), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/debt/store
      * @method POST
      * @param DebtRequest $request
-     * @requires partner_id,partner_type,debit_at,due_at,type,name,amount_debt
+     * @requires partner_id,partner_type,debit_at,due_at,type,name,amount_debt,amount_paid,note
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
     public function store()
     {
         try {
-            $this->model::create($this->request->all());
-            return responseApi("Tạo thành công!", true);
+            $debt=$this->model::create([
+                "partner_id" => $this->request->partner_id,
+                "partner_type" => $this->request->partner_type,
+                "debit_at" => $this->request->debit_at ? Carbon::make($this->request->debit_at)->format('Y-m-d') : Carbon::now()->format('Y-m-d'),
+                "due_at" => $this->request->due_at ? Carbon::make($this->request->due_at)->format('Y-m-d') : ($this->request->debit_at ? Carbon::make($this->request->debit_at)->addYear()->format('Y-m-d') : Carbon::now()->addYear()->format('Y-m-d')),
+                "type" => $this->request->type,
+                "name" => $this->request->name,
+                "amount_debt" => $this->request->amount_debt,
+                "amount_paid" => $this->request->amount_paid,
+                "note" => $this->request->note,
+                "status" => 1
+            ]);
+            return responseApi($debt, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/debt/show
      * @method POST
@@ -104,23 +113,36 @@ class DebtController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/debt/update
      * @method POST
      * @param DebtRequest $request
-     * @requires partner_id,partner_type,debit_at,due_at,type,name,amount_debt
+     * @requires partner_id,partner_type,debit_at,due_at,type,name,amount_debt,amount_paid,note,status
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
     public function update()
     {
         try {
-            $this->model::find($this->request->id)->update($this->request->all());
-            return responseApi("Cập nhật thành công!", true);
+            $debt=$this->model::find($this->request->id)->update([
+                "partner_id" => $this->request->partner_id,
+                "partner_type" => $this->request->partner_type,
+                "debit_at" => $this->request->debit_at ? Carbon::make($this->request->debit_at)->format('Y-m-d') : Carbon::now()->format('Y-m-d'),
+                "due_at" => $this->request->due_at ? Carbon::make($this->request->due_at)->format('Y-m-d') : ($this->request->debit_at ? Carbon::make($this->request->debit_at)->addYear()->format('Y-m-d') : Carbon::now()->addYear()->format('Y-m-d')),
+                "type" => $this->request->type,
+                "name" => $this->request->name,
+                "amount_debt" => $this->request->amount_debt,
+                "amount_paid" => $this->request->amount_paid,
+                "note" => $this->request->note,
+                "status" => $this->request->status
+            ]);
+            return responseApi($debt, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/debt/delete
      * @method POST
@@ -138,6 +160,7 @@ class DebtController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     public function checkTimeDebt()
     {
         $now = Carbon::now()->format('Y-m-d');
@@ -147,13 +170,14 @@ class DebtController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     public function checkAmountDebt()
     {
         try {
             $debt = $this->model::where('status', 1)->orWhere('status', 2)->get();
             $debt->map(function ($item) {
                 $amount_paid = $item->payments->sum('amount');
-                if ($item->payments->sum('amount')>0){
+                if ($item->payments->sum('amount') > 0) {
                     $item->update(['amount_paid' => $amount_paid, 'status' => 2]);
                 }
                 if ($item->amount_debt == $amount_paid) {

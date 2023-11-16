@@ -40,14 +40,6 @@ class DebtRequest extends FormRequest
                 "required",
                 "in:0,1"
             ],
-            "debit_at" => [
-                "required",
-                "date"
-            ],
-            "due_at" => [
-                "required",
-                "date"
-            ],
             "type" => [
                 "required",
                 "in:0,1"
@@ -78,8 +70,6 @@ class DebtRequest extends FormRequest
                     "id" => $updateId,
                     "partner_id" => $rules['partner_id'],
                     "partner_type" => $rules['partner_type'],
-                    "debit_at" => $rules['debit_at'],
-                    "due_at" => $rules['due_at'],
                     "type" => $rules['type'],
                     "name" => $rules['name'],
                     "amount_debt" => $rules['amount_debt'],
@@ -102,9 +92,6 @@ class DebtRequest extends FormRequest
             "exists" => "Dữ liệu không tồn tại!",
             "in" => "Giá trị không hợp lệ!",
             "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!",
-            "date" => "Sai định dạng ngày!",
-            "regex" => "Sai định dạng!",
             "numeric" => "Chỉ được nhập số!"
         ];
     }

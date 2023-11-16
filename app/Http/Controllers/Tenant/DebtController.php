@@ -36,6 +36,7 @@ class DebtController extends Controller
             }
             $data = $debt->getCollection()->transform(function ($item) {
                 return [
+                    "id" => $item->id,
                     "partner_name" => $item->partner->name,
                     "debit_at" => $item->debit_at,
                     "due_at" => $item->due_at,
@@ -90,12 +91,15 @@ class DebtController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function show($id)
+    public function show()
     {
         try {
-            $debt = $this->model::with('partner')->where('id', $id)->get();
+            $debt = $this->model::with('partner')->where('id', $this->request->id)->get();
             $response = $debt->map(function ($item) {
                 return [
+                    "id" => $item->id,
+                    "partner_id" => $item->partner->id,
+                    "partner_type" => $item->partner_type,
                     "partner_name" => $item->partner->name,
                     "debit_at" => $item->debit_at,
                     "due_at" => $item->due_at,

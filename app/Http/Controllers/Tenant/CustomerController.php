@@ -63,9 +63,11 @@ class CustomerController extends Controller
                     'id' => $data->id,
                     'name' => $data->name,
                     'tel' => $data->tel,
+                    'name_tel' => $data->name . ' - ' .$data->tel,
                     'email' => $data->email,
                     'status' => $data->status,
-                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'customer_type' => $data->customer_type,
+                    'address' => $data->address_detail,
                     'created_at' => $data->created_at->format('H:i d-m-Y'),
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];
@@ -87,7 +89,7 @@ class CustomerController extends Controller
                     'tel' => $data->tel,
                     'email' => $data->email,
                     'status' => $data->status,
-                    'address' => $data->commune->name . ', ' . $data->district->name . ', ' . $data->province->name,
+                    'address' => $data->address_detail,
                     'created_at' => $data->created_at->format('H:i d-m-Y'),
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];

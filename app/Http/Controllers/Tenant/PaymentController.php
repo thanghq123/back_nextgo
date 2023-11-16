@@ -90,21 +90,31 @@ class PaymentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function storeOrder(PaymentRequest $request)
+    public function storeOrder(Request $request)
     {
         try {
-            $order = $this->orderModel::find($request->id);
-            $payment = $order->payments()->create([
-                'amount' => $request->amount,
-                'amount_in' => $request->amount_in,
-                'amount_refund' => $request->amount_refund,
-                'payment_method' => $request->payment_method,
-                'payment_at' => now(),
-                'reference_code' => $request->reference_code,
-                'note' => $request->note,
-                'created_by' => 1
-            ]);
-            return responseApi($payment->id, true);
+            $order = $this->orderModel::find($request->order_payment[0]['paymentable_id']);
+            $paymentOrder=collect($request->order_payment);
+            if ($paymentOrder->count() == 1){
+                $amount = $paymentOrder[0]['amount'];
+                $amount_in = $paymentOrder[0]['amount_in'];
+            }else{
+                $amount = $paymentOrder[0]['pricePayment'];
+                $amount_in = $paymentOrder[0]['pricePayment'];
+            }
+            foreach ($paymentOrder as $item) {
+                $payment = $order->payments()->create([
+                    'amount' => $amount,
+                    'amount_in' => $amount_in,
+                    'amount_refund' => $item['amount_refund'],
+                    'payment_method' => $item['payment_method'],
+                    'payment_at' => now(),
+                    'reference_code' => $item['reference_code']??null,
+                    'note' => $item['note'],
+                    'created_by' => 1
+                ]);
+            }
+            if ($payment) return responseApi("Thêm thành công", true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

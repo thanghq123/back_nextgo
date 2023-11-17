@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('inventory_transaction_id');
             $table->index('inventory_transaction_id');
             $table->string('reason');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->tinyInteger('status');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

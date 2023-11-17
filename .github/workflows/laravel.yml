@@ -24,7 +24,7 @@ jobs:
             pwd
             # git config --global --add safe.directory /www/wwwroot/${{ secrets.DOMAIN }}/duantn
             git pull
-            # git branch -a
+            git branch -a
             composer install
             php artisan migrate
             php artisan tenants:artisan "migrate --path=database/migrations/tenant --database=tenant"

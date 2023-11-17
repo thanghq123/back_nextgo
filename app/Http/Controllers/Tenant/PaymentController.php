@@ -99,14 +99,11 @@ class PaymentController extends Controller
             if ($paymentOrder->count() == 1){
                 $amount = $paymentOrder[0]['amount'];
                 $amount_in = $paymentOrder[0]['amount_in'];
-            }else{
-                $amount = $paymentOrder[0]['pricePayment'];
-                $amount_in = $paymentOrder[0]['pricePayment'];
             }
             foreach ($paymentOrder as $item) {
                 $payment = $order->payments()->create([
-                    'amount' => $amount,
-                    'amount_in' => $amount_in,
+                    'amount' => $amount??$item['pricePayment'],
+                    'amount_in' => $amount_in??$item['pricePayment'],
                     'amount_refund' => $item['amount_refund'],
                     'payment_method' => $item['payment_method'],
                     'payment_at' => now(),

@@ -165,7 +165,7 @@ class InventoryTransactionController extends Controller
                 $variationQuantity = $this->variationQuantityModel::where('variation_id', $value->variation_id)->where('inventory_id', $inventoryTransaction->inventory_id);
                 $variationQuantityData = $variationQuantity->first();
                 if ($request->tranType == 0) {
-                    if ($variationQuantityData->count() > 0) {
+                    if ($variationQuantityData) {
                         $variationQuantity->increment('quantity', $value->quantity);
                     } else {
                         VariationQuantity::create([

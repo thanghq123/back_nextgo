@@ -24,7 +24,7 @@ jobs:
             pwd
             git pull
             git branch -a
-            ${{COMPOSER}} composer install
+            ${{ secrets.COMPOSER }} composer install
             php artisan migrate
             php artisan tenants:artisan "migrate --path=database/migrations/tenant --database=tenant"
             php artisan optimize:clear

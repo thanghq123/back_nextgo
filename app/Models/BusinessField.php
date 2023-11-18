@@ -24,7 +24,7 @@ class BusinessField extends Model
         return $this->hasMany(Tenant::class,'business_field_id');
     }
     public function BusinessFieldSeed(){
-        return $this->belongsToMany(BusinessFieldSeed::class,'business_field_seeds','business_field_id','id');
+        return $this->belongsToMany(BusinessFieldSeed::class,'business_field_seeds','business_field_id','seed_id');
     }
 
 }

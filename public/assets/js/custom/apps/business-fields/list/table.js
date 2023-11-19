@@ -1,15 +1,14 @@
 "use strict";
 var BusinessFieldList = function () {
     var dataTable, deleteRow, restoreRow;
-
+    const tableElement = document.getElementById('kt_table_business_field');
     deleteRow = () => {
-        dataTable.querySelectorAll('[data-kt-business_field-table-filter="delete_row"]').forEach((element => {
+        tableElement.querySelectorAll('[data-kt-business_field-table-filter="delete_row"]').forEach((element => {
             element.addEventListener("click", (function (event) {
                 event.preventDefault();
                 const row = event.target.closest("tr");
                 let business_field_id = row.attributes['data-id'].value;
                 let business_field_name = row.querySelectorAll('td')[0].innerText;
-
                 Swal.fire({
                     text: "Bạn có chắc muốn xoá " + business_field_name + "?",
                     icon: "warning",
@@ -57,13 +56,12 @@ var BusinessFieldList = function () {
     };
 
     restoreRow = () => {
-        dataTable.querySelectorAll('[data-kt-business_field-table-filter="restore_row"]').forEach((element => {
+        tableElement.querySelectorAll('[data-kt-business_field-table-filter="restore_row"]').forEach((element => {
             element.addEventListener("click", (function (event) {
                 event.preventDefault();
                 const row = event.target.closest("tr");
                 let business_field_id = row.attributes['data-id'].value;
                 let business_field_name = row.querySelectorAll('td')[0].innerText;
-
                 Swal.fire({
                     text: "Bạn có chắc muốn khôi phục " + business_field_name + "?",
                     icon: "warning",

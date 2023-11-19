@@ -230,7 +230,7 @@
 @push('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{asset('assets/js/custom/apps/pricings/list/table.js')}}"></script>
-    <script src="{{asset('assets/js/custom/apps/pricings/list/export-business_field.js')}}"></script>
+    <script src="{{asset('assets/js/custom/apps/pricings/list/export-pricing.js')}}"></script>
     <script src="{{asset('assets/js/custom/apps/pricings/list/add.js')}}"></script>
     <script>
         $(document).ready(function () {

@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeedController;
 use App\Http\Controllers\DataSeedController;
+use App\Http\Controllers\TenantController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,6 +75,10 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::get('show',[UserController::class,'show'])->name('show');
         Route::get('restore',[UserController::class,'restore'])->name('restore');
         Route::delete('delete',[UserController::class,'delete'])->name('delete');
+    });
+    Route::prefix('tenant')->name('tenant.')->group(function (){
+       Route::get('/',[TenantController::class,'index'])->name('index');
+       Route::post('store',[TenantController::class,'store'])->name('store');
     });
 });
 Route::fallback(function () {

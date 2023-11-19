@@ -1,9 +1,9 @@
 "use strict";
 var PricingList = function () {
     var dataTable, deleteRow;
-
+    const tableElement = document.getElementById('kt_table_pricing');
     deleteRow = () => {
-        dataTable.querySelectorAll('[data-kt-pricing-table-filter="delete_row"]').forEach((element => {
+        tableElement.querySelectorAll('[data-kt-pricing-table-filter="delete_row"]').forEach((element => {
             element.addEventListener("click", (function (event) {
                 event.preventDefault();
                 const row = event.target.closest("tr");

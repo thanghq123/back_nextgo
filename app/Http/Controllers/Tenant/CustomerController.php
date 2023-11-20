@@ -18,14 +18,17 @@ class CustomerController extends Controller
     public function list()
     {
         try {
-            $customerData = $this->model::with(['group_customer'])
+            $customerData = $this->model::with(['group_customer' => function ($query) {
+                $query->where('type', 0);
+            }])
+                ->where('type', 0)
                 ->orderBy('id', 'desc')
                 ->get();
             $data = $customerData->map(function ($customerData){
                 return [
                     'id' => $customerData->id,
                     'group_customer_id' => $customerData->group_customer_id,
-                    'group_customer_name' => $customerData->group_customer->name,
+                    'group_customer_name' => $customerData->group_customer->name??null,
                     'type' => $customerData->type,
                     'name' => $customerData->name,
                     'gender' => $customerData->gender,

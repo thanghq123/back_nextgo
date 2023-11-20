@@ -18,11 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id');
             $table->index('order_id');
             $table->unsignedBigInteger('variation_id');
-            $table->unsignedBigInteger('batch_id')->nullable();
+            $table->double('price');
             $table->double('discount')->nullable();
             $table->tinyInteger('discount_type')->nullable();
             $table->double('tax')->nullable();
-            $table->integer('quantity');
             $table->double('total_price');
             $table->timestamps();
         });

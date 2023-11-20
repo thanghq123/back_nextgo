@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\BusinessField;
+use App\Models\Seed;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -188,7 +190,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PricingSeeder::class,
             BusinessFieldSeeder::class,
+            DataSeedByBusinessFieldSeeder::class,
         ]);
+
         DB::statement("DROP DATABASE IF EXISTS `tenant1`;");
         Tenant::query()->create([
             'name' => 'tenant1',

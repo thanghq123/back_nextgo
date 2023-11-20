@@ -17,6 +17,11 @@ class Tenant extends SpatieTenant
     use SoftDeletes;
 
     protected $table = 'tenants';
+    protected $fillable=[
+      "name",
+      "database",
+      "user_id"
+    ];
 
     protected static function booted()
     {

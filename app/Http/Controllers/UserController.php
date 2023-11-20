@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['tenants'])->get();
+        $users = User::with(['tenants'])->orderBy('created_at','desc')->get();
         return view('admin.user.index', compact('users'));
     }
 

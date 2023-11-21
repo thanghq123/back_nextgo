@@ -10,7 +10,7 @@
 {{--    <meta property="og:url" content="https://keenthemes.com/metronic" />--}}
     <meta property="og:site_name" content="Nextgo | Giải pháp quản lí bán hàng" />
     <meta name="csrf-token" content="{{csrf_token()}}">
-    <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico')}}" />
+    <link rel="shortcut icon" href="{{ asset('assets/media/logos/logo-small.svg')}}" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />

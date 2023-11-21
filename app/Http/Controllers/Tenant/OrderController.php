@@ -85,7 +85,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             $order = $this->model::create([
-                "location_id" => $this->request->location,
+                "location_id" => $this->request->location_id,
                 "customer_id" => $this->request->customer_id,
                 "created_by" => $this->request->created_by,
                 "discount" => $this->request->discount,
@@ -103,9 +103,9 @@ class OrderController extends Controller
                     'order_id' => $order->id,
                     'variation_id' => $order_detail['id'],
                     'batch_id' => $order_detail['batchs'] ? $order_detail['batches_focus']['id'] : null,
-                    'discount' => $order_detail['priceModal']['result'],
-                    'discount_type' => $order_detail['priceModal']['radioDiscount'],
-                    'tax' => $order_detail['priceModal']['tax'],
+                    'discount' => $order_detail['priceModal']['result'] ?? 0,
+                    'discount_type' => $order_detail['priceModal']['radioDiscount'] ?? null,
+                    'tax' => $order_detail['priceModal']['tax'] ?? null,
                     'quantity' => $order_detail['quanity'],
                     'total_price' => $order_detail['result'],
                 ]);

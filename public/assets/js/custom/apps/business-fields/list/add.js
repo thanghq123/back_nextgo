@@ -67,6 +67,8 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                 method: business_field_id != null ? 'PUT' : 'POST',
                                 data: {
                                     _token: form.querySelector('[name="_token"]').value,
+                                    business_name: form.querySelector('[name="business_name"]') ? form.querySelector('[name="business_name"]').value : null,
+                                    address: form.querySelector('[name="address"]') ? form.querySelector('[name="address"]').value : null,
                                     name: form.querySelector('[name="name"]') ? form.querySelector('[name="name"]').value : null,
                                     code: form.querySelector('[name="code"]') ? form.querySelector('[name="code"]').value.toUpperCase() : null,
                                     detail: form.querySelector('[name="detail"]') ? form.querySelector('[name="detail"]').value : null,

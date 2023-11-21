@@ -1,15 +1,15 @@
 @extends('layouts.auth')
-@section('title','Forgot Password')
+@section('title','Quên mật khẩu')
 @section('content')
     <form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="" action="#">
         <!--begin::Heading-->
         @csrf
         <div class="text-center mb-10">
             <!--begin::Title-->
-            <h1 class="text-dark fw-bolder mb-3">Forgot Password ?</h1>
+            <h1 class="text-dark fw-bolder mb-3">Quên mật khẩu ?</h1>
             <!--end::Title-->
             <!--begin::Link-->
-            <div class="text-gray-500 fw-semibold fs-6">Enter your email to reset your password.</div>
+            <div class="text-gray-500 fw-semibold fs-6">Vui lòng nhập email của bạn để đặt lại mật khẩu.</div>
             <!--end::Link-->
         </div>
         <!--begin::Heading-->
@@ -23,14 +23,14 @@
         <div class="d-flex flex-wrap justify-content-center pb-lg-0">
             <button type="button" id="kt_password_reset_submit" class="btn btn-primary me-4">
                 <!--begin::Indicator label-->
-                <span class="indicator-label">Submit</span>
+                <span class="indicator-label">Xác nhận</span>
                 <!--end::Indicator label-->
                 <!--begin::Indicator progress-->
-                <span class="indicator-progress">Please wait...
+                <span class="indicator-progress">Vui lòng đợi...
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                 <!--end::Indicator progress-->
             </button>
-            <a href="{{ route('login') }}" class="btn btn-light">Cancel</a>
+            <a href="{{ route('login') }}" class="btn btn-light">Huỷ</a>
         </div>
         <!--end::Actions-->
     </form>

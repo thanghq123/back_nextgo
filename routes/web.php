@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeedController;
 use App\Http\Controllers\DataSeedController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\StatisticController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,9 +24,7 @@ use App\Http\Controllers\TenantController;
 |
 */
 
-Route::get('/', function (){
-   return 'hello';
-})->name('home');
+Route::redirect('', '/login');
 Route::get('/mail', [TestController::class, 'index']);
 Route::get('/create', [TestController::class, 'create']);
 Route::get('/list', [TestController::class, 'list']);
@@ -39,7 +38,8 @@ Route::get('reset-password/{token}/{email}', [ResetPasswordController::class, 'r
 Route::put('reset-password', [ResetPasswordController::class, 'changePassword']);
 Route::get('log-out',[LoginController::class,'logout'])->name('logout');
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
-    Route::view('/', 'admin.dashboard.index')->name('home');
+//    Route::view('/', 'admin.dashboard.index')->name('home');
+    Route::get('/', [StatisticController::class, 'index'])->name('home');
     Route::prefix('business-field')->name('bf.')->group(function () {
         Route::get('/', [BusinessFieldController::class, 'index'])->name('index');
         Route::post('store', [BusinessFieldController::class, 'store'])->name('create');

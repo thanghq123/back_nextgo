@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Tenant\LocationController;
 use App\Models\Tenant\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,10 +18,16 @@ class Tenant extends SpatieTenant
     use SoftDeletes;
 
     protected $table = 'tenants';
-    protected $fillable=[
-      "name",
-      "database",
-      "user_id"
+    protected $fillable = [
+        "name",
+        'business_name',
+        'address',
+        "database",
+        "user_id",
+        "business_field_id",
+        "created_at",
+        "updated_at",
+        "deleted_at",
     ];
 
     protected static function booted()
@@ -44,24 +51,60 @@ class Tenant extends SpatieTenant
         try {
 
             $this->makeCurrent();
-            $status = DB::statement("CREATE DATABASE IF NOT EXISTS `{$this->database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            $status = DB::statement("CREATE DATABASE IF NOT EXISTS `{$this->database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;");
             if ($status) {
-                $artisanStatus = Artisan::call(TenantsArtisanCommand::class, [
+                Artisan::call(TenantsArtisanCommand::class, [
 
-                    'artisanCommand' => 'migrate --path=database/migrations/tenant --database=tenant',
+                    'artisanCommand' => 'migrate --path=database/migrations/tenant --database=tenant --seed',
 
                     '--tenant' => $this->id,
 
                 ]);
-                if ($artisanStatus):
-                    $user = $this->user;
-                    $userCreate = \App\Models\Tenant\User::query()->create([
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'username' => $user->username ?? '',
-                    ]);
-                    $userCreate->roles()->attach(Role::query()->where('name', 'admin')->first()->id);
-                endif;
+
+
+                $user = $this->user;
+
+                $businessFieldId = $this->business_field_id;
+
+                $seedsByBusinessField = Seed::query()
+                    ->whereHas('businessFieldSeed', function ($query) use ($businessFieldId) {
+                        $query->where('business_field_id', $businessFieldId);
+                    })
+                    ->select('name', 'type')
+                    ->get()
+                    ->groupBy('type')
+                    ->map(function ($group) {
+                        return $group->map(function ($item) {
+                            return [
+                                'name' => $item->name,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        });
+                    })->toArray();
+
+                foreach ($seedsByBusinessField as $seedType => $seedsArray) {
+                    $model = config('util.SEED_TYPES.' . $seedType);
+                    (new $model)->query()->insert($seedsArray);
+                }
+
+                (new LocationController())->createLocationAndInventory([
+                    'name' => $this->business_name,
+                    'tel' => $user->tel,
+                    'email' => $user->email,
+                    'status' => 1,
+                    'address_detail' => $this->address,
+                    'is_main' => 1,
+                ]);
+
+                $userCreate = \App\Models\Tenant\User::query()->create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'username' => $user->username ?? '',
+                ]);
+
+                $userCreate->roles()->attach(Role::query()->where('name', 'admin')->first()->id);
+
             }
 
         } catch (\Throwable $th) {

@@ -28,7 +28,7 @@ class SupplierController extends Controller
                 return [
                     'id' => $supplierData->id,
                     'group_customer_id' => $supplierData->group_customer_id,
-                    'group_customer_name' => $supplierData->group_customer->name,
+                    'group_customer_name' => $supplierData->group_customer?->name,
                     'type' => $supplierData->type,
                     'name' => $supplierData->name,
                     'gender' => $supplierData->gender,

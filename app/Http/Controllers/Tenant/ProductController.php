@@ -393,7 +393,7 @@ class ProductController extends Controller
                     foreach ($this->request['variations'] as $dataVariation) {
                         $variation = $this->variationModel::create([
                             "product_id" => $this->request->id,
-                            "sku" => $dataVariation['sku'],
+                            "sku" => $dataVariation['sku'] ?? '',
                             "barcode" => $dataVariation['barcode'],
                             "variation_name" => $dataVariation['variation_name'],
                             "display_name" => $dataVariation['display_name'],
@@ -423,8 +423,7 @@ class ProductController extends Controller
             } else {
                 if ($this->request['variations']) {
                     foreach ($this->request['variations'] as $dataVariation) {
-                        $this->variationModel::find($dataVariation['id'])->update([
-                            "sku" => $dataVariation['sku'],
+                        $dataUpdate = [
                             "barcode" => $dataVariation['barcode'],
                             "variation_name" => $dataVariation['variation_name'],
                             "display_name" => $dataVariation['display_name'],
@@ -432,7 +431,9 @@ class ProductController extends Controller
                             "price_import" => $dataVariation['price_import'],
                             "price_export" => $dataVariation['price_export'],
                             "status" => $dataVariation['status']
-                        ]);
+                        ];
+                        if (isset($dataVariation['sku'])) $dataUpdate['sku'] = $dataVariation['sku'];
+                        $this->variationModel::find($dataVariation['id'])->update($dataUpdate);
                     }
                 }
             }

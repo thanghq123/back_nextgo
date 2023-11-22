@@ -172,6 +172,7 @@ Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group
     Route::post('show', [PrintedFormController::class, 'show'])->name('show');
     Route::post('update', [PrintedFormController::class, 'update'])->name('update');
     Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
+    Route::post('/return', [PrintedFormController::class, 'return'])->name('return');
 });
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::post('/', [PaymentController::class, 'index'])->name('list');

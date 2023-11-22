@@ -13,11 +13,10 @@ class OrderDetail extends Model
     protected $fillable=[
         "order_id",
         "variation_id",
-        "batch_id",
+        "price",
         "discount",
         "discount_type",
         "tax",
-        "quantity",
         "total_price",
     ];
     public function order()
@@ -26,11 +25,10 @@ class OrderDetail extends Model
     }
     public function variant()
     {
-        return $this->belongsTo(Variation::class,'variant_id','id');
+        return $this->belongsTo(Variation::class,'variation_id','id');
     }
-    public function batch()
+    public function orderDetailBatch()
     {
-        return $this->belongsTo(Batch::class,'batch_id','id');
+        return $this->hasMany(OrderDetailBatch::class,'order_detail_id','id');
     }
-
 }

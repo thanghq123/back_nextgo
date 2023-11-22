@@ -22,9 +22,6 @@ class Payment extends Model
         "note",
         "created_by"
     ];
-    protected $casts = [
-        'payment_at' => 'timestamp',
-    ];
     public function paymentable()
     {
         return $this->morphTo();

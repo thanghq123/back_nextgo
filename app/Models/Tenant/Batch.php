@@ -28,4 +28,8 @@ class Batch extends Model
     public function variation(){
         return $this->belongsTo(Variation::class,'variation_id');
     }
+    public function orderDetailBatch()
+    {
+        return $this->hasMany(OrderDetailBatch::class,'order_detail_id','id');
+    }
 }

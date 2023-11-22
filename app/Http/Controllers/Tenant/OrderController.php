@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\OrderRequest;
 use App\Models\Tenant\Order;
 use App\Models\Tenant\OrderDetail;
+use App\Models\Tenant\OrderDetailBatch;
 use App\Models\Tenant\VariationQuantity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ class OrderController extends Controller
         private Order $model,
         private OrderDetail $orderDetailModel,
         private VariationQuantity $variationQuantityModel,
+        private OrderDetailBatch $orderDetailBatchModel,
         private OrderRequest $request
     ) {
     }
@@ -30,17 +32,75 @@ class OrderController extends Controller
     public function list()
     {
         try {
-            $orderData = $this->model::with(['orderDetails', 'customer', 'location', 'createdBy'])->paginate(10);
+            $orderData = $this->model::with([
+                'orderDetails.variant',
+                'orderDetails.orderDetailBatch.batch',
+                'customer',
+                'location',
+                'createdBy',
+                'payments'
+            ])->orderBy('id', 'desc')->paginate(10);
 
             $data = $orderData->getCollection()->transform(function ($orderData) {
                 return [
                     'id' => $orderData->id,
                     'location_id' => $orderData->location_id,
-                    'location_name' => $orderData->location->name,
+                    'location_data' => [
+                        'name' => $orderData->location->name,
+                        'image' => $orderData->location->image,
+                        'description' => $orderData->location->description,
+                        'tel' => $orderData->location->tel,
+                        'email' => $orderData->location->email,
+                        'province_code' => $orderData->location->province_code,
+                        'district_code' => $orderData->location->district_code,
+                        'ward_code' => $orderData->location->ward_code,
+                        'address_detail' => $orderData->location->address_detail,
+                        'status' => $orderData->location->status,
+                        'is_main' => $orderData->location->is_main,
+                        'created_by' => $orderData->location->created_by,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                    ],
                     'customer_id' => $orderData->customer_id,
-                    'customer_name' => $orderData->customer->name,
+                    'customer_data' => [
+                        'group_customer_id' => $orderData->customer->group_customer_id,
+                        'type' => $orderData->customer->type,
+                        'name' => $orderData->customer->name,
+                        'gender' => $orderData->customer->gender,
+                        'dob' => $orderData->customer->dob,
+                        'email' => $orderData->customer->email,
+                        'tel' => $orderData->customer->tel,
+                        'status' => $orderData->customer->status,
+                        'province_code' => $orderData->customer->province_code,
+                        'district_code' => $orderData->customer->district_code,
+                        'ward_code' => $orderData->customer->ward_code,
+                        'address_detail' => $orderData->customer->address_detail,
+                        'note' => $orderData->customer->note,
+                        'customer_type' => $orderData->customer->customer_type,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                    ],
                     'created_by' => $orderData->created_by,
-                    'created_name' => $orderData->createdBy->name,
+                    'created_data' => [
+                        'name' => $orderData->createdBy->name,
+                        'email' => $orderData->createdBy->email,
+                        'email_verified_at' => $orderData->createdBy->email_verified_at,
+                        'password' => $orderData->createdBy->password,
+                        'remember_token' => $orderData->createdBy->remember_token,
+                        'location_id' => $orderData->createdBy->location_id,
+                        'username' => $orderData->createdBy->username,
+                        'tel' => $orderData->createdBy->tel,
+                        'status' => $orderData->createdBy->status,
+                        'created_by' => $orderData->createdBy->created_by,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                    ],
                     'discount' => $orderData->discount,
                     'discount_type' => $orderData->discount_type,
                     'tax' => $orderData->tax,
@@ -49,12 +109,46 @@ class OrderController extends Controller
                     'total_price' => $orderData->total_price,
                     'status' => $orderData->status,
                     'payment_status' => $orderData->payment_status,
+                    'created_at' => $orderData->created_at ?
+                        Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                    'updated_at' => $orderData->updated_at ?
+                        Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
                     'oder_details' => collect($orderData->orderDetails)->map(function ($orderDetails) {
                         return [
                             'id' => $orderDetails->id,
                             'order_id' => $orderDetails->order_id,
                             'variation_id' => $orderDetails->variation_id,
-                            'batch_id' => $orderDetails->batch_id,
+                            'variation_data' => $orderDetails->variant ? [
+                                'product_id' => $orderDetails->variant->product_id,
+                                'sku' => $orderDetails->variant->sku,
+                                'barcode' => $orderDetails->variant->barcode,
+                                'variation_name' => $orderDetails->variant->variation_name,
+                                'display_name' => $orderDetails->variant->display_name,
+                                'image' => $orderDetails->variant->image,
+                                'price_import' => $orderDetails->variant->price_import,
+                                'price_export' => $orderDetails->variant->price_export,
+                                'status' => $orderDetails->variant->status,
+                                'created_at' => $orderDetails->variant->created_at ?
+                                    Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
+                                'updated_at' => $orderDetails->variant->updated_at ?
+                                    Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
+                            ] : [],
+                            'batches' => $orderDetails->orderDetailBatch ?
+                                collect($orderDetails->orderDetailBatch)->map(function ($batches){
+                                    return [
+                                        'id' => $batches->batch->id,
+                                        'code' => $batches->batch->code,
+                                        'variation_id' => $batches->batch->variation_id,
+                                        'manufacture_date' => $batches->batch->manufacture_date ?
+                                            Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
+                                        'expiration_date' => $batches->batch->expiration_date ?
+                                            Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
+                                        'created_at' => $batches->batch->created_at ?
+                                            Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
+                                        'updated_at' => $batches->batch->updated_at ?
+                                            Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
+                                    ];
+                                }) : [],
                             'discount' => $orderDetails->discount,
                             'discount_type' => $orderDetails->discount_type,
                             'tax' => $orderDetails->tax,
@@ -62,8 +156,26 @@ class OrderController extends Controller
                             'total_price' => $orderDetails->total_price
                         ];
                     }),
-                    'created_at' => Carbon::make($orderData->created_at)->format('d/m/Y H:i'),
-                    'updated_at' => Carbon::make($orderData->updated_at)->format('d/m/Y H:i')
+                    'payment' => $orderData->payments ?
+                        collect($orderData->payments)->map(function ($payment){
+                            return [
+                                'paymentable_type' => $payment->paymentable_type,
+                                'paymentable_id' => $payment->paymentable_id,
+                                'amount' => $payment->amount,
+                                'amount_in' => $payment->amount_in,
+                                'amount_refund' => $payment->amount_refund,
+                                'payment_method' => $payment->payment_method,
+                                'payment_at' => $payment->payment_at ?
+                                    Carbon::make($payment->payment_at)->format('d/m/Y H:i') : null,
+                                'reference_code' => $payment->reference_code,
+                                'note' => $payment->note,
+                                'created_by' => $payment->created_by,
+                                'created_at' => $payment->created_at ?
+                                    Carbon::make($payment->created_at)->format('d/m/Y H:i') : null,
+                                'updated_at' => $payment->updated_at ?
+                                    Carbon::make($payment->updated_at)->format('d/m/Y H:i') : null
+                            ];
+                        }) : []
                 ];
             });
 
@@ -99,20 +211,24 @@ class OrderController extends Controller
             ]);
 
             foreach ($this->request->order_details as $order_detail) {
-                $this->orderDetailModel::create([
+                $orderDetail = $this->orderDetailModel::create([
                     'order_id' => $order->id,
                     'variation_id' => $order_detail['id'],
-                    'batch_id' => $order_detail['batchs'] ? $order_detail['batches_focus']['id'] : null,
-                    'discount' => $order_detail['priceModal']['result'] ?? 0,
-                    'discount_type' => $order_detail['priceModal']['radioDiscount'] ?? null,
-                    'tax' => $order_detail['priceModal']['tax'] ?? null,
-                    'quantity' => $order_detail['quanity'],
+                    'price' => $order_detail['price'],
+                    'discount' => $order_detail['priceModal']['result'],
+                    'discount_type' => $order_detail['priceModal']['radioDiscount'],
+                    'tax' => $order_detail['priceModal']['tax'],
                     'total_price' => $order_detail['result'],
                 ]);
                 if ($order_detail['batchs']) {
-                    foreach ($order_detail['batches_focus']['batches'] as $variationQuantitie){
+                    foreach ($order_detail['batches_focus']['batches'] as $data){
+                        $this->orderDetailBatchModel::create([
+                            'order_detail_id' => $orderDetail->id,
+                            'batch_id' => $data['id'],
+                            'quantity' => $order_detail['quanity']
+                        ]);
                         $this->variationQuantityModel::query()
-                            ->where('batch_id', $variationQuantitie['id'])
+                            ->where('batch_id', $data['id'])
                             ->where('variation_id', $order_detail['id'])
                             ->decrement('quantity', $order_detail['quanity']);
                     }
@@ -148,18 +264,77 @@ class OrderController extends Controller
     public function show()
     {
         try {
-            $orderData = $this->model::with(['orderDetails', 'customer', 'location', 'createdBy'])
+            $orderData = $this->model::with([
+                'orderDetails.variant',
+                'orderDetails.orderDetailBatch.batch',
+                'customer',
+                'location',
+                'createdBy',
+                'payments'
+            ])
                 ->where('id', $this->request->id)
                 ->get();
+
             $data = $orderData->map(function ($orderData) {
                 return [
                     'id' => $orderData->id,
                     'location_id' => $orderData->location_id,
-                    'location_name' => $orderData->location->name,
+                    'location_data' => [
+                        'name' => $orderData->location->name,
+                        'image' => $orderData->location->image,
+                        'description' => $orderData->location->description,
+                        'tel' => $orderData->location->tel,
+                        'email' => $orderData->location->email,
+                        'province_code' => $orderData->location->province_code,
+                        'district_code' => $orderData->location->district_code,
+                        'ward_code' => $orderData->location->ward_code,
+                        'address_detail' => $orderData->location->address_detail,
+                        'status' => $orderData->location->status,
+                        'is_main' => $orderData->location->is_main,
+                        'created_by' => $orderData->location->created_by,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                        ],
                     'customer_id' => $orderData->customer_id,
-                    'customer_name' => $orderData->customer->name,
+                    'customer_data' => [
+                        'group_customer_id' => $orderData->customer->group_customer_id,
+                        'type' => $orderData->customer->type,
+                        'name' => $orderData->customer->name,
+                        'gender' => $orderData->customer->gender,
+                        'dob' => $orderData->customer->dob,
+                        'email' => $orderData->customer->email,
+                        'tel' => $orderData->customer->tel,
+                        'status' => $orderData->customer->status,
+                        'province_code' => $orderData->customer->province_code,
+                        'district_code' => $orderData->customer->district_code,
+                        'ward_code' => $orderData->customer->ward_code,
+                        'address_detail' => $orderData->customer->address_detail,
+                        'note' => $orderData->customer->note,
+                        'customer_type' => $orderData->customer->customer_type,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                    ],
                     'created_by' => $orderData->created_by,
-                    'created_name' => $orderData->createdBy->name,
+                    'created_data' => [
+                        'name' => $orderData->createdBy->name,
+                        'email' => $orderData->createdBy->email,
+                        'email_verified_at' => $orderData->createdBy->email_verified_at,
+                        'password' => $orderData->createdBy->password,
+                        'remember_token' => $orderData->createdBy->remember_token,
+                        'location_id' => $orderData->createdBy->location_id,
+                        'username' => $orderData->createdBy->username,
+                        'tel' => $orderData->createdBy->tel,
+                        'status' => $orderData->createdBy->status,
+                        'created_by' => $orderData->createdBy->created_by,
+                        'created_at' => $orderData->created_at ?
+                            Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                        'updated_at' => $orderData->updated_at ?
+                            Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
+                    ],
                     'discount' => $orderData->discount,
                     'discount_type' => $orderData->discount_type,
                     'tax' => $orderData->tax,
@@ -168,12 +343,46 @@ class OrderController extends Controller
                     'total_price' => $orderData->total_price,
                     'status' => $orderData->status,
                     'payment_status' => $orderData->payment_status,
+                    'created_at' => $orderData->created_at ?
+                        Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
+                    'updated_at' => $orderData->updated_at ?
+                        Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
                     'oder_details' => collect($orderData->orderDetails)->map(function ($orderDetails) {
                         return [
                             'id' => $orderDetails->id,
                             'order_id' => $orderDetails->order_id,
                             'variation_id' => $orderDetails->variation_id,
-                            'batch_id' => $orderDetails->batch_id,
+                            'variation_data' => $orderDetails->variant ? [
+                                'product_id' => $orderDetails->variant->product_id,
+                                'sku' => $orderDetails->variant->sku,
+                                'barcode' => $orderDetails->variant->barcode,
+                                'variation_name' => $orderDetails->variant->variation_name,
+                                'display_name' => $orderDetails->variant->display_name,
+                                'image' => $orderDetails->variant->image,
+                                'price_import' => $orderDetails->variant->price_import,
+                                'price_export' => $orderDetails->variant->price_export,
+                                'status' => $orderDetails->variant->status,
+                                'created_at' => $orderDetails->variant->created_at ?
+                                    Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
+                                'updated_at' => $orderDetails->variant->updated_at ?
+                                    Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
+                            ] : [],
+                            'batches' => $orderDetails->orderDetailBatch ?
+                                collect($orderDetails->orderDetailBatch)->map(function ($batches){
+                                    return [
+                                        'id' => $batches->batch->id,
+                                        'code' => $batches->batch->code,
+                                        'variation_id' => $batches->batch->variation_id,
+                                        'manufacture_date' => $batches->batch->manufacture_date ?
+                                            Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
+                                        'expiration_date' => $batches->batch->expiration_date ?
+                                            Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
+                                        'created_at' => $batches->batch->created_at ?
+                                            Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
+                                        'updated_at' => $batches->batch->updated_at ?
+                                            Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
+                                    ];
+                                }) : [],
                             'discount' => $orderDetails->discount,
                             'discount_type' => $orderDetails->discount_type,
                             'tax' => $orderDetails->tax,
@@ -181,8 +390,26 @@ class OrderController extends Controller
                             'total_price' => $orderDetails->total_price
                         ];
                     }),
-                    'created_at' => Carbon::make($orderData->created_at)->format('d/m/Y H:i'),
-                    'updated_at' => Carbon::make($orderData->updated_at)->format('d/m/Y H:i')
+                    'payment' => $orderData->payments ?
+                        collect($orderData->payments)->map(function ($payment){
+                            return [
+                                'paymentable_type' => $payment->paymentable_type,
+                                'paymentable_id' => $payment->paymentable_id,
+                                'amount' => $payment->amount,
+                                'amount_in' => $payment->amount_in,
+                                'amount_refund' => $payment->amount_refund,
+                                'payment_method' => $payment->payment_method,
+                                'payment_at' => $payment->payment_at ?
+                                    Carbon::make($payment->payment_at)->format('d/m/Y H:i') : null,
+                                'reference_code' => $payment->reference_code,
+                                'note' => $payment->note,
+                                'created_by' => $payment->created_by,
+                                'created_at' => $payment->created_at ?
+                                    Carbon::make($payment->created_at)->format('d/m/Y H:i') : null,
+                                'updated_at' => $payment->updated_at ?
+                                    Carbon::make($payment->updated_at)->format('d/m/Y H:i') : null
+                            ];
+                        }) : []
                 ];
             });
             return responseApi(collect($data)->collapse(), true);

@@ -11,28 +11,28 @@ class PrintedFormController extends Controller
 {
 
     public function __construct(
-        private PrintedForm $model,
+        private PrintedForm        $model,
         private PrintedFormRequest $request
     )
     {
     }
 
     //
-    public function list(){
+    public function list()
+    {
         try {
             return responseApi($this->model::query()->paginate(10), true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function store(){
+    public function store()
+    {
         try {
             $this->model::create($this->request->all());
             return responseApi("Tạo thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
@@ -41,8 +41,7 @@ class PrintedFormController extends Controller
     {
         try {
             return responseApi($this->model::find($this->request->id), true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
@@ -52,19 +51,23 @@ class PrintedFormController extends Controller
         try {
             $this->model::find($this->request->id)->update($this->request->all());
             return responseApi("Cập nhật thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function delete(){
+    public function delete()
+    {
         try {
             $this->model::find($this->request->id)->delete();
             return responseApi("Xóa thành công!", true);
-        }catch (\Throwable $throwable)
-        {
+        } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
+    }
+
+    public function return()
+    {
+        $this->model::query()->find($this->request->id)->update(config('printed_form'));
     }
 }

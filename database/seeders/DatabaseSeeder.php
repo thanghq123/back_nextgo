@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
             'guard_name' => 'api'
         ]);
 
+        Tenant\PrintedForm::query()->create(config('printed_form'));
+
         $warranty = \App\Models\Tenant\Warranty::query()->insert(
             [
                 [

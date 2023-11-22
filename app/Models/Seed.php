@@ -13,6 +13,6 @@ class Seed extends Model
     protected $fillable = ['name', 'type'];
     public function businessFieldSeed()
     {
-        return $this->belongsToMany(BusinessFieldSeed::class, 'business_field_seeds', 'seed_id', 'business_field_id');
+        return $this->belongsToMany(BusinessField::class, 'business_field_seeds', 'seed_id', 'business_field_id');
     }
 }

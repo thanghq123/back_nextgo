@@ -22,7 +22,7 @@ class LocationController extends Controller
                 "required",
                 "regex:/^0[0-9]{9}$/"
             ],
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0'
         ];
@@ -95,37 +95,32 @@ class LocationController extends Controller
         try {
             $this->validation($request);
             $file = $request->file('image');
-            $fileName = $file->getClientOriginalName();
-            $fullpath = $file->storeAs('images', $fileName, 'public');
+            if ($file) {
+                $fileName = $file->getClientOriginalName();
+                $fullpath = $file->storeAs('images', $fileName, 'public');
+            }
             $address = Commune::with(['district', 'district.province'])->whereId($request->ward_code)->first();
             $data = [
                 'name' => $request->name,
-                'image' => $fullpath,
-                'description' => $request->description,
-                'tel' => $request->tel,
-                'email' => $request->email,
-                'province_code' => $request->province_code,
-                'district_code' => $request->district_code,
-                'ward_code' => $request->ward_code,
+                'image' => $fullpath ?? null,
+                'description' => $request->description ?? null,
+                'tel' => $request->tel ?? null,
+                'email' => $request->email ?? null,
+                'province_code' => $request->province_code ?? null,
+                'district_code' => $request->district_code ?? null,
+                'ward_code' => $request->ward_code ?? null,
                 'address_detail' => $request->address_detail,
-                'status' => $request->status,
-                'is_main' => $request->is_main,
-                'created_by' => $request->created_by
+                'status' => $request->status ?? 1,
+                'is_main' => $request->is_main ?? 0,
+                'created_by' => $request->created_by ?? null
             ];
-            $location = Location::query()->create($data);
-            Inventory::query()->create([
-                'location_id' => $location->id,
-                'name' => 'Kho ' . $location->name,
-                'status' => $location->status,
-                'code' => Str::slug('Kho ' . $location->name)
-            ]);
+            $this->createLocationAndInventory($data);
             DB::commit();
             return responseApi('Thêm thành công', true);
         } catch (ValidationException $exception) {
             DB::rollBack();
             return responseApi($exception->errors());
         }
-
     }
 
     public function update(Request $request)
@@ -183,5 +178,16 @@ class LocationController extends Controller
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }
+    }
+
+    public function createLocationAndInventory($data)
+    {
+        $location = Location::query()->create($data);
+        Inventory::query()->create([
+            'location_id' => $location->id,
+            'name' => 'Kho ' . $location->name,
+            'status' => $location->status,
+            'code' => Str::slug('Kho ' . $location->name)
+        ]);
     }
 }

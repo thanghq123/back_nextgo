@@ -41,6 +41,8 @@ class TenantController extends Controller
                     return responseApi('Tạo người dùng thành công', true);
                 } else {
                     $tenant = new Tenant();
+                    $tenant->business_name = $this->request->input('business_name');
+                    $tenant->address = $this->request->input('address');
                     $tenant->name = $this->request->input('name_tenant');
                     $tenant->domain = $this->request->input('name_tenant') . ".com";
                     $tenant->database = $this->request->input('name_tenant');

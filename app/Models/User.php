@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +22,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tel',
+        'status',
+        'pricing_id',
+        'expired_plan_at',
+        'created_by'
     ];
 
     /**
@@ -41,12 +47,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function tenants()
     {
         return $this->hasMany(Tenant::class, 'user_id');
     }
-    public function pricing(){
-        return $this->belongsTo(Pricing::class,'pricing_id');
+
+    public function pricing()
+    {
+        return $this->belongsTo(Pricing::class, 'pricing_id');
     }
 
 }

@@ -75,7 +75,15 @@
                                         <div class="select-user" style="display: block">
                                         <!--begin::Input group-->
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tên Tenant(Viết liền khum
+                                            <label class="required fw-semibold fs-6 mb-2">Tên cửa hàng</label>
+                                            <input type="text" name="business_name" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tên cửa hàng" value=""/>
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Địa chỉ</label>
+                                            <input type="text" name="address" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Địa chỉ" value=""/>
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Tên miền(Viết liền khum
                                                 dấu)</label>
                                             <input type="text" name="name_tenant" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tên Tenant" value=""/>
                                         </div>
@@ -162,9 +170,9 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_business_field">
                 <thead>
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                    <th class="min-w-125px">Tên</th>
-                    <th class="min-w-125px">Domain</th>
-                    <th class="min-w-125px">Database</th>
+                    <th class="min-w-125px">Tên cửa hàng</th>
+                    <th class="min-w-125px">Tên miền</th>
+                    <th class="min-w-125px">Địa chỉ</th>
                     <th class="min-w-125px">Tên User</th>
                     <th class="min-w-125px">Lĩnh Vực Kinh Doanh</th>
                     <th class="min-w-125px">Trạng Thái</th>
@@ -173,9 +181,10 @@
                 <tbody class="text-gray-600 fw-semibold">
                 @foreach($tenants as $tenant)
                     <tr data-id="{{$tenant->id}}">
+                        <td>{{$tenant->business_name}}</td>
                         <td>{{$tenant->name}}</td>
-                        <td>{{$tenant->domain ? $tenant->domain : "none" }}</td>
-                        <td>{{$tenant->database}}</td>
+                        <td>{{$tenant->address }}</td>
+{{--                        <td>{{$tenant->database}}</td>--}}
                         <td>{{$tenant->user->name}}</td>
                         <td>{{$tenant->business_field->name}}</td>
                         <td class="{{$tenant->status == 1? 'text-success': 'text-danger'}}">{{$tenant->status == 1? 'Kích hoạt': 'Khum kích hoạt'}}</td>
@@ -218,6 +227,8 @@
             $('#kt_modal_add_business_field').on('show.bs.modal', function (event) {
                 let button = $(event.relatedTarget)
                 let business_field_id = button.data('id')
+                let business_name = $('#kt_modal_add_business_field_form input[business_name="name"]')
+                let address = $('#kt_modal_add_business_field_form input[address="name"]')
                 let name = $('#kt_modal_add_business_field_form input[name="name"]')
                 let code = $('#kt_modal_add_business_field_form input[name="code"]')
                 let detail = $('#kt_modal_add_business_field_form input[name="detail"]')

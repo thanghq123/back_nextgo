@@ -6,10 +6,10 @@
     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
         <a href="{{route('admin.home')}}">
-            <img alt="Logo" src="{{ asset('assets/media/logos/default-dark.svg')}}"
-                 class="h-25px app-sidebar-logo-default"/>
-            <img alt="Logo" src="{{ asset('assets/media/logos/default-small.svg')}}"
-                 class="h-20px app-sidebar-logo-minimize"/>
+            <img alt="Logo" src="{{ asset('assets/media/logos/logo-dark.svg')}}"
+                 class="w-100 app-sidebar-logo-default"/>
+            <img alt="Logo" src="{{ asset('assets/media/logos/logo-small.svg')}}"
+                 class="w-100 app-sidebar-logo-minimize"/>
         </a>
         <div id="kt_app_sidebar_toggle"
              class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"

@@ -7,6 +7,7 @@ use App\Models\BusinessField;
 use App\Models\Seed;
 use App\Models\Tenant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -208,12 +209,15 @@ class DatabaseSeeder extends Seeder
 
         DB::statement("DROP DATABASE IF EXISTS `tenant1`;");
         Tenant::query()->create([
+            'business_name' => 'Cửa hàng bán quần áo',
             'name' => 'tenant1',
             'database' => 'tenant1',
-            'business_name' => 'Cửa hàng bán quần áo',
-            'user_id' => $user->id,
             'business_field_id' => $bussinessFieldId,
+            'user_id' => $user->id,
             'address' => 'Hà Nội',
+            'pricing_id' => 1,
+            'due_at' => Carbon::now()->addDays(30)->format('Y-m-d'),
+            "status" => 1,
         ]);
 
     }

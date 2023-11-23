@@ -21,14 +21,19 @@
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
+
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-
+                    <button type="button" class="btn btn-primary" style="margin-right: 20px" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_business_field1">
+                        <i class="ki-duotone ki-plus fs-2"></i>Thêm Người Dùng
+                    </button>
                     <!--begin::Hide default export buttons-->
                     <div id="kt_datatable_business_field_buttons" class="d-none"></div>
                     <!--end::Hide default export buttons-->
                     <!--end::Export-->
                     <!--begin::Add user-->
+
                     <button type="button" id="show-trash" class="btn btn-danger">
                         Danh sách đã xoá
                     </button>
@@ -74,44 +79,56 @@
                                         <!--begin::Input group-->
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Tên user</label>
-                                            <input type="text" name="ten_user" disabled
+                                            <input type="text" name="ten_user"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Email</label>
-                                            <input type="text" name="email" disabled
+                                            <input type="text" name="email_user"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Tên chi nhánh</label>
-                                            <input type="text" name="ten_chi_nhanh" disabled
+                                            <input type="text" name="ten_chi_nhanh"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Lĩnh vực kinh doanh</label>
-                                            <input type="text" name="linh_vuc_kinh_doanh" disabled
+                                            <input type="text" name="linh_vuc_kinh_doanh"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
 
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Gói sử dụng</label>
-                                            <input type="text" name="goi_su_dung" disabled
+                                            <label class="required fw-semibold fs-6 mb-2">Người Tạo</label>
+                                            <input type="text" name="nguoi_tao"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Trạng thái</label>
-                                            <input type="text" name="trang_thai" disabled
+                                            <input type="text" name="trang_thai"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
                                     </div>
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
+                                    <div class="text-center pt-10">
+                                        <button type="reset" class="btn btn-light me-3"
+                                                data-kt-business_field-modal-action="cancel">Huỷ
+                                        </button>
+                                        <button type="submit" id="button-submit" class="btn btn-primary btn-submit"
+                                                data-kt-business_field-modal-action="submit">
+                                            <span class="indicator-label">Lưu</span>
+                                            <span class="indicator-progress">Vui lòng đợi...
+                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
                                     <!--end::Actions-->
 
                                 </form>
@@ -195,8 +212,8 @@
                 let tenant_id = button.data('id')
                 let ten_chi_nhanh = $('#kt_modal_add_business_field_form input[name="ten_chi_nhanh"]')
                 let ten_user = $('#kt_modal_add_business_field_form input[name="ten_user"]')
-                let email = $('#kt_modal_add_business_field_form input[name="email"]')
-                let goi_su_dung = $('#kt_modal_add_business_field_form input[name="goi_su_dung"]')
+                let email = $('#kt_modal_add_business_field_form input[name="email_user"]')
+                let nguoi_tao = $('#kt_modal_add_business_field_form input[name="nguoi_tao"]')
                 let linh_vuc_kinh_doanh = $('#kt_modal_add_business_field_form input[name="linh_vuc_kinh_doanh"]')
                 let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
                 if (tenant_id) {
@@ -206,6 +223,7 @@
                         type: 'GET',
                         data: {id: tenant_id},
                         success: function (data) {
+                            $("#button-submit").hide()
                             KTApp.hidePageLoading();
                             $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
                             if (data.status) {
@@ -221,29 +239,33 @@
                                     })
                                 }
                                 ten_user.val(data.payload.name)
-                                ten_chi_nhanh.val(tenantData.join(", ")? tenantData.join(", ") : "")
+                                ten_chi_nhanh.val(tenantData.join(", ") ? tenantData.join(", ") : "")
                                 email.val(data.payload.email)
-                                goi_su_dung.val(data.payload.pricing?.name)
-                                linh_vuc_kinh_doanh.val(locationData.join(", ")? locationData.join(", ") : "")
-                                trang_thai.val(statusData.join(", ")? statusData.join(", ") : "")
+                                nguoi_tao.val(data.payload.parent?.name)
+                                linh_vuc_kinh_doanh.val(locationData.join(", ") ? locationData.join(", ") : "")
+                                trang_thai.val(statusData.join(", ") ? statusData.join(", ") : "")
+                                $("form").find("input, select, textarea").prop("disabled", true);
                             } else {
                                 $('#kt_modal_add_business_field_form input[name="id"]').val('')
                                 ten_chi_nhanh.val('')
                                 ten_user.val('')
                                 email.val('')
-                                goi_su_dung.val('')
+                                nguoi_tao.val('')
                                 linh_vuc_kinh_doanh.val('')
                                 trang_thai.val('')
+                                $("form").find("input, select, textarea").prop("disabled", false);
                             }
                         }
                     })
                 } else {
                     $('#kt_modal_add_business_field_form input[name="id"]').val('')
-                    $('#kt_modal_add_business_field_header .modal-header_title').text('Thêm mới chi nhánh')
+                    $('#kt_modal_add_business_field_header .modal-header_title').text('Thêm mới người dùng')
+                    $("form").find("input, select, textarea").prop("disabled", false);
+                    $("#button-submit").show()
                     ten_chi_nhanh.val('')
                     ten_user.val('')
                     email.val('')
-                    goi_su_dung.val('')
+                    nguoi_tao.val('')
                     linh_vuc_kinh_doanh.val('')
                     trang_thai.val('')
                 }

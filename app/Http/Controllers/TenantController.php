@@ -36,7 +36,7 @@ class TenantController extends Controller
                     $user->name = $this->request->input('username');
                     $user->email = $this->request->input('email');
                     $user->password = password_hash($this->request->input('password'),PASSWORD_DEFAULT);
-                    $user->pricing_id = 1;
+                    $user->created_by = auth()->id();
                     $user->save();
                     return responseApi('Tạo người dùng thành công', true);
                 } else {

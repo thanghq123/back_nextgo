@@ -21,6 +21,19 @@ const KTbusiness_fieldAddbusiness_field = function () {
         init: function () {
             (() => {
                 initFormValidation({
+                    email_user: form.querySelector('[name="email_user"]')?{
+                        validators: {
+                            notEmpty: {message: "Email không được để trống"}, regexp: {
+                                regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "The value is not a valid email address"
+                            }
+                        }
+                    }:null,
+                    ten_chi_nhanh: form.querySelector('[name="ten_chi_nhanh"]') ? {validators: {notEmpty: {message: "Tên chi nhánh không được để trống"}}} : null,
+                    ten_user: form.querySelector('[name="ten_user"]') ? {validators: {notEmpty: {message: "Tên người dùng không được để trống"}}} : null,
+                    nguoi_tao: form.querySelector('[name="nguoi_tao"]') ? {validators: {notEmpty: {message: "Người tạo không được để trống"}}} : null,
+                    linh_vuc_kinh_doanh: form.querySelector('[name="linh_vuc_kinh_doanh"]') ? {validators: {notEmpty: {message: "Lĩnh vực kinh doanh không được để trống"}}} : null,
+                    trang_thai: form.querySelector('[name="trang_thai"]') ? {validators: {notEmpty: {message: "Trạng thái không được để trống"}}} : null,
                     name: form.querySelector('[name="name"]') ? {validators: {notEmpty: {message: "Tên không được để trống"}}} : null,
                     code: form.querySelector('[name="code"]') ? {validators: {notEmpty: {message: "Mã ngành hàng không được để trống"},}} : null,
                     detail: form.querySelector('[name="detail"]') ? {validators: {notEmpty: {message: "Mô tả không được để trống"}}} : null,
@@ -29,34 +42,40 @@ const KTbusiness_fieldAddbusiness_field = function () {
                     business_field: form.querySelector('[name="business_field"]') ? {validators: {notEmpty: {message: "Chọn lĩnh vực kinh doanh"}}} : null,
                 });
                 // Add or remove validation rules when clicking on the show-add-user button
-                document.querySelector('#add-user').addEventListener('click', () => {
-                    initFormValidation({
-                        name_tenant: null,
-                        user_id: null,
-                        business_field: null,
-                        username: {validators: {notEmpty: {message: "Tên không được để trống"}}},
-                        email: {
-                            validators: {
-                                notEmpty: {message: "Email không được để trống"}, regexp: {
-                                    regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "The value is not a valid email address"
+                let showuser = document.querySelector('#add-user')
+                if (showuser) {
+                    showuser.addEventListener('click', () => {
+                        initFormValidation({
+                            name_tenant: null,
+                            user_id: null,
+                            business_field: null,
+                            username: {validators: {notEmpty: {message: "Tên không được để trống"}}},
+                            email: {
+                                validators: {
+                                    notEmpty: {message: "Email không được để trống"}, regexp: {
+                                        regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        message: "The value is not a valid email address"
+                                    }
                                 }
-                            }
-                        },
-                        password: {validators: {notEmpty: {message: "Mật khẩu không được để trống"}}},
-                    })
+                            },
+                            password: {validators: {notEmpty: {message: "Mật khẩu không được để trống"}}},
+                        })
 
-                })
-                document.querySelector('#hidden-user').addEventListener('click', () => {
-                    initFormValidation({
-                        name_tenant: form.querySelector('[name="name_tenant"]') ? {validators: {notEmpty: {message: "Tên không được để trống"}}} : null,
-                        user_id: form.querySelector('[name="user_id"]') ? {validators: {notEmpty: {message: "Chọn user"}}} : null,
-                        business_field: form.querySelector('[name="business_field"]') ? {validators: {notEmpty: {message: "Chọn lĩnh vực kinh doanh"}}} : null,
-                        username: null,
-                        email: null,
-                        password: null,
+                    })
+                }
+                let hiddenUser = document.querySelector('#hidden-user')
+                if (hiddenUser) {
+                    hiddenUser.addEventListener('click', () => {
+                        initFormValidation({
+                            name_tenant: form.querySelector('[name="name_tenant"]') ? {validators: {notEmpty: {message: "Tên không được để trống"}}} : null,
+                            user_id: form.querySelector('[name="user_id"]') ? {validators: {notEmpty: {message: "Chọn user"}}} : null,
+                            business_field: form.querySelector('[name="business_field"]') ? {validators: {notEmpty: {message: "Chọn lĩnh vực kinh doanh"}}} : null,
+                            username: null,
+                            email: null,
+                            password: null,
+                        });
                     });
-                });
+                }
                 const btn_submit = modalForm.querySelector('[data-kt-business_field-modal-action="submit"]');
                 btn_submit.addEventListener("click", (modalForm => {
                     let business_field_id = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : null;

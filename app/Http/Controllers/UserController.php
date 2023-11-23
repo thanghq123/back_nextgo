@@ -10,14 +10,14 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['tenants'])->orderBy('created_at','desc')->get();
+        $users = User::with(['tenants','parent'])->orderBy('created_at','desc')->get();
         return view('admin.user.index', compact('users'));
     }
 
     public function show(Request $request)
     {
         try {
-            $user = User::with('pricing', 'tenants.business_field')->where('id', $request->id)->first();
+            $user = User::with('pricing', 'tenants.business_field','parent')->where('id', $request->id)->first();
             if (!$user) return responseApi("không tồn tại!");
             return responseApi($user, true);
         } catch (\Throwable $throwable) {

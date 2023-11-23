@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('order_detail_batches', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_detail_id');
-            $table->unsignedBigInteger('batch_id');
+            $table->unsignedBigInteger('batch_id')->nullable();
             $table->integer('quantity');
             $table->timestamps();
         });

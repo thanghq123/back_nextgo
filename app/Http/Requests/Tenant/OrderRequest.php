@@ -26,7 +26,6 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
         $getUrl = Str::afterLast($this->url(), '/');
         $id = ",".$this->id;
         $rules =  [
@@ -34,7 +33,7 @@ class OrderRequest extends FormRequest
                 "required",
                 "exists:App\Models\Tenant\Order,id"
             ],
-            "location_id" => [
+            "location" => [
                 "required",
                 "exists:App\Models\Tenant\Location,id"
             ],
@@ -70,7 +69,7 @@ class OrderRequest extends FormRequest
             "status" => "required",
             "payment_status" => "required",
             "order_details" => "required",
-            "order_details.*.variation_id" => [
+            "order_details.*.variation_quantities.*.variation_id" => [
                 "required",
                 "exists:App\Models\Tenant\Variation,id"
             ],
@@ -87,20 +86,20 @@ class OrderRequest extends FormRequest
                 "nullable",
                 "gte:0"
             ],
-            "order_details.*.quantity" => [
+            "order_details.*.quanity" => [
                 "required",
                 "gt:0"
             ],
-            "order_details.*.total_price" => [
+            "order_details.*.result" => [
                 "required",
-                "gt:0"
+                "gte:0"
             ],
         ];
 
         switch ($getUrl){
             case "store":
                 return [
-                    "location_id" => $rules['location_id'],
+                    "location" => $rules['location'],
                     "customer_id" => $rules['customer_id'],
                     "created_by" => $rules['created_by'],
                     "discount" => $rules['discount'],
@@ -112,13 +111,14 @@ class OrderRequest extends FormRequest
                     "status" => $rules['status'],
                     "order_details" => $rules['order_details'],
                     "payment_status" => $rules['payment_status'],
-                    "order_details.*.variation_id" => $rules['order_details.*.variation_id'],
+                    "order_details.*.variation_quantities.*.variation_id" =>
+                        $rules['order_details.*.variation_quantities.*.variation_id'],
                     "order_details.*.batch_id" => $rules['order_details.*.batch_id'],
                     "order_details.*.discount" => $rules['order_details.*.discount'],
                     "order_details.*.discount_type" => $rules['order_details.*.discount_type'],
                     "order_details.*.tax" => $rules['order_details.*.tax'],
-                    "order_details.*.quantity" => $rules['order_details.*.quantity'],
-                    "order_details.*.total_price" => $rules['order_details.*.total_price']
+                    "order_details.*.quanity" => $rules['order_details.*.quanity'],
+                    "order_details.*.result" => $rules['order_details.*.result']
                 ];
             case "show":
                 return ["id" => $rules["id"]];

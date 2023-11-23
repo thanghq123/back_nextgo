@@ -19,12 +19,15 @@ class Tenant extends SpatieTenant
 
     protected $table = 'tenants';
     protected $fillable = [
-        "name",
         'business_name',
-        'address',
+        "name",
+        "domain",
         "database",
-        "user_id",
         "business_field_id",
+        "user_id",
+        "pricing_id",
+        'address',
+        "due_at",
         "created_at",
         "updated_at",
         "deleted_at",

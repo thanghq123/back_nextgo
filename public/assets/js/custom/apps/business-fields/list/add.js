@@ -93,6 +93,7 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                     detail: form.querySelector('[name="detail"]') ? form.querySelector('[name="detail"]').value : null,
                                     name_tenant: form.querySelector('[name="name_tenant"]') ? removeAccent(form.querySelector('[name="name_tenant"]').value.replace(/\s/g, "")) : null,
                                     business_field: form.querySelector('[name="business_field"]') ? form.querySelector('[name="business_field"]').value : null,
+                                    pricing_id: form.querySelector('[name="pricing_id"]') ? form.querySelector('[name="pricing_id"]').value : null,
                                     username: form.querySelector('[name="username"]') ? form.querySelector('[name="username"]').value : null,
                                     user_id: form.querySelector('[name="user_id"]') ? form.querySelector('[name="user_id"]').value : null,
                                     email: form.querySelector('[name="email"]') ? form.querySelector('[name="email"]').value : null,

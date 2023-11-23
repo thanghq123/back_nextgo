@@ -109,6 +109,16 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Lựa Chọn Gói Dịch Vụ</label>
+                                                <select class="form-select mb-2" name="pricing_id" data-control="select2"
+                                                        data-hide-search="true" data-placeholder="Chọn">
+                                                    <option></option>
+                                                    @foreach($pricing as $price)
+                                                        <option value="{{$price->id}}">{{$price->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <button type="button" class="btn btn-primary" id="add-user">

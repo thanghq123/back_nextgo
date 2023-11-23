@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('status')->default(true);
             $table->string('tel')->nullable();
-            $table->bigInteger('pricing_id')->default(1);
-            $table->date('expired_plan_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

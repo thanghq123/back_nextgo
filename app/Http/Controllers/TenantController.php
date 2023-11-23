@@ -6,6 +6,8 @@ use App\Http\Requests\TenantRequest;
 use App\Models\BusinessField;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Models\Pricing;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TenantController extends Controller
@@ -21,7 +23,8 @@ class TenantController extends Controller
         $tenants = Tenant::with(['user', 'business_field'])->orderBy('created_at', 'desc')->get();
         $businessField = BusinessField::all();
         $users = User::all();
-        return view('admin.tenant.index', compact('tenants', 'businessField', 'users'));
+        $pricing = Pricing::all();
+        return view('admin.tenant.index', compact('tenants', 'businessField', 'users', 'pricing'));
     }
 
     public function store()
@@ -48,6 +51,9 @@ class TenantController extends Controller
                     $tenant->database = $this->request->input('name_tenant');
                     $tenant->user_id = $this->request->input('user_id');
                     $tenant->business_field_id = $this->request->input('business_field');
+                    $tenant->due_at = $this->request->input('due_at');
+                    $tenant->pricing_id = $this->request->pricing_id;
+                    $tenant->due_at = Carbon::now()->addDays(30)->format('Y-m-d');
                     $tenant->status = 1;
                     $tenant->save();
                     return responseApi('Tạo chi nhánh thành công', true);

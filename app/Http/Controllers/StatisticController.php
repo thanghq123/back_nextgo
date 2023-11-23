@@ -12,7 +12,7 @@ class StatisticController extends Controller
     {
         $users = User::role('customer')->count();
         foreach (Pricing::get() as $pricing) {
-            $plan[$pricing->name] = User::role('customer')->where('pricing_id', $pricing->id)->count();
+            $plan[$pricing->name] = Tenant::where('pricing_id', $pricing->id)->count();
         }
         $tenants = Tenant::count();
         $pricings = Pricing::count();

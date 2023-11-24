@@ -242,6 +242,9 @@
                     let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
                     let phone_number = $('#kt_modal_add_business_field_form input[name="phone_number"]')
                     if (edit_id) {
+                        $("#button-submit").show()
+                        $(".form-add-user").show()
+                        $(".show-tenant").hide()
                         KTApp.showPageLoading();
                         $.ajax({
                             url: '{{route('admin.user.show')}}',
@@ -257,7 +260,7 @@
                                     phone_number.val(!data.payload.tel ? '' : data.payload.tel)
 
                                 } else {
-                                    $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                                    $('#kt_modal_add_business_field_form input[name="id"]').val(null)
                                     ten_user.val('')
                                     email.val('')
                                     phone_number.val('')
@@ -275,8 +278,8 @@
                             data: {show_id: tenant_id},
                             success: function (data) {
                                 $("#button-submit").hide()
-                                $(".show-tenant").show()
                                 $(".form-add-user").hide()
+                                $(".show-tenant").show()
                                 KTApp.hidePageLoading();
                                 $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
                                 if (data.status) {
@@ -299,7 +302,7 @@
                                     trang_thai.val(statusData.join(", ") ? statusData.join(", ") : "")
                                     $("form").find("input, select, textarea").prop("disabled", true);
                                 } else {
-                                    $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                                    $('#kt_modal_add_business_field_form input[name="id"]').val(null)
                                     ten_chi_nhanh.val('')
                                     ten_user.val('')
                                     email.val('')
@@ -310,8 +313,9 @@
                                 }
                             }
                         })
-                    } else {
-                        $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                    }
+                    if(!tenant_id && !edit_id){
+                        $('#kt_modal_add_business_field_form input[name="id"]').val(null)
                         $('#kt_modal_add_business_field_header .modal-header_title').text('Thêm mới người dùng')
                         $("form").find("input, select, textarea").prop("disabled", false);
                         $("#button-submit").show()

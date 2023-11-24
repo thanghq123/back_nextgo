@@ -47,10 +47,10 @@ const KTbusiness_fieldAddbusiness_field = function () {
                 btn_submit.addEventListener("click", (modalForm => {
                     let business_field_id = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : null;
                     modalForm.preventDefault(), checkForm && checkForm.validate().then((function (modalForm) {
-                        if ("Valid" == modalForm) {
+                        if ("Valid" === modalForm) {
                             (btn_submit.setAttribute("data-kt-indicator", "on"), btn_submit.disabled = !0, $.ajax({
-                                url: business_field_id != null ? (window.location.href + '/update').replace('#', '') : (window.location.href + '/store').replace('#', ''),
-                                method: business_field_id != null ? 'PUT' : 'POST',
+                                url: business_field_id? (window.location.href + '/update').replace('#', '') : (window.location.href + '/store').replace('#', ''),
+                                method: business_field_id ? 'PUT' : 'POST',
                                 data: {
                                     _token: form.querySelector('[name="_token"]').value,
                                     business_name: form.querySelector('[name="business_name"]') ? form.querySelector('[name="business_name"]').value : null,
@@ -69,7 +69,7 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                     phone_number: form.querySelector('[name="phone_number"]') ? form.querySelector('[name="phone_number"]').value : null,
                                     ten_user: form.querySelector('[name="ten_user"]') ? form.querySelector('[name="ten_user"]').value : null,
                                     email_user: form.querySelector('[name="email_user"]') ? form.querySelector('[name="email_user"]').value : null,
-                                    id: business_field_id != "" ? business_field_id : null
+                                    id: business_field_id ? business_field_id : null
                                 },
                                 success: function (data) {
                                     console.log(data);

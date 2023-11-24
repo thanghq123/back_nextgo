@@ -79,6 +79,7 @@ class UserController extends Controller
         }
     }
     public function update(){
+        return responseApi($this->request->url(),true);
         DB::beginTransaction();
         try {
             $user = User::query()->find($this->request->id);

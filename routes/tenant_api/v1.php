@@ -19,6 +19,7 @@ use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\VariationController;
 use App\Http\Controllers\Tenant\VariationQuantityController;
 use App\Http\Controllers\Tenant\PaymentController;
+use App\Http\Controllers\Tenant\StatisticController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -174,9 +175,15 @@ Route::prefix('printed_forms')->middleware('cors')->name('printed_forms')->group
     Route::post('delete', [PrintedFormController::class, 'delete'])->name('delete');
     Route::post('/return', [PrintedFormController::class, 'return'])->name('return');
 });
+
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::post('/', [PaymentController::class, 'index'])->name('list');
     Route::post('/debt', [PaymentController::class, 'storeDebt'])->name('storeDebt');
     Route::post('/order', [PaymentController::class, 'storeOrder'])->name('storeOrder');
 });
+
+Route::prefix('report')->name('report.')->group(function () {
+    Route::post('income', [StatisticController::class, 'income'])->name('income');
+});
+
 

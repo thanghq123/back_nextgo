@@ -29,20 +29,13 @@ class TenantController extends Controller
 
     public function store()
     {
+
         DB::beginTransaction();
         try {
             if (!empty($this->request->validated())) {
                 $filterDatabase = Tenant::where('database', $this->request->input('name_tenant'))->get();
                 if (count($filterDatabase) > 0) return responseApi('Cơ sở đã tổn tại');
-                else if (!$this->request->has('user_id')) {
-                    $user = new User();
-                    $user->name = $this->request->input('username');
-                    $user->email = $this->request->input('email');
-                    $user->password = password_hash($this->request->input('password'),PASSWORD_DEFAULT);
-                    $user->pricing_id = 1;
-                    $user->save();
-                    return responseApi('Tạo người dùng thành công', true);
-                } else {
+                else {
                     $tenant = new Tenant();
                     $tenant->business_name = $this->request->input('business_name');
                     $tenant->address = $this->request->input('address');
@@ -51,9 +44,8 @@ class TenantController extends Controller
                     $tenant->database = $this->request->input('name_tenant');
                     $tenant->user_id = $this->request->input('user_id');
                     $tenant->business_field_id = $this->request->input('business_field');
-                    $tenant->due_at = $this->request->input('due_at');
                     $tenant->pricing_id = $this->request->pricing_id;
-                    $tenant->due_at = Carbon::now()->addDays(30)->format('Y-m-d');
+                    $tenant->due_at = Carbon::now()->addDays($this->request->input('due_at'))->format('Y-m-d');
                     $tenant->status = 1;
                     $tenant->save();
                     return responseApi('Tạo chi nhánh thành công', true);

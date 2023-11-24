@@ -51,11 +51,6 @@ class User extends Authenticatable
         return $this->hasMany(Tenant::class, 'user_id');
     }
 
-    public function pricing()
-    {
-        return $this->belongsTo(Pricing::class, 'pricing_id');
-    }
-
     public function parent()
     {
         return $this->belongsTo(User::class, 'created_by');

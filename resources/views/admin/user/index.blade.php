@@ -25,7 +25,7 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <button type="button" class="btn btn-primary" style="margin-right: 20px" data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_add_business_field1">
+                            data-bs-target="#kt_modal_add_business_field">
                         <i class="ki-duotone ki-plus fs-2"></i>Thêm Người Dùng
                     </button>
                     <!--begin::Hide default export buttons-->
@@ -51,7 +51,7 @@
                             <!--begin::Modal header-->
                             <div class="modal-header" id="kt_modal_add_business_field_header">
                                 <!--begin::Modal title-->
-                                <h2 class="modal-header_title fw-bold">Thêm mặt hàng</h2>
+                                <h2 class="modal-header_title fw-bold">Thêm người dùng</h2>
                                 <!--end::Modal title-->
                                 <!--begin::Close-->
                                 <div class="btn btn-icon btn-sm btn-active-icon-primary"
@@ -89,30 +89,47 @@
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
                                                    value=""/>
                                         </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tên chi nhánh</label>
-                                            <input type="text" name="ten_chi_nhanh"
-                                                   class="form-control form-control-solid mb-3 mb-lg-0"
-                                                   value=""/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Lĩnh vực kinh doanh</label>
-                                            <input type="text" name="linh_vuc_kinh_doanh"
-                                                   class="form-control form-control-solid mb-3 mb-lg-0"
-                                                   value=""/>
-                                        </div>
 
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Người Tạo</label>
-                                            <input type="text" name="nguoi_tao"
-                                                   class="form-control form-control-solid mb-3 mb-lg-0"
-                                                   value=""/>
+                                        <div class="form-add-user">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Mật khẩu</label>
+                                                <input type="password" name="password" autocomplete="off"
+                                                       class="form-control form-control-solid"/>
+                                            </div>
+
+                                            <div class="fv-row mb-7">
+                                                <label class="fw-semibold fs-6 mb-2">Số điện thoại</label>
+                                                <input class="form-control form-control-solid" name="phone_number"
+                                                       id="kt_inputmask_2" inputmode="text">
+                                            </div>
                                         </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Trạng thái</label>
-                                            <input type="text" name="trang_thai"
-                                                   class="form-control form-control-solid mb-3 mb-lg-0"
-                                                   value=""/>
+                                        <div class="show-tenant">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tên chi nhánh</label>
+                                                <input type="text" name="ten_chi_nhanh"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       value=""/>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Lĩnh vực kinh
+                                                    doanh</label>
+                                                <input type="text" name="linh_vuc_kinh_doanh"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       value=""/>
+                                            </div>
+
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Người Tạo</label>
+                                                <input type="text" name="nguoi_tao"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       value=""/>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Trạng thái</label>
+                                                <input type="text" name="trang_thai"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       value=""/>
+                                            </div>
                                         </div>
                                     </div>
                                     <!--end::Scroll-->
@@ -177,6 +194,11 @@
                                        data-bs-target="#kt_modal_add_business_field" data-id="{{$user->id}}">Show</a>
                                 </div>
                                 <div class="menu-item px-3">
+                                    <a href="" class="menu-link px-3" data-bs-toggle="modal"
+                                       data-bs-target="#kt_modal_add_business_field"
+                                       data-edit-id="{{$user->id}}">Edit</a>
+                                </div>
+                                <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3"
                                        data-kt-business_field-table-filter="delete_row"
                                        data-id="{{$user->id}}">Delete</a>
@@ -207,69 +229,104 @@
     <script src="{{asset('assets/js/custom/apps/business-fields/list/add.js')}}"></script>
     <script>
         $(document).ready(function () {
+            $(".form-add-user").hide()
             $('#kt_modal_add_business_field').on('show.bs.modal', function (event) {
-                let button = $(event.relatedTarget)
-                let tenant_id = button.data('id')
-                let ten_chi_nhanh = $('#kt_modal_add_business_field_form input[name="ten_chi_nhanh"]')
-                let ten_user = $('#kt_modal_add_business_field_form input[name="ten_user"]')
-                let email = $('#kt_modal_add_business_field_form input[name="email_user"]')
-                let nguoi_tao = $('#kt_modal_add_business_field_form input[name="nguoi_tao"]')
-                let linh_vuc_kinh_doanh = $('#kt_modal_add_business_field_form input[name="linh_vuc_kinh_doanh"]')
-                let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
-                if (tenant_id) {
-                    KTApp.showPageLoading();
-                    $.ajax({
-                        url: '{{route('admin.user.show')}}',
-                        type: 'GET',
-                        data: {id: tenant_id},
-                        success: function (data) {
-                            $("#button-submit").hide()
-                            KTApp.hidePageLoading();
-                            $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
-                            if (data.status) {
-                                let tenantData = [];
-                                let locationData = [];
-                                let statusData = [];
-                                $('#kt_modal_add_business_field_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
-                                if (data.payload.tenants.length !== 0) {
-                                    data.payload.tenants.forEach(function (value) {
-                                        tenantData.push(value.name)
-                                        statusData.push(value.name === 0 ? 'Chưa kích hoạt' : 'Kích hoạt')
-                                        locationData.push(value.business_field.name)
-                                    })
+                    let button = $(event.relatedTarget)
+                    let tenant_id = button.data('id')
+                    let edit_id = button.data('edit-id');
+                    let ten_chi_nhanh = $('#kt_modal_add_business_field_form input[name="ten_chi_nhanh"]')
+                    let ten_user = $('#kt_modal_add_business_field_form input[name="ten_user"]')
+                    let email = $('#kt_modal_add_business_field_form input[name="email_user"]')
+                    let nguoi_tao = $('#kt_modal_add_business_field_form input[name="nguoi_tao"]')
+                    let linh_vuc_kinh_doanh = $('#kt_modal_add_business_field_form input[name="linh_vuc_kinh_doanh"]')
+                    let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
+                    let phone_number = $('#kt_modal_add_business_field_form input[name="phone_number"]')
+                    if (edit_id) {
+                        KTApp.showPageLoading();
+                        $.ajax({
+                            url: '{{route('admin.user.show')}}',
+                            type: 'GET',
+                            data: {update_id: edit_id},
+                            success: function (data) {
+                                KTApp.hidePageLoading();
+                                $('#kt_modal_add_business_field_header .modal-header_title').text('Cập nhật chi nhánh')
+                                if (data.status) {
+                                    $('#kt_modal_add_business_field_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
+                                    ten_user.val(data.payload.name)
+                                    email.val(data.payload.email)
+                                    phone_number.val(!data.payload.tel ? '' : data.payload.tel)
+
+                                } else {
+                                    $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                                    ten_user.val('')
+                                    email.val('')
+                                    phone_number.val('')
                                 }
-                                ten_user.val(data.payload.name)
-                                ten_chi_nhanh.val(tenantData.join(", ") ? tenantData.join(", ") : "")
-                                email.val(data.payload.email)
-                                nguoi_tao.val(data.payload.parent?.name)
-                                linh_vuc_kinh_doanh.val(locationData.join(", ") ? locationData.join(", ") : "")
-                                trang_thai.val(statusData.join(", ") ? statusData.join(", ") : "")
-                                $("form").find("input, select, textarea").prop("disabled", true);
-                            } else {
-                                $('#kt_modal_add_business_field_form input[name="id"]').val('')
-                                ten_chi_nhanh.val('')
-                                ten_user.val('')
-                                email.val('')
-                                nguoi_tao.val('')
-                                linh_vuc_kinh_doanh.val('')
-                                trang_thai.val('')
-                                $("form").find("input, select, textarea").prop("disabled", false);
                             }
-                        }
-                    })
-                } else {
-                    $('#kt_modal_add_business_field_form input[name="id"]').val('')
-                    $('#kt_modal_add_business_field_header .modal-header_title').text('Thêm mới người dùng')
-                    $("form").find("input, select, textarea").prop("disabled", false);
-                    $("#button-submit").show()
-                    ten_chi_nhanh.val('')
-                    ten_user.val('')
-                    email.val('')
-                    nguoi_tao.val('')
-                    linh_vuc_kinh_doanh.val('')
-                    trang_thai.val('')
+
+
+                        })
+                    }
+                    if (tenant_id) {
+                        KTApp.showPageLoading();
+                        $.ajax({
+                            url: '{{route('admin.user.show')}}',
+                            type: 'GET',
+                            data: {show_id: tenant_id},
+                            success: function (data) {
+                                $("#button-submit").hide()
+                                $(".show-tenant").show()
+                                $(".form-add-user").hide()
+                                KTApp.hidePageLoading();
+                                $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
+                                if (data.status) {
+                                    let tenantData = [];
+                                    let locationData = [];
+                                    let statusData = [];
+                                    $('#kt_modal_add_business_field_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
+                                    if (data.payload.tenants.length !== 0) {
+                                        data.payload.tenants.forEach(function (value) {
+                                            tenantData.push(value.name)
+                                            statusData.push(value.name === 0 ? 'Chưa kích hoạt' : 'Kích hoạt')
+                                            locationData.push(value.business_field.name)
+                                        })
+                                    }
+                                    ten_user.val(data.payload.name)
+                                    ten_chi_nhanh.val(tenantData.join(", ") ? tenantData.join(", ") : "")
+                                    email.val(data.payload.email)
+                                    nguoi_tao.val(data.payload.parent?.name)
+                                    linh_vuc_kinh_doanh.val(locationData.join(", ") ? locationData.join(", ") : "")
+                                    trang_thai.val(statusData.join(", ") ? statusData.join(", ") : "")
+                                    $("form").find("input, select, textarea").prop("disabled", true);
+                                } else {
+                                    $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                                    ten_chi_nhanh.val('')
+                                    ten_user.val('')
+                                    email.val('')
+                                    nguoi_tao.val('')
+                                    linh_vuc_kinh_doanh.val('')
+                                    trang_thai.val('')
+                                    $("form").find("input, select, textarea").prop("disabled", false);
+                                }
+                            }
+                        })
+                    } else {
+                        $('#kt_modal_add_business_field_form input[name="id"]').val('')
+                        $('#kt_modal_add_business_field_header .modal-header_title').text('Thêm mới người dùng')
+                        $("form").find("input, select, textarea").prop("disabled", false);
+                        $("#button-submit").show()
+                        $(".form-add-user").show()
+                        $(".show-tenant").hide()
+                        ten_chi_nhanh.val('')
+                        ten_user.val('')
+                        email.val('')
+                        nguoi_tao.val('')
+                        linh_vuc_kinh_doanh.val('')
+                        trang_thai.val('')
+                        phone_number.val('')
+                    }
                 }
-            })
+            )
             $('#show-trash').click(function () {
                 window.location.href = '{{route('admin.user.trash')}}'
             })

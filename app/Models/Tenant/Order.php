@@ -48,19 +48,32 @@ class Order extends Model
     {
         return $this->morphMany(Payment::class, 'paymentable');
     }
-    public function scopeToday($query){
-        return $query->whereDate('created_at', Carbon::today())->sum('total_price');
+
+    public function scopeOrderCompleted($query){
+        return $query->whereDate('created_at', Carbon::today())->where('payment_status', 2)->sum('total_price');
     }
-    public function scopeYesterday($query){
-        return $query->whereDate('created_at', Carbon::yesterday())->sum('total_price');
-    }
-    public function scopeSevenDays($query){
-        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->sum('total_price');
-    }
-    public function scopeThirtyDays($query){
-        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->sum('total_price');
-    }
-    public function scopeFromTo($query, $startDate, $endDate){
-        return $query->whereBetween('created_at', [$startDate, $endDate])->sum('total_price');
+
+    public function scopeWhereCreatedAt($query,array $option = [],int $locationId = 0){
+        $query->when($locationId != 0, function ($query) use ($locationId){
+            return $query->with([
+                'paymentable.location' => function($query) use ($locationId){
+                    $query->where('id', $locationId);
+                }]);
+        });
+
+        switch ($option[0]){
+            case 'today':
+                return $query->whereDate('created_at', Carbon::today())->sum('total_price');
+            case 'yesterday':
+                return $query->whereDate('created_at', Carbon::yesterday())->sum('total_price');
+            case 'sevenDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->sum('total_price');
+            case 'thirtyDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->sum('total_price');
+            case 'fromTo':
+                return $query->whereBetween('created_at', [$option[1], $option[2]])->sum('total_price');
+            default:
+                return responseApi("Lỗi", false);
+        }
     }
 }

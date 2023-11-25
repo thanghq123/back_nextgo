@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
@@ -30,5 +31,31 @@ class Payment extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by','id');
+    }
+
+    public function scopeWhereMethod($query,int $payment_method,array $option = [],int $locationId = 0){
+        $query->when($locationId != 0, function ($query) use ($locationId){
+           return $query->with([
+                'paymentable.location' => function($query) use ($locationId){
+                    $query->where('id', $locationId);
+                }]);
+        });
+
+        $query->where('payment_method', $payment_method);
+
+        switch ($option[0]){
+            case 'today':
+                return $query->whereDate('payment_at', Carbon::today())->sum('amount');
+            case 'yesterday':
+                return $query->whereDate('payment_at', Carbon::yesterday())->sum('amount');
+            case 'sevenDays':
+                return $query->whereDate('payment_at', '>=', Carbon::now()->subDays(7))->sum('amount');
+            case 'thirtyDays':
+                return $query->whereDate('payment_at', '>=', Carbon::now()->subDays(30))->sum('amount');
+            case 'fromTo':
+                return $query->whereBetween('payment_at', [$option[1], $option[2]])->sum('amount');
+            default:
+                return responseApi("Lỗi", false);
+        }
     }
 }

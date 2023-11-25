@@ -184,6 +184,10 @@ Route::prefix('payment')->name('payment.')->group(function () {
 
 Route::prefix('report')->name('report.')->group(function () {
     Route::post('income', [StatisticController::class, 'income'])->name('income');
+    Route::post('products', [StatisticController::class, 'products'])->name('products');
+    Route::post('payment-methods', [StatisticController::class, 'paymentMethods'])->name('payment-methods');
+    Route::post('general', [StatisticController::class, 'general'])->name('general');
+    Route::post('customers', [StatisticController::class, 'customers'])->name('customers');
 });
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 function createFolder($folderName, $cloud = 'google')
@@ -99,6 +100,7 @@ function getContent($folderName, $fileName, $cloud = 'google')
 if (!function_exists('responseApi')) {
     function responseApi(mixed $data = "Not found", bool $status = false, int $code = 200, mixed $dataAppend = []): \Illuminate\Http\JsonResponse
     {
+
         if (!$status) $data = ['status' => $status, 'meta' => $data];
 
         if ($status) $data = ['status' => $status, 'payload' => $data];
@@ -107,12 +109,13 @@ if (!function_exists('responseApi')) {
 
         return response()->json(
             $data,
-            $code
+            $code,
         );
     }
 }
 
-function paginateCustom($data, $dataPaginate){
+function paginateCustom($data, $dataPaginate)
+{
     return new \Illuminate\Pagination\LengthAwarePaginator(
         $data,
         $dataPaginate->total(),
@@ -124,4 +127,19 @@ function paginateCustom($data, $dataPaginate){
             ]
         ]
     );
+}
+
+function generateUserToken($user): array
+{
+    $token = $user->createToken('authToken');
+    $expires_at = Carbon::now()->addHour('2')->timestamp;
+    $token->expires_at = $expires_at;
+    $tokenGen = $token->plainTextToken;
+    $data = [
+        'user' => $user,
+        'token' => $tokenGen,
+        'expires_at' => $expires_at,
+        'token_type' => 'Bearer',
+    ];
+    return $data;
 }

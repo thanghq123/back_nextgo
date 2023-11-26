@@ -25,12 +25,15 @@ class TenantRequest extends FormRequest
     public function rules()
     {
         $url = Str::afterLast($this->url(), '/');
+        $user_id = $this->user_id ?? auth()->user()?->id;
+
         if($url == 'store'){
             if($this->user_id){
                 return [
                     'name_tenant' => 'required',
-                    'business_field' => 'required',
-                    'user_id' => 'required'
+                    'business_field' => $this->business_code ? 'nullable' : 'required',
+                    'user_id' => 'required',
+                    'business_name' => 'required',
                 ];
             }else{
                 return [
@@ -47,6 +50,7 @@ class TenantRequest extends FormRequest
         return [
             'name.required' => 'Tên phải được nhập',
             'business_field.required' => 'Lĩnh vực kinh doanh phải được chọn',
+            'business_name.required' => 'Vui lòng điền tên cửa hàng',
             'user_id.required' => 'Người dùng phải được chọn',
             'username.required' => 'Tên người dùng phải được nhập',
             'email.required' => 'Email phải được nhập',

@@ -28,16 +28,36 @@ class DatabaseSeeder extends Seeder
     public function runTenantSpecificSeeders()
     {
         // run tenant specific seeders
-//        \App\Models\Tenant\User::query()->create([
-//            'name' => 'tenant1',
-//            'email' => 'tenant1@gmail.com',
-//            'password' => Hash::make('12345678'),
-//        ]);
 
-        Tenant\Role::create([
-            'name' => 'admin',
-            'guard_name' => 'api'
+        Tenant\Role::query()->insert([
+            [
+                'name' => 'super-admin',
+                'guard_name' => 'api',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'admin',
+                'guard_name' => 'api',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'staff',
+                'guard_name' => 'api',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
+
+        $staff = \App\Models\Tenant\User::query()->create([
+            'name' => 'staff1',
+            'email' => 'staff1@gmail.com',
+            'password' => Hash::make('12345678'),
+            'location_id' => 1,
+        ]);
+
+        $staff->roles()->attach(\App\Models\Tenant\Role::query()->where('name', 'staff')->first()->id);
 
         Tenant\PrintedForm::query()->create(config('printed_form'));
 

@@ -24,8 +24,6 @@ class User extends Authenticatable
         'password',
         'tel',
         'status',
-        'pricing_id',
-        'expired_plan_at',
         'created_by'
     ];
 
@@ -53,9 +51,14 @@ class User extends Authenticatable
         return $this->hasMany(Tenant::class, 'user_id');
     }
 
-    public function pricing()
+    public function parent()
     {
-        return $this->belongsTo(Pricing::class, 'pricing_id');
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 
 }

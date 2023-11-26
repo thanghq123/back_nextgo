@@ -25,26 +25,20 @@ class TenantRequest extends FormRequest
     public function rules()
     {
         $url = Str::afterLast($this->url(), '/');
-        $user_id = $this->user_id ?? auth()->user()?->id;
-
-        if($url == 'store'){
-            if($this->user_id){
-                return [
-                    'name_tenant' => 'required',
-                    'business_field' => $this->business_code ? 'nullable' : 'required',
-                    'user_id' => 'required',
-                    'business_name' => 'required',
-                ];
-            }else{
-                return [
-                    'username' => 'required',
-                    'email' => 'required|email',
-                    'password' => 'required'
-                ];
-            }
+        if ($url == 'store') {
+            return [
+                'name_tenant' => 'required',
+                'business_field' => $this->business_code ? 'nullable' : 'required',
+                'user_id' => 'required',
+                'due_at' => 'nullable',
+                'pricing_id' => 'nullable',
+                'business_name' => 'required',
+                'address' => 'required'
+            ];
         }
         return [];
     }
+
     public function messages()
     {
         return [
@@ -55,7 +49,9 @@ class TenantRequest extends FormRequest
             'username.required' => 'Tên người dùng phải được nhập',
             'email.required' => 'Email phải được nhập',
             'email.email' => 'Email không đúng định dạng',
-            'password.required' => 'Mật khẩu phải được nhập'
+            'password.required' => 'Mật khẩu phải được nhập',
+            'due_at.required' => 'Ngày hết hạn phải được nhập',
+            'due_at.in' => 'Ngày hết hạn ko hợp lệ',
         ];
     }
 }

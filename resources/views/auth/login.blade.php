@@ -44,8 +44,8 @@
         </div>
         <!--end::Submit button-->
         <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">Bạn chưa có tài khoản ?
-            <a href="{{ route('register') }}" class="link-primary">Đăng kí</a></div>
+{{--        <div class="text-gray-500 text-center fw-semibold fs-6">Bạn chưa có tài khoản ?--}}
+{{--            <a href="{{ route('register') }}" class="link-primary">Đăng kí</a></div>--}}
         <!--end::Sign up-->
     </form>
 @endsection

@@ -28,10 +28,10 @@ class TenantRequest extends FormRequest
         if ($url == 'store') {
             return [
                 'name_tenant' => 'required',
-                'business_field' => 'required',
+                'business_field' => $this->business_code ? 'nullable' : 'required',
                 'user_id' => 'required',
-                'due_at' => 'required|in:14, 365, 730, 1095',
-                'pricing_id' => 'required',
+                'due_at' => 'nullable',
+                'pricing_id' => 'nullable',
                 'business_name' => 'required',
                 'address' => 'required'
             ];
@@ -44,6 +44,7 @@ class TenantRequest extends FormRequest
         return [
             'name.required' => 'Tên phải được nhập',
             'business_field.required' => 'Lĩnh vực kinh doanh phải được chọn',
+            'business_name.required' => 'Vui lòng điền tên cửa hàng',
             'user_id.required' => 'Người dùng phải được chọn',
             'username.required' => 'Tên người dùng phải được nhập',
             'email.required' => 'Email phải được nhập',

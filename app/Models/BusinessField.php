@@ -8,7 +8,7 @@ use Spatie\Multitenancy\Models\Concerns\UsesLandlordConnection;
 
 class BusinessField extends Model
 {
-    use HasFactory,UsesLandlordConnection;
+    use HasFactory;
 
     protected $table = 'business_fields';
     protected $fillable = [

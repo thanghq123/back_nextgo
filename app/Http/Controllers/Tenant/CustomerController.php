@@ -21,7 +21,7 @@ class CustomerController extends Controller
             $customerData = $this->model::with(['group_customer' => function ($query) {
                 $query->where('type', 0);
             }])
-                ->where('type', 0)
+                ->where('type', '<>',1)
                 ->orderBy('id', 'desc')
                 ->get();
             $data = $customerData->map(function ($customerData){

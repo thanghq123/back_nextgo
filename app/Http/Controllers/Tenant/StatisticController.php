@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\StatisticRequest;
+use App\Models\Tenant\Customer;
 use App\Models\Tenant\OrderDetail;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Order;
-use App\Models\Tenant\Product;
+use Carbon\Carbon;
 
 class StatisticController extends Controller
 {
     public function __construct(
         private Order $orderModel,
         private OrderDetail $orderDetailModel,
+        private Customer $customerModel,
         private Payment $paymentModel,
         private StatisticRequest $request
     ) {
@@ -21,14 +23,14 @@ class StatisticController extends Controller
 
     public function income(){
         try {
-            $option = $this->request->option;
-            $locationId = $this->request->location ?? 0;
-//            $inventoryId = $this->request->inventory_id ?? 0;
-            $startDate = $this->request->start_date;
-            $endDate = $this->request->end_date;
-
             return responseApi([
-                $option => $this->orderModel::query()->whereCreatedAt([$option, $startDate, $endDate], $locationId)
+                $this->request->option => $this->orderModel::query()->whereCreatedAt(
+                    [
+                        $this->request->option,
+                        $this->request->start_date,
+                        $this->request->end_date],
+                    $this->request->location,
+                    $this->request->inventory_id)
             ], true);
         }catch (\Throwable $throwable)
         {
@@ -70,16 +72,34 @@ class StatisticController extends Controller
 
     public function paymentMethods(){
         try {
-            $option = $this->request->option;
-            $locationId = $this->request->location ?? 0;
-//            $inventoryId = $this->request->inventory_id ?? 0;
-            $startDate = $this->request->start_date ?? null;
-            $endDate = $this->request->end_date ?? null;
-
             return responseApi([
-                "cash" => $this->paymentModel::query()->whereMethod(0,[$option, $startDate, $endDate], $locationId),
-                "transfer" => $this->paymentModel::query()->whereMethod(1,[$option, $startDate, $endDate], $locationId),
-                "debit" => $this->paymentModel::query()->whereMethod(2,[$option, $startDate, $endDate], $locationId)
+                "cash" => $this->paymentModel::query()->whereMethod(0,
+                    [
+                        $this->request->option,
+                        $this->request->start_date,
+                        $this->request->end_date
+                    ],
+                    $this->request->location,
+                    $this->request->inventory_id
+                ),
+                "transfer" => $this->paymentModel::query()->whereMethod(1,
+                    [
+                        $this->request->option,
+                        $this->request->start_date,
+                        $this->request->end_date
+                    ],
+                    $this->request->location,
+                    $this->request->inventory_id
+                ),
+                "debit" => $this->paymentModel::query()->whereMethod(2,
+                    [
+                        $this->request->option,
+                        $this->request->start_date,
+                        $this->request->end_date
+                    ],
+                    $this->request->location,
+                    $this->request->inventory_id
+                )
             ], true);
         }catch (\Throwable $throwable)
         {
@@ -89,17 +109,29 @@ class StatisticController extends Controller
 
     public function customers(){
         try {
-            $option = $this->request->option;
-            $locationId = $this->request->location ?? 0;
-//            $inventoryId = $this->request->inventory_id ?? 0;
-            $startDate = $this->request->start_date ?? null;
-            $endDate = $this->request->end_date ?? null;
-
-            return responseApi([
-                "cash" => $this->orderModel::query()->whereMethod(0,[$option, $startDate, $endDate], $locationId),
-                "transfer" => $this->orderModel::query()->whereMethod(1,[$option, $startDate, $endDate], $locationId),
-                "debit" => $this->orderModel::query()->whereMethod(2,[$option, $startDate, $endDate], $locationId)
-            ], true);
+            $locationId = $this->request->location;
+            $inventoryId = $this->request->inventory_id;
+            return $this->customerModel::query()
+                ->with(['order' => function ($query) use ($locationId, $inventoryId) {
+                    $query->where('location_id', $locationId)
+                        ->whereHas('location', function ($query) use ($inventoryId) {
+                            $query->whereHas('inventories', function ($query) use ($inventoryId) {
+                                $query->where('id', $inventoryId);
+                            });
+                        })
+                        ->whereDate('created_at', '>=', '2023-11-27');
+                }])
+                ->whereHas('order', function ($query) use ($locationId, $inventoryId) {
+                    $query->where('location_id', $locationId)
+                        ->whereHas('location', function ($query) use ($inventoryId) {
+                            $query->whereHas('inventories', function ($query) use ($inventoryId) {
+                                $query->where('id', $inventoryId);
+                            });
+                        })
+                        ->whereDate('created_at', '>=', '2023-11-27');
+                })
+                ->withSum('order', 'total_price')
+                ->get();
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

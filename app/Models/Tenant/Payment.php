@@ -33,12 +33,18 @@ class Payment extends Model
         return $this->belongsTo(User::class,'created_by','id');
     }
 
-    public function scopeWhereMethod($query,int $payment_method,array $option = [],int $locationId = 0){
-        $query->when($locationId != 0, function ($query) use ($locationId){
-           return $query->with([
-                'paymentable.location' => function($query) use ($locationId){
-                    $query->where('id', $locationId);
-                }]);
+    public function scopeWhereMethod(
+        $query,
+        int $payment_method,
+        array $option = [],
+        ?int $locationId = 0,
+        ?int $inventoryId = 0){
+        $query->when($locationId != 0 && $inventoryId != 0, function ($query) use ($locationId, $inventoryId){
+            return $query->whereHas('paymentable', function($query) use ($locationId){
+                return $query->where('location_id', $locationId);
+            })->whereHas('paymentable.location.inventories', function($query) use ($inventoryId){
+                return $query->where('id', $inventoryId);
+            });
         });
 
         $query->where('payment_method', $payment_method);

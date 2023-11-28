@@ -21,6 +21,7 @@ use App\Http\Controllers\Tenant\VariationQuantityController;
 use App\Http\Controllers\Tenant\PaymentController;
 use App\Http\Controllers\Tenant\StatisticController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Tenant\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,7 +34,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('login/enterprise', [AuthController::class, 'loginEnterprise'])->name('login')->middleware('auth:sanctum');
     Route::post('get/enterprise', [AuthController::class, 'getUserEnterprise'])->name('getUserEnterprise');
@@ -43,11 +43,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/unauthorized', function () {
         return response()->json(['message' => 'Unauthorized'], 401);
     })->name('unauthorized');
-    Route::post('create-admin-tenant',[AuthController::class,'createAdminForTenant'])->name('create-admin-tenant');
-    Route::post('update-admin-tenant', [AuthController::class, 'updateAdminForTenant'])->name('update-admin-tenant');
-    Route::post('delete-admin-tenant', [AuthController::class, 'deleteAdminForTenant'])->name('delete-admin-tenant');
 });
-Route::post('create-tenant',[AuthController::class,'createTenant'])->name('create-tenant');
+
+
 
 Route::middleware('tenant')->group(function () {
 
@@ -61,7 +59,12 @@ Route::middleware('tenant')->group(function () {
     Route::post('get-variation', [VariationController::class, 'getListVariation']);
     Route::post('storage/list', [VariationQuantityController::class, 'getVariationQuantity']);
 
-    Route::get('user', [AuthController::class, 'getUser'])->middleware('auth:sanctum')->name('getUser');
+    Route::prefix('user')->name('user.')->group(function (){
+        Route::post('/',[UserController::class, 'list'])->name('list');
+        Route::post('store',[UserController::class,'store'])->name('store');
+        Route::post('update', [UserController::class, 'update'])->name('update');
+        Route::post('delete', [UserController::class, 'delete'])->name('delete');
+    });
     Route::prefix('categories')->name('categories')->group(function () {
         Route::post('/', [CategoryController::class, 'list'])->name('list');
         Route::post('store', [CategoryController::class, 'store'])->name('store');
@@ -194,6 +197,7 @@ Route::middleware('tenant')->group(function () {
     Route::prefix('report')->name('report.')->group(function () {
         Route::post('income', [StatisticController::class, 'income'])->name('income');
     });
+
 });
 
 

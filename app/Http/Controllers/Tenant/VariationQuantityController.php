@@ -21,7 +21,7 @@ class VariationQuantityController extends Controller
 
     public function getVariationQuantityById($id){
         try {
-            $variationQuantity = VariationQuantity::with(['variation','batch','variation.product:id,name'])->find($id);
+            $variationQuantity = VariationQuantity::with(['variation','batch','variation.product:id,code'])->find($id);
             if (!$variationQuantity){
                 return responseApi([],false);
             }

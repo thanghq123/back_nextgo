@@ -43,7 +43,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/unauthorized', function () {
         return response()->json(['message' => 'Unauthorized'], 401);
     })->name('unauthorized');
+    Route::post('create-admin-tenant',[AuthController::class,'createAdminForTenant'])->name('create-admin-tenant');
+    Route::post('update-admin-tenant', [AuthController::class, 'updateAdminForTenant'])->name('update-admin-tenant');
+    Route::post('delete-admin-tenant', [AuthController::class, 'deleteAdminForTenant'])->name('delete-admin-tenant');
 });
+Route::post('create-tenant',[AuthController::class,'createTenant'])->name('create-tenant');
 
 Route::middleware('tenant')->group(function () {
 

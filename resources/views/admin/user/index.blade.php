@@ -258,7 +258,7 @@
                                     ten_user.val(data.payload.name)
                                     email.val(data.payload.email)
                                     phone_number.val(!data.payload.tel ? '' : data.payload.tel)
-
+                                    $("form").find("input, select, textarea").prop("disabled", false);
                                 } else {
                                     $('#kt_modal_add_business_field_form input[name="id"]').val(null)
                                     ten_user.val('')

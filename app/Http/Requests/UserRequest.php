@@ -38,13 +38,13 @@ class UserRequest extends FormRequest
         }
         else if ($url == 'update') {
             return [
-//                'email_user' => [
-//                    'required',
-//                    'email',
-//                    'unique:users,email,'.$this->id
-//                ],
-//                'password' => 'required',
-//                'ten_user' => 'required'
+                'email_user' => [
+                    'required',
+                    'email',
+                    'unique:users,email,'.$this->id
+                ],
+                'password' => 'required',
+                'ten_user' => 'required'
             ];
         }
         return [

@@ -59,14 +59,17 @@ class InventoryTransactionController extends Controller
      * @path /tenant/api/v1/storage/import
      * @desciption danh sách đơn nhập kho
      * @method POST
-     * @param InventoryTransactionRequest $request
+     * @param InventoryTransactionRequest $request trans_type||null
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function list()
+    public function list(Request $request)
     {
         try {
             $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')->paginate(10);
+            if ($request->has('trans_type') && $request->trans_type != '') {
+                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',1)->paginate(10);
+            }
             $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
                 return [
                     "inventory_transaction_id" => $inventoryTransactionData->inventory_transaction_id,
@@ -78,18 +81,7 @@ class InventoryTransactionController extends Controller
                     "updated_at" => Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            $response = new \Illuminate\Pagination\LengthAwarePaginator(
-                $data,
-                $inventoryTransactionData->total(),
-                $inventoryTransactionData->perPage(),
-                $inventoryTransactionData->currentPage(), [
-                    'path' => \Request::url(),
-                    'query' => [
-                        'page' => $inventoryTransactionData->currentPage()
-                    ]
-                ]
-            );
-            return responseApi($response, true);
+            return responseApi(paginateCustom($data,$inventoryTransactionData), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -106,7 +98,7 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name')->where("inventory_transaction_id", $id)->get();
+            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->get();
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "id" => $inventoryTransactionData->id,
@@ -122,6 +114,7 @@ class InventoryTransactionController extends Controller
                     "inventory_transaction_details" => $inventoryTransactionData->inventoryTransactionDetails->map(function ($inventoryTransactionDetails) {
                         return [
                             "variation_name" => $inventoryTransactionDetails->variation->variation_name,
+                            "sku" => $inventoryTransactionDetails->variation->sku,
                             "batch_id" => $inventoryTransactionDetails->batch_id,
                             "quantity" => $inventoryTransactionDetails->quantity,
                             "price" => $inventoryTransactionDetails->price,
@@ -149,7 +142,7 @@ class InventoryTransactionController extends Controller
     {
         DB::beginTransaction();
         try {
-            if ($this->model::where('inventory_transaction_id',$request->id)->count()==0) {
+            if ($this->model::where('inventory_transaction_id', $request->id)->count() == 0) {
                 return responseApi("Không tìm thấy đơn hàng!", false);
             }
             $inventoryTransaction = $this->model::with('inventoryTransactionDetails')->where('inventory_transaction_id', $request->id)->where('trans_type', $request->tranType);
@@ -184,7 +177,7 @@ class InventoryTransactionController extends Controller
                 }
             }
             DB::commit();
-            $message =$request->tranType == 0 ? "Cập nhật thành công đơn nhập" : "Cập nhật thành công đơn xuất" . $inventoryTransaction->inventory_transaction_id;
+            $message = $request->tranType == 0 ? "Cập nhật thành công đơn nhập" : "Cập nhật thành công đơn xuất" . $inventoryTransaction->inventory_transaction_id;
             return responseApi($message, true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
@@ -241,6 +234,7 @@ class InventoryTransactionController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/trans/store
      * @desciption tạo đơn chuyển kho
@@ -287,7 +281,7 @@ class InventoryTransactionController extends Controller
                 "inventory_transaction_id" => $inventory_transaction_id,
                 "reason" => $request->reason,
                 "note" => $request->note,
-                "status" => 1,
+                "status" => 2,
                 "created_by" => $request->created_by
             ]);
             $inventoryTransaction->inventoryTransactionDetails()->createMany(collect($request->inventory_transaction_details)->toArray());
@@ -298,6 +292,7 @@ class InventoryTransactionController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/trans
      * @desciption danh sách đơn chuyển kho
@@ -337,6 +332,7 @@ class InventoryTransactionController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @desciption cập nhật trạng thái đơn chuyển kho khi đơn nhập và đơn xuất đã được xử lý
      * @return \Illuminate\Http\JsonResponse

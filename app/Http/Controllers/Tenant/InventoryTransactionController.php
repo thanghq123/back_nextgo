@@ -68,7 +68,7 @@ class InventoryTransactionController extends Controller
         try {
             $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')->paginate(10);
             if ($request->has('trans_type') && $request->trans_type != '') {
-                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',1)->paginate(10);
+                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',$request->trans_type)->paginate(10);
             }
             $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
                 return [
@@ -98,7 +98,7 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->get();
+            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->where('trans_type',0)->get();
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "id" => $inventoryTransactionData->id,
@@ -246,6 +246,10 @@ class InventoryTransactionController extends Controller
     public function createTransfer(InventoryTransactionRequest $request)
     {
         $inventory_transaction_id = Carbon::now()->timestamp;
+        $quantity = $this->variationQuantityModel::where('inventory_id', $request->inventory_id_out)->where('variation_id', collect($request->inventory_transaction_details)->toArray())->first()->quantity;
+        if ($quantity < $request->quantity) {
+            return responseApi("Số lượng tồn kho không đủ!", false);
+        }
         DB::beginTransaction();
         try {
             $inventoryTransaction = $this->model::create([

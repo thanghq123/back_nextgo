@@ -81,7 +81,7 @@ class PricingController extends Controller
                     'name',
                     'max_locations',
                     'max_users',
-                    'price_per_month',
+                    'price',
                 ])
                 ->get();
             return responseApi($pricings, true);

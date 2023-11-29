@@ -5,7 +5,7 @@ use App\Http\Controllers\PublicApi\Addresscontroller;
 use App\Http\Controllers\BusinessFieldController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,6 +34,7 @@ Route::prefix('tenants')->middleware(['auth:sanctum'])->name('tenants.')->group(
     Route::post('/get', function () {
         return auth()->user();
     });
+    Route::post('/subscription-orders', [OrderController::class, 'store'])->name('subscription-orders.store');
 });
 
 

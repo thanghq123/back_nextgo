@@ -13,6 +13,7 @@ use App\Http\Controllers\SeedController;
 use App\Http\Controllers\DataSeedController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -81,6 +82,18 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::prefix('tenant')->name('tenant.')->group(function (){
        Route::get('/',[TenantController::class,'index'])->name('index');
        Route::post('store',[TenantController::class,'store'])->name('store');
+    });
+    Route::prefix('order')->name('order.')->group(function (){
+        Route::get('/',[OrderController::class,'index'])->name('index');
+        Route::get('show',[OrderController::class,'show'])->name('show');
+        Route::post('create-note',[OrderController::class,'createNote'])->name('create-note');
+        Route::get('show-note',[OrderController::class,'showNote'])->name('show-note');
+        Route::patch('update-status',[OrderController::class,'updateStatus'])->name('update-status');
+        Route::post('store',[OrderController::class,'store'])->name('store');
+        Route::delete('delete',[OrderController::class,'delete'])->name('delete');
+        Route::get('request',[OrderController::class,'listTenantChangeHistory'])->name('request');
+        Route::get('show-request',[OrderController::class,'showTenantChangeHistory'])->name('show-request');
+        Route::post('payment',[OrderController::class,'storeOrder'])->name('payment');
     });
 });
 Route::fallback(function () {

@@ -87,7 +87,7 @@
                                                        placeholder="Địa chỉ" value=""/>
                                             </div>
                                             <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Tên miền(Viết liền khum
+                                                <label class="required fw-semibold fs-6 mb-2">Tên miền(Viết liền không
                                                     dấu)</label>
                                                 <input type="text" name="name_tenant"
                                                        class="form-control form-control-solid mb-3 mb-lg-0"
@@ -128,18 +128,18 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Chọn ngày hết hạn</label>
-                                                <select class="form-select mb-2" name="due_at" data-control="select2"
-                                                        data-hide-search="true" data-placeholder="Chọn"
-                                                        id="kt_ecommerce_add_product_status_select">
-                                                    <option hidden=""></option>
-                                                    <option value="14">Free (14 ngày)</option>
-                                                    <option value="365">1 Năm</option>
-                                                    <option value="730">2 Năm</option>
-                                                    <option value="1095">3 Năm</option>
-                                                </select>
-                                            </div>
+                                            {{--                                            <div class="fv-row mb-7">--}}
+                                            {{--                                                <label class="required fw-semibold fs-6 mb-2">Chọn ngày hết hạn</label>--}}
+                                            {{--                                                <select class="form-select mb-2" name="due_at" data-control="select2"--}}
+                                            {{--                                                        data-hide-search="true" data-placeholder="Chọn"--}}
+                                            {{--                                                        id="kt_ecommerce_add_product_status_select">--}}
+                                            {{--                                                    <option hidden=""></option>--}}
+                                            {{--                                                    <option value="14">Free (14 ngày)</option>--}}
+                                            {{--                                                    <option value="365">1 Năm</option>--}}
+                                            {{--                                                    <option value="730">2 Năm</option>--}}
+                                            {{--                                                    <option value="1095">3 Năm</option>--}}
+                                            {{--                                                </select>--}}
+                                            {{--                                            </div>--}}
                                         </div>
                                     </div>
                                     <!--end::Scroll-->

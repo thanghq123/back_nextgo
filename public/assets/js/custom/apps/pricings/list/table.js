@@ -66,7 +66,7 @@ var PricingList = function () {
                     order: [],
                     pageLength: 10,
                     lengthChange: false,
-                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 4}]
+                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 5}]
                 });
 
                 dataTable.on("draw", (function () {

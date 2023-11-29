@@ -33,7 +33,8 @@ class TenantController extends Controller
         DB::beginTransaction();
         try {
             if (!empty($this->request->validated())) {
-                $filterDatabase = Tenant::where('database', $this->request->input('name_tenant'))->get();
+                $tenantName=cleanText($this->request->input('name_tenant'));
+                $filterDatabase = Tenant::where('database', $tenantName)->get();
 
                 $business_field_id = $this->request->input('business_field');
 
@@ -48,16 +49,17 @@ class TenantController extends Controller
 
                 if (count($filterDatabase) > 0) return responseApi('Cơ sở đã tổn tại');
                 else {
+                    $due_at=Pricing::where('id',$this->request->pricing_id)->first()?->expiry_day;
                     $tenant = new Tenant();
                     $tenant->business_name = $this->request->input('business_name');
                     $tenant->address = $this->request->input('address');
-                    $tenant->name = $this->request->input('name_tenant');
-                    $tenant->domain = $this->request->input('name_tenant') . ".com";
-                    $tenant->database = $this->request->input('name_tenant');
+                    $tenant->name = $tenantName;
+                    $tenant->domain = env('APP_URL').'/'.$tenantName;
+                    $tenant->database = $tenantName;
                     $tenant->user_id = $this->request->input('user_id');
                     $tenant->business_field_id = $business_field_id;
                     $tenant->pricing_id = $this->request->pricing_id;
-                    $tenant->due_at = Carbon::now()->addDays($this->request->input('due_at') ?? 7)->format('Y-m-d');
+                    $tenant->due_at = Carbon::now()->addDays($due_at)->format('Y-m-d');
                     $tenant->status = 1;
                     $tenant->save();
                     return responseApi('Tạo chi nhánh thành công', true);

@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pricings', function (Blueprint $table) {
+        Schema::create('subscription_orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tenant_id');
+            $table->index('tenant_id');
+            $table->unsignedBigInteger('pricing_id');
+            $table->boolean('type')->nullable();
             $table->string('name');
-            $table->integer('max_locations');
-            $table->integer('max_users');
-            $table->double('price');
-            $table->integer('expiry_day');
+            $table->string('tel');
+            $table->unsignedBigInteger('assigned_to');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pricings');
+        Schema::dropIfExists('subscription_orders');
     }
 };

@@ -73,7 +73,7 @@
                         <td>{{$value['name']}}</td>
                         <td>{{$value['tel']}}</td>
                         <td>
-{{--                            <span class="badge status-list--span badge-light-{{$value['status']==0?'danger':($value['status']==1?'warning':($value['status']==2?'info':'success'))}}">{{$value['status']==0?'Huỷ':($value['status']==1?'Chưa xử lý':($value['status']==2?'Đang xử lý':'Đã hoàn thành'))}}</span>--}}
+                            {{--                            <span class="badge status-list--span badge-light-{{$value['status']==0?'danger':($value['status']==1?'warning':($value['status']==2?'info':'success'))}}">{{$value['status']==0?'Huỷ':($value['status']==1?'Chưa xử lý':($value['status']==2?'Đang xử lý':'Đã hoàn thành'))}}</span>--}}
                             <select class="form-select form-select-solid status-list" aria-label="Trạng thái">
                                 <option value="0" {{$value['status']==0?'selected':''}}>Huỷ</option>
                                 <option value="1" {{$value['status']==1?'selected':''}}>Chưa xử lý</option>
@@ -194,8 +194,8 @@
                             </div>
                             <div class="fv-row mb-7">
                                 <label class="fw-semibold fs-6 mb-2">Ghi chú</label>
-                               <textarea class="form-control form-control-solid" name="note" id="" cols="30"
-                                         rows="10"></textarea>
+                                <textarea class="form-control form-control-solid" name="note" id="" cols="30"
+                                          rows="10"></textarea>
                             </div>
                             <!--end::Input group-->
                         </div>
@@ -285,8 +285,15 @@
                             </div>
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Người phụ trách</label>
-                                <input type="text" disabled class="form-control form-control-solid assigned_to-detail"
-                                       value="" placeholder="Người phụ trách"/>
+                                <select class="form-select form-select-solid assigned_to-detail"
+                                        data-control="select2" name="assigned_to"
+                                        data-placeholder="Chọn người phụ trách"
+                                        data-dropdown-parent="#kt_modal_show_detail" >
+                                    <option></option>
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Ngày tạo</label>
@@ -411,6 +418,7 @@
                 let assigned_to = $('#kt_modal_show_detail_form .assigned_to-detail')
                 let created_at = $('#kt_modal_show_detail_form .created_at-detail')
                 let note = $('#kt_modal_show_detail_form .note-detail')
+                $('#kt_modal_show_detail_form').append('<input type="hidden" name="subscription_order_id" value="' + subscription_order_id + '">')
                 if (subscription_order_id) {
                     KTApp.showPageLoading();
                     $.ajax({
@@ -433,16 +441,30 @@
                 }
             })
             //update status
-            $('.status-list').on('change',function () {
+            $('.status-list').on('change', function () {
                 let status = $(this).val()
                 let id = $(this).parents('tr').data('id')
-                console.log(id,status)
+                console.log(id, status)
                 $.ajax({
                     url: '{{route('admin.order.update-status')}}',
                     type: 'PATCH',
-                    data: {id: id, status: status , _token : '{{csrf_token()}}'},
+                    data: {id: id, status: status, _token: '{{csrf_token()}}'},
                     success: function (data) {
                         toastr.success('Cập nhật trạng thái thành công')
+                    }
+                })
+            })
+
+            $('.assigned_to-detail').on('change', function () {
+                let assigned_to = $(this).val()
+                let id = $('#kt_modal_show_detail_form input[name="subscription_order_id"]').val()
+                console.log(id, assigned_to)
+                $.ajax({
+                    url: '{{route('admin.order.update-assigned')}}',
+                    type: 'PATCH',
+                    data: {id: id, assigned_to: assigned_to, _token: '{{csrf_token()}}'},
+                    success: function (data) {
+                        if (data.status == 200) toastr.success('Cập nhật người phụ trách thành công')
                     }
                 })
             })

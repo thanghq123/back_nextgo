@@ -89,6 +89,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::post('create-note',[OrderController::class,'createNote'])->name('create-note');
         Route::get('show-note',[OrderController::class,'showNote'])->name('show-note');
         Route::patch('update-status',[OrderController::class,'updateStatus'])->name('update-status');
+        Route::patch('update-assigned',[OrderController::class,'updateAssignedTo'])->name('update-assigned');
         Route::post('store',[OrderController::class,'store'])->name('store');
         Route::delete('delete',[OrderController::class,'delete'])->name('delete');
         Route::get('request',[OrderController::class,'listTenantChangeHistory'])->name('request');

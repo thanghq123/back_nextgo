@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('subscription_order_id');
             $table->index('subscription_order_id');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });

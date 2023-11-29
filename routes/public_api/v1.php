@@ -34,7 +34,7 @@ Route::prefix('tenants')->middleware(['auth:sanctum'])->name('tenants.')->group(
     Route::post('/get', function () {
         return auth()->user();
     });
-    Route::post('/subscription-orders', [OrderController::class, 'store'])->name('subscription-orders.store');
+    Route::post('/subscription-orders', [OrderController::class, 'storeSubscriptionOrderApi'])->name('subscription-orders.store');
 });
 
 

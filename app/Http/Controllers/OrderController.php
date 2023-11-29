@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionOrder;
 use App\Models\SubscriptionOrderNote;
@@ -17,6 +18,7 @@ class OrderController extends Controller
     {
         $tenants = Tenant::get();
         $pricings = Pricing::get();
+        $users= User::get();
         $data = SubscriptionOrder::with('tenant:id,business_name', 'pricing:id,name', 'assignedTo:id,name')->orderBy('created_at')->get();
         $subscriptionOrder = $data->map(function ($item) {
             return [
@@ -32,7 +34,7 @@ class OrderController extends Controller
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
             ];
         });
-        return view('admin.order.index', compact('subscriptionOrder', 'tenants', 'pricings'));
+        return view('admin.order.index', compact('subscriptionOrder', 'tenants', 'pricings','users'));
     }
 
     public function show(Request $request)
@@ -47,7 +49,7 @@ class OrderController extends Controller
                 'type' => $item->type,
                 'name' => $item->name,
                 'tel' => $item->tel,
-                'assigned_to' => $item->assignedTo->name,
+                'assigned_to' => $item->assignedTo->id??null,
                 'status_name' => $this->checkStatus($item->status),
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
             ];
@@ -76,7 +78,16 @@ class OrderController extends Controller
         $order->update([
             'status' => $request->status,
         ]);
-        return response()->json(['success' => 'Cập nhật trạng thái thành công!']);
+        return response()->json(['success' => 'Cập nhật trạng thái thành công!', 'status' => 200]);
+    }
+
+    public function updateAssignedTo(Request $request)
+    {
+        $order = SubscriptionOrder::findOrFail($request->id);
+        $order->update([
+            'assigned_to' => $request->assigned_to,
+        ]);
+        return response()->json(['success' => 'Cập nhật thành công!','status'=>200]);
     }
 
     public function store(OrderRequest $request)
@@ -89,7 +100,7 @@ class OrderController extends Controller
                 'name' => $request->name,
                 'tel' => $request->tel,
                 'assigned_to' => auth()->user()->id,
-                'status' => 1,
+                'status' => 2,
             ]);
             if ($request->has('note') && $request->note != '' && $order) {
                 SubscriptionOrderNote::create([
@@ -138,6 +149,7 @@ class OrderController extends Controller
             ]);
             return response()->json(['success' => 'Cập nhật ghi chú thành công!']);
         }
+
         SubscriptionOrderNote::create([
             'subscription_order_id' => $request->subscription_order_id,
             'note' => $request->note,
@@ -202,6 +214,24 @@ class OrderController extends Controller
             return response()->json(['success' => 'Tạo thành công!', 'order' => $order]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => $throwable->getMessage()]);
+        }
+    }
+
+    public function storeSubscriptionOrderApi(OrderRequest $request)
+    {
+        try {
+            $order = SubscriptionOrder::create([
+                'tenant_id' => $request->tenant_id,
+                'pricing_id' => $request->pricing_id,
+                'type' => $request->type,
+                'name' => $request->name,
+                'tel' => $request->tel,
+                'assigned_to' => null,
+                'status' => 1,
+            ]);
+            return responseApi('Tạo thành công!', true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
         }
     }
 }

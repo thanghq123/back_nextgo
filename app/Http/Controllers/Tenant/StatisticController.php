@@ -37,18 +37,25 @@ class StatisticController extends Controller
 
     public function products(){
         try {
-            $startDate = $this->request->startDate;
-            $endDate = $this->request->endDate;
-            $model = $this->orderDetailModel::query()->with([
-                'variant:id,sku,display_name,price_import,price_export',
-                'orderDetailBatch' => function($query){
-                    $query->sum('quantity');
-                }
-            ])
-                ->get();
-            return $model;
+            $productData = $this->orderDetailModel::query()->whereProduct([
+                $this->request->option,
+                $this->request->start_date,
+                $this->request->end_date
+            ],
+                $this->request->location);
 
-            return responseApi([], true);
+            $data = $productData->getCollection()->transform(function ($productData){
+                return [
+                    'variation_id' => $productData->variation_id,
+                    'sku' => $productData->variant->sku,
+                    'variation_name' => $productData->variant->variation_name,
+                    'total_quantity' => intval($productData->total_quantity),
+                    'total_price_sell' => $productData->total_price_sell,
+                    'total_price_import' => $productData->total_price_import
+                ];
+            });
+
+            return responseApi(paginateCustom($data, $productData), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

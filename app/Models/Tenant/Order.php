@@ -74,4 +74,32 @@ class Order extends Model
                 return responseApi("Lỗi", false);
         }
     }
+
+    public function scopeWhereCustomer($query, array $option = [], ?int $locationId = 0){
+        $query->select('customer_id',
+            \DB::raw('sum(total_product) as total_product'),
+            \DB::raw('sum(total_price) as total_price'))
+            ->with(['customer'])
+            ->when($locationId != 0, function ($query) use ($locationId){
+                return $query->where('location_id', $locationId);
+            });
+
+        switch ($option[0]){
+            case 'today':
+                return $query->whereDate('created_at', Carbon::today())->groupBy('customer_id')->paginate(10);
+            case 'yesterday':
+                return $query->whereDate('created_at', Carbon::yesterday())->groupBy('customer_id')->paginate(10);
+            case 'sevenDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->groupBy('customer_id')
+                    ->paginate(10);
+            case 'thirtyDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->groupBy('customer_id')
+                    ->paginate(10);
+            case 'fromTo':
+                return $query->whereBetween('created_at', [$option[1], $option[2]])->groupBy('customer_id')
+                    ->paginate(10);
+            default:
+                return responseApi("Lỗi", false);
+        }
+    }
 }

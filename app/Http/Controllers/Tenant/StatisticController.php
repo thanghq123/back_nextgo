@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\StatisticRequest;
-use App\Models\Tenant\Customer;
 use App\Models\Tenant\OrderDetail;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Order;
@@ -15,7 +14,6 @@ class StatisticController extends Controller
     public function __construct(
         private Order $orderModel,
         private OrderDetail $orderDetailModel,
-        private Customer $customerModel,
         private Payment $paymentModel,
         private StatisticRequest $request
     ) {
@@ -105,29 +103,24 @@ class StatisticController extends Controller
 
     public function customers(){
         try {
-            $locationId = $this->request->location;
-            $inventoryId = $this->request->inventory_id;
-            return $this->customerModel::query()
-                ->with(['order' => function ($query) use ($locationId, $inventoryId) {
-                    $query->where('location_id', $locationId)
-                        ->whereHas('location', function ($query) use ($inventoryId) {
-                            $query->whereHas('inventories', function ($query) use ($inventoryId) {
-                                $query->where('id', $inventoryId);
-                            });
-                        })
-                        ->whereDate('created_at', '>=', '2023-11-27');
-                }])
-                ->whereHas('order', function ($query) use ($locationId, $inventoryId) {
-                    $query->where('location_id', $locationId)
-                        ->whereHas('location', function ($query) use ($inventoryId) {
-                            $query->whereHas('inventories', function ($query) use ($inventoryId) {
-                                $query->where('id', $inventoryId);
-                            });
-                        })
-                        ->whereDate('created_at', '>=', '2023-11-27');
-                })
-                ->withSum('order', 'total_price')
-                ->get();
+            $customerData = $this->orderModel::query()->whereCustomer([
+                $this->request->option,
+                $this->request->start_date,
+                $this->request->end_date
+            ],
+                $this->request->location);
+            $data = $customerData->getCollection()->transform(function ($customerData){
+                return [
+                    'customer_id' => $customerData->customer_id,
+                    'total_product' => intval($customerData->total_product),
+                    'total_price' => $customerData->total_price,
+                    'name' => $customerData->customer->name,
+                    'email' => $customerData->customer->email,
+                    'tel' => $customerData->customer->tel
+                ];
+            });
+
+            return responseApi(paginateCustom($data, $customerData), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

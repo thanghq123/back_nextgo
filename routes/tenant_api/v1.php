@@ -149,6 +149,7 @@ Route::middleware('tenant')->group(function () {
             Route::post('store', [InventoryTransactionController::class, 'createTransfer'])->name('createTransfer');
         });
         Route::post('get-variation', [VariationController::class, 'getListVariation']);
+        Route::post('get-variation-inventory', [VariationQuantityController::class, 'getVariationQuantity']);
         Route::post('get-variation/{id}',[VariationQuantityController::class,'getVariationQuantityById']);
     });
 

@@ -10,7 +10,7 @@ class VariationController extends Controller
     public function getListVariation()
     {
         try {
-            $product = Variation::with(['variationQuantities', 'productName'])->get();
+            $product = Variation::with(['productName'])->get();
             $result = $product->map(function($data){
                 return [
                     'id' => $data->id,
@@ -26,7 +26,6 @@ class VariationController extends Controller
                     'status' => $data->status,
                     'created_at' => $data->created_at,
                     'updated_at' => $data->updated_at,
-                    'variation_quantities' => $data->variationQuantities
                 ];
             });
             return responseApi($result,true);

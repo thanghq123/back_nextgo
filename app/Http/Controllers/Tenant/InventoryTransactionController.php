@@ -102,6 +102,7 @@ class InventoryTransactionController extends Controller
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "id" => $inventoryTransactionData->id,
+                    "inventory_id" => $inventoryTransactionData->inventory->id,
                     "inventory_name" => $inventoryTransactionData->inventory->name,
                     "partner_name" => $inventoryTransactionData->partner->name,
                     "partner_type" => $inventoryTransactionData->partner_type,
@@ -114,7 +115,7 @@ class InventoryTransactionController extends Controller
                     "inventory_transaction_details" => $inventoryTransactionData->inventoryTransactionDetails->map(function ($inventoryTransactionDetails) {
                         return [
                             "variation_name" => $inventoryTransactionDetails->variation->variation_name,
-                            "sku" => $inventoryTransactionDetails->variation->sku,
+                            "sku" => $inventoryTransactionDetails->variation->sku??null,
                             "batch_id" => $inventoryTransactionDetails->batch_id,
                             "quantity" => $inventoryTransactionDetails->quantity,
                             "price" => $inventoryTransactionDetails->price,
@@ -285,7 +286,7 @@ class InventoryTransactionController extends Controller
                 "inventory_transaction_id" => $inventory_transaction_id,
                 "reason" => $request->reason,
                 "note" => $request->note,
-                "status" => 2,
+                "status" => 1,
                 "created_by" => $request->created_by
             ]);
             $inventoryTransaction->inventoryTransactionDetails()->createMany(collect($request->inventory_transaction_details)->toArray());

@@ -29,8 +29,7 @@ class StatisticController extends Controller
                         $this->request->option,
                         $this->request->start_date,
                         $this->request->end_date],
-                    $this->request->location,
-                    $this->request->inventory_id)
+                    $this->request->location)
             ], true);
         }catch (\Throwable $throwable)
         {
@@ -79,8 +78,7 @@ class StatisticController extends Controller
                         $this->request->start_date,
                         $this->request->end_date
                     ],
-                    $this->request->location,
-                    $this->request->inventory_id
+                    $this->request->location
                 ),
                 "transfer" => $this->paymentModel::query()->whereMethod(1,
                     [
@@ -88,8 +86,7 @@ class StatisticController extends Controller
                         $this->request->start_date,
                         $this->request->end_date
                     ],
-                    $this->request->location,
-                    $this->request->inventory_id
+                    $this->request->location
                 ),
                 "debit" => $this->paymentModel::query()->whereMethod(2,
                     [
@@ -97,8 +94,7 @@ class StatisticController extends Controller
                         $this->request->start_date,
                         $this->request->end_date
                     ],
-                    $this->request->location,
-                    $this->request->inventory_id
+                    $this->request->location
                 )
             ], true);
         }catch (\Throwable $throwable)

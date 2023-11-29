@@ -17,6 +17,7 @@ class Order extends Model
         "created_by",
         "discount",
         "discount_type",
+        "quantity",
         "tax",
         "service_charge",
         "total_product",
@@ -53,12 +54,9 @@ class Order extends Model
         return $query->whereDate('created_at', Carbon::today())->where('payment_status', 2)->sum('total_price');
     }
 
-    public function scopeWhereCreatedAt($query, array $option = [], ?int $locationId = 0, ?int $inventoryId = 0){
-        $query->when($locationId != 0 && $inventoryId, function ($query) use ($locationId, $inventoryId){
-            return $query->whereHas('location.inventories', function($query) use ($inventoryId){
-                $query->where('id', $inventoryId);
-            })
-                ->where('location_id', $locationId);
+    public function scopeWhereCreatedAt($query, array $option = [], ?int $locationId = 0){
+        $query->when($locationId != 0, function ($query) use ($locationId){
+            return $query->where('location_id', $locationId);
         });
 
         switch ($option[0]){

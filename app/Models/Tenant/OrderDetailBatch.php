@@ -23,7 +23,4 @@ class OrderDetailBatch extends Model
     {
         return $this->belongsTo(OrderDetail::class,'order_detail_id','id');
     }
-    public function scopeQuantity($query, $orderDetailId){
-        return intval($query->where('order_detail_id', $orderDetailId->id)->sum('quantity'));
-    }
 }

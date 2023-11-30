@@ -13,19 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('created_by')->default(0);
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->integer('quantity')->after('discount_type');
         });
     }
 
-    /**     * Reverse the migrations.
+    /**
+     * Reverse the migrations.
      *
      * @return void
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->dropColumn('quantity');
         });
     }
 };

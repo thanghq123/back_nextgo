@@ -100,7 +100,6 @@ class LocationController extends Controller
                 $fileName = $file->getClientOriginalName();
                 $fullpath = $file->storeAs('images', $fileName, 'public');
             }
-            $address = Commune::with(['district', 'district.province'])->whereId($request->ward_code)->first();
             $data = [
                 'name' => $request->name,
                 'image' => $fullpath ?? null,
@@ -138,7 +137,6 @@ class LocationController extends Controller
             } else {
                 $fullpath = $location->image;
             }
-            $address = Commune::with(['district', 'district.province'])->whereId($request->ward_code)->first();
             $data = [
                 'name' => $request->name,
                 'image' => $fullpath,

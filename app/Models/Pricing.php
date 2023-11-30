@@ -10,7 +10,7 @@ class Pricing extends Model
     use HasFactory,UsesLandlordConnection;
     protected $table = 'pricings';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'max_locations', 'max_users', 'price_per_month'];
+    protected $fillable = ['name', 'max_locations', 'max_users', 'price',"expiry_day"];
 
     public function users()
     {

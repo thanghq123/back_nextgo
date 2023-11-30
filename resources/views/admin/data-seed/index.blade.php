@@ -195,8 +195,12 @@
             </div>
         </div>
     </div>
-    <!--end::Modal - Customers - Add-->
-    <!--end::Modals-->
+    <!--begin::Page loading(append to body)-->
+    <div class="page-loader flex-column bg-dark bg-opacity-25">
+        <span class="spinner-border text-primary" role="status"></span>
+        <span class="text-gray-800 fs-6 fw-semibold mt-5">Đang tải...</span>
+    </div>
+    <!--end::Page loading-->
 @endsection
 @push('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>

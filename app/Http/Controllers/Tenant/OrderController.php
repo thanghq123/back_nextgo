@@ -151,8 +151,8 @@ class OrderController extends Controller
                                 }) : [],
                             'discount' => $orderDetails->discount,
                             'discount_type' => $orderDetails->discount_type,
+                            'quantity' => $orderDetails->quantity,
                             'tax' => $orderDetails->tax,
-                            'quantity' => $this->orderDetailBatchModel::query()->quantity($orderDetails),
                             'total_price' => $orderDetails->total_price
                         ];
                     }),
@@ -197,7 +197,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             $order = $this->model::create([
-                "location_id" => $this->request->location_id,
+                "location_id" => $this->request->location,
                 "customer_id" => $this->request->customer_id,
                 "created_by" => $this->request->created_by,
                 "discount" => $this->request->discount,
@@ -217,6 +217,7 @@ class OrderController extends Controller
                     'price' => $order_detail['price_export'],
                     'discount' => $order_detail['priceModal']['result'],
                     'discount_type' => $order_detail['priceModal']['radioDiscount'],
+                    'quantity' => $order_detail['quanity'],
                     'tax' => $order_detail['priceModal']['tax'],
                     'total_price' => $order_detail['result'],
                 ]);
@@ -389,8 +390,8 @@ class OrderController extends Controller
                                 }) : [],
                             'discount' => $orderDetails->discount,
                             'discount_type' => $orderDetails->discount_type,
+                            'quantity' => $orderDetails->quantity,
                             'tax' => $orderDetails->tax,
-                            'quantity' => $this->orderDetailBatchModel::query()->quantity($orderDetails),
                             'total_price' => $orderDetails->total_price
                         ];
                     }),

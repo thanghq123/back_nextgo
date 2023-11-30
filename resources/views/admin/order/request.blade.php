@@ -13,7 +13,7 @@
                         <span class="path1"></span>
                         <span class="path2"></span>
                     </i>
-                    <input type="text" data-kt-customer-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Customers" />
+                    <input type="text" data-kt-customer-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm" />
                 </div>
                 <!--end::Search-->
             </div>
@@ -25,18 +25,17 @@
                     <!--begin::Filter-->
                     <div class="w-200px me-3">
                         <!--begin::Select2-->
-                        <select class="form-select form-select-solid" data-control="select2"  data-placeholder="Kiểu loại dữ liệu" data-kt-ecommerce-order-filter="type">
+                        <select class="form-select form-select-solid" data-control="select2"  data-placeholder="Loại yêu cầu" data-kt-ecommerce-order-filter="type">
                             <option></option>
                             <option value="all">Tất cả</option>
-                            <option value="Danh mục">Danh mục</option>
-                            <option value="Thương hiệu">Thương hiệu</option>
-                            <option value="Đơn vị hạng mục">Đơn vị hạng mục</option>
+                            <option value="Gia hạn">Gia hạn</option>
+                            <option value="Nâng cấp">Nâng cấp</option>
                         </select>
                         <!--end::Select2-->
                     </div>
                     <!--end::Filter-->
                     <!--begin::Add customer-->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Thêm dữ liệu mẫu</button>
+{{--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Thêm dữ liệu mẫu</button>--}}
                     <!--end::Add customer-->
                 </div>
                 <!--end::Toolbar-->
@@ -58,21 +57,27 @@
                 <thead>
                 <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                     <th class="min-w-25px">#</th>
-                    <th class="min-w-125px">Tên loại dữ liệu</th>
-                    <th class="min-w-125px">Kiểu loại dữ liệu</th>
+                    <th class="min-w-125px">Tên cửa hàng</th>
+                    <th class="min-w-125px">Loại yêu cầu</th>
+                    <th class="min-w-125px">Gói cũ</th>
+                    <th class="min-w-125px">Gói mới</th>
+                    <th class="min-w-125px">Tổng tiền</th>
+                    <th class="min-w-125px">Người phụ trách</th>
+                    <th class="min-w-125px">Ngày tạo</th>
                     <th class="text-end min-w-70px">Actions</th>
                 </tr>
                 </thead>
                 <tbody class="fw-semibold text-gray-600">
-                @foreach($seeds as $item => $seed)
-                    <tr data-id="{{$seed->id}}">
-                        <td>
-                            {{$item+1}}
-                        </td>
-                        <td>
-                            {{$seed->name}}
-                        </td>
-                        <td> {{$seed->type==0?'Danh mục':($seed->type==1?'Thương hiệu':'Đơn vị hạng mục')}}</td>
+                @foreach($data as $item => $value)
+                    <tr data-id="{{$value['id']}}">
+                        <td>{{$item+1}}</td>
+                        <td>{{$value['tenant']}}</td>
+                        <td> {{$value['change_type']==0?'Gia hạn':'Nâng cấp'}}</td>
+                        <td>{{$value['from_pricing']}}</td>
+                        <td>{{$value['to_pricing']}}</td>
+                        <td>{{number_format($value['total_price'])}}</td>
+                        <td>{{$value['created_by']}}</td>
+                        <td>{{$value['created_at']}}</td>
                         <td class="text-end">
                             <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                 <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
@@ -81,13 +86,13 @@
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
-                                       data-bs-target="#kt_modal_add_customer" data-id="{{$seed->id}}">Sửa</a>
+                                       data-bs-target="#kt_modal_add_customer" data-id="{{$value['id']}}">Thanh toán</a>
                                 </div>
                                 <!--end::Menu item-->
                                 <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$seed->id}}">Xoá</a>
-                                </div>
+{{--                                <div class="menu-item px-3">--}}
+{{--                                    <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$value['id']}}">Delete</a>--}}
+{{--                                </div>--}}
                                 <!--end::Menu item-->
                             </div>
                             <!--end::Menu-->
@@ -114,7 +119,7 @@
                     <!--begin::Modal header-->
                     <div class="modal-header" id="kt_modal_add_customer_header">
                         <!--begin::Modal title-->
-                        <h2 class="fw-bold modal-header_title">Thêm dữ liệu mẫu</h2>
+                        <h2 class="fw-bold modal-header_title">Tạo đơn thanh toán</h2>
                         <!--end::Modal title-->
                         <!--begin::Close-->
                         <div id="kt_modal_add_customer_close" class="btn btn-icon btn-sm btn-active-icon-primary">
@@ -133,24 +138,23 @@
                             <!--begin::Input group-->
                             @csrf
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Tên loại dữ liệu</label>
-                                <input type="text" name="name"
-                                       class="form-control form-control-solid mb-3 mb-lg-0"
-                                       placeholder="Tên loại dữ liệu" value=""/>
+                                <label class="required fw-semibold fs-6 mb-2">Số tiền cần thanh toán (VNĐ)</label>
+                                <input disabled type="text" class="form-control" placeholder="Số tiền cần thanh toán" name="total_price"/>
+                            </div>
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Phương thức thanh toán</label>
+                                <select class="required form-select" name="payment_method" >
+                                    <option>Chọn phương thức thanh toán</option>
+                                    <option value="0">Tiền mặt</option>
+                                    <option value="1">Chuyển khoản</option>
+                                </select>
                             </div>
                             <!--end::Input group-->
                             <!--begin::Input group-->
                             <div class="fv-row mb-7">
-                                <label class="required fw-semibold fs-6 mb-2">Loại dữ liệu mẫu</label>
-                                <select class="required form-select" data-control="select2" name="type"
-                                        data-placeholder="Chọn loại dữ liệu mẫu">
-                                    <option class="option-hidden"></option>
-                                    <option value="0">Danh mục</option>
-                                    <option value="1">Thương hiệu</option>
-                                    <option value="2">Đơn vị hạng mục</option>
-                                </select>
+                                <label class="fw-semibold fs-6 mb-2">Mã tham chiếu (khi chuyển khoản)</label>
+                                <input type="text" class="form-control" placeholder="Mã tham chiếu" name="reference_code"/>
                             </div>
-                            <!--end::Input group-->
                         </div>
                         <!--end::Scroll-->
                     </div>
@@ -163,7 +167,7 @@
                         <!--begin::Button-->
                         <button type="submit" id="kt_modal_add_customer_submit" class="btn btn-primary">
                             <span class="indicator-label">Lưu</span>
-                            <span class="indicator-progress">Please wait...
+                            <span class="indicator-progress">Vui lòng chờ...
 														<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
                         <!--end::Button-->
@@ -174,8 +178,6 @@
             </div>
         </div>
     </div>
-    <!--end::Modal - Customers - Add-->
-    <!--end::Modals-->
     <!--begin::Page loading(append to body)-->
     <div class="page-loader flex-column bg-dark bg-opacity-25">
         <span class="spinner-border text-primary" role="status"></span>
@@ -185,36 +187,31 @@
 @endsection
 @push('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{asset('assets/js/custom/apps/seed/list/table.js')}}"></script>
+    <script src="{{asset('assets/js/custom/apps/order/list2/table.js')}}"></script>
     <script src="{{asset('assets/js/custom/utilities/modals/users-search.js')}}"></script>
-    {{--    <script src="{{asset('assets/js/custom/apps/seed/list/export-seed.js')}}"></script>--}}
-    <script src="{{asset('assets/js/custom/apps/seed/list/add.js')}}"></script>
+    <script src="{{asset('assets/js/custom/apps/order/list2/add.js')}}"></script>
     <script>
         $(document).ready(function () {
             $('#kt_modal_add_customer').on('show.bs.modal', function (event) {
                 let button = $(event.relatedTarget)
-                let seed_id = button.data('id')
-                let name = $('#kt_modal_add_customer_form input[name="name"]')
-                let type = $('#kt_modal_add_customer_form select[name="type"]')
-                if (seed_id) {
+                let tenant_change_history_id = button.data('id')
+                let total_price = $('#kt_modal_add_customer_form input[name="total_price"]')
+                if (tenant_change_history_id) {
                     KTApp.showPageLoading();
                     $.ajax({
-                        url: '{{route('admin.seed.show')}}',
+                        url: '{{route('admin.order.show-request')}}',
                         type: 'GET',
-                        data: {id: seed_id},
+                        data: {id: tenant_change_history_id},
                         success: function (data) {
+                            console.log(data.detail)
                             KTApp.hidePageLoading();
-                            $('#kt_modal_add_customer_header .modal-header_title').text('Cập nhật dữ liệu mẫu')
-                            $('#kt_modal_add_customer_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
-                            name.val(data.payload.name);
-                            type.val(data.payload.type).prop('selected', true);
+                            $('#kt_modal_add_customer_form').append('<input type="hidden" name="id" value="' + data.detail.id + '">')
+                            total_price.val(data.detail.total_price)
                         }
                     })
                 } else {
                     $('#kt_modal_add_seed_form input[name="id"]').val('')
-                    $('#kt_modal_add_seed_header .modal-header_title').text('Thêm mới dữ liệu mẫu')
-                    name.val('')
-                    type.val('')
+                    total_price.val('')
                 }
             })
         })

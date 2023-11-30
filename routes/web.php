@@ -74,6 +74,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
         Route::get('/',[UserController::class,'index'])->name('index');
         Route::get('trash',[UserController::class,'trash'])->name('trash');
         Route::get('show',[UserController::class,'show'])->name('show');
+        Route::post('store',[UserController::class,'store'])->name('store');
+        Route::put('update',[UserController::class,'update'])->name('update');
         Route::get('restore',[UserController::class,'restore'])->name('restore');
         Route::delete('delete',[UserController::class,'delete'])->name('delete');
     });

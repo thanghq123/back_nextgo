@@ -56,7 +56,7 @@ Route::middleware('tenant')->group(function () {
     Route::post('get-product', [ProductController::class, 'getListProduct']);
     Route::post('get-attribute', [ProductController::class, 'getListAttribute']);
     Route::post('search-customer', [CustomerController::class, 'searchCustomer']);
-//    Route::post('get-variation', [VariationController::class, 'getListVariation']);
+    Route::post('get-variation', [VariationController::class, 'getListVariation']);
 //    Route::post('storage/list', [VariationQuantityController::class, 'getVariationQuantity']);
 
     Route::prefix('user')->name('user.')->group(function (){

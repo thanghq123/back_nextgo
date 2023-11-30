@@ -43,7 +43,7 @@ class ProductController extends Controller
                 'variations'
             ])->orderBy('id', 'desc')->paginate(10);
 
-            $data = $productData->getCollection()->transform(function ($productData){
+            $data = $productData->getCollection()->transform(function ($productData) {
                 return [
                     'id' => $productData->id,
                     'name' => $productData->name,
@@ -61,23 +61,23 @@ class ProductController extends Controller
                     'category_name' => $productData->category ? $productData->category->name : null,
                     'status' => $productData->status,
                     'attributes' => $productData->attributes ?
-                        collect($productData->attributes)->map(function ($attributes){
+                        collect($productData->attributes)->map(function ($attributes) {
                             return [
                                 'id' => $attributes->id,
                                 'product_id' => $attributes->product_id,
                                 'name' => $attributes->name,
                                 'attribute_values' => $attributes->attributeValues ?
-                                    collect($attributes->attributeValues)->map(function ($attributeValues){
-                                    return [
-                                        'id' => $attributeValues->id,
-                                        'attribute_id' => $attributeValues->attribute_id,
-                                        'value' => $attributeValues->value
-                                    ];
-                                }) : [],
+                                    collect($attributes->attributeValues)->map(function ($attributeValues) {
+                                        return [
+                                            'id' => $attributeValues->id,
+                                            'attribute_id' => $attributeValues->attribute_id,
+                                            'value' => $attributeValues->value
+                                        ];
+                                    }) : [],
                             ];
                         }) : [],
                     'variations' => $productData->variations ?
-                        collect($productData->variations)->map(function ($variations){
+                        collect($productData->variations)->map(function ($variations) {
                             return [
                                 'id' => $variations->id,
                                 'product_id' => $variations->product_id,
@@ -105,14 +105,14 @@ class ProductController extends Controller
     public function getListProduct()
     {
         try {
-            if ($this->request->location_id) {
+            if ($this->request->inventory_id) {
                 $products = Variation::with([
                     'product.itemUnit',
-                    'variationQuantities',
-                    'batchs'
-                ])->whereHas('variationQuantities.inventory', function ($query) {
-                    $query->where('location_id', $this->request->location_id);
-                })
+                    'batchs',
+                    'variationQuantities' => function ($query) {
+                        $query->where('inventory_id', $this->request->inventory_id);
+                    },
+                ])
                     ->get()->groupBy('product_id');
 
             } else {
@@ -279,13 +279,13 @@ class ProductController extends Controller
                     'category_name' => $productData->category ? $productData->category->name : null,
                     'status' => $productData->status,
                     'attributes' => $productData->attributes ?
-                        collect($productData->attributes)->map(function ($attributes){
+                        collect($productData->attributes)->map(function ($attributes) {
                             return [
                                 'id' => $attributes->id,
                                 'product_id' => $attributes->product_id,
                                 'name' => $attributes->name,
                                 'attribute_values' => $attributes->attributeValues ?
-                                    collect($attributes->attributeValues)->map(function ($attributeValues){
+                                    collect($attributes->attributeValues)->map(function ($attributeValues) {
                                         return [
                                             'id' => $attributeValues->id,
                                             'attribute_id' => $attributeValues->attribute_id,
@@ -295,7 +295,7 @@ class ProductController extends Controller
                             ];
                         }) : [],
                     'variations' => $productData->variations ?
-                        collect($productData->variations)->map(function ($variations){
+                        collect($productData->variations)->map(function ($variations) {
                             return [
                                 'id' => $variations->id,
                                 'product_id' => $variations->product_id,
@@ -309,8 +309,8 @@ class ProductController extends Controller
                                 'status' => $variations->status
                             ];
                         }) : [],
-                    "created_at"=>Carbon::make($productData->created_at)->format('d/m/Y H:i'),
-                    "updated_at"=>Carbon::make($productData->updated_at)->format('d/m/Y H:i')
+                    "created_at" => Carbon::make($productData->created_at)->format('d/m/Y H:i'),
+                    "updated_at" => Carbon::make($productData->updated_at)->format('d/m/Y H:i')
                 ];
             });
 

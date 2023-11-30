@@ -17,6 +17,7 @@ class Order extends Model
         "created_by",
         "discount",
         "discount_type",
+        "quantity",
         "tax",
         "service_charge",
         "total_product",
@@ -48,19 +49,57 @@ class Order extends Model
     {
         return $this->morphMany(Payment::class, 'paymentable');
     }
-    public function scopeToday($query){
-        return $query->whereDate('created_at', Carbon::today())->sum('total_price');
+
+    public function scopeOrderCompleted($query){
+        return $query->whereDate('created_at', Carbon::today())->where('payment_status', 2)->sum('total_price');
     }
-    public function scopeYesterday($query){
-        return $query->whereDate('created_at', Carbon::yesterday())->sum('total_price');
+
+    public function scopeWhereCreatedAt($query, array $option = [], ?int $locationId = 0){
+        $query->when($locationId != 0, function ($query) use ($locationId){
+            return $query->where('location_id', $locationId);
+        });
+
+        switch ($option[0]){
+            case 'today':
+                return $query->whereDate('created_at', Carbon::today())->sum('total_price');
+            case 'yesterday':
+                return $query->whereDate('created_at', Carbon::yesterday())->sum('total_price');
+            case 'sevenDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->sum('total_price');
+            case 'thirtyDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->sum('total_price');
+            case 'fromTo':
+                return $query->whereBetween('created_at', [$option[1], $option[2]])->sum('total_price');
+            default:
+                return responseApi("Lỗi", false);
+        }
     }
-    public function scopeSevenDays($query){
-        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->sum('total_price');
-    }
-    public function scopeThirtyDays($query){
-        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->sum('total_price');
-    }
-    public function scopeFromTo($query, $startDate, $endDate){
-        return $query->whereBetween('created_at', [$startDate, $endDate])->sum('total_price');
+
+    public function scopeWhereCustomer($query, array $option = [], ?int $locationId = 0){
+        $query->select('customer_id',
+            \DB::raw('sum(total_product) as total_product'),
+            \DB::raw('sum(total_price) as total_price'))
+            ->with(['customer'])
+            ->when($locationId != 0, function ($query) use ($locationId){
+                return $query->where('location_id', $locationId);
+            });
+
+        switch ($option[0]){
+            case 'today':
+                return $query->whereDate('created_at', Carbon::today())->groupBy('customer_id')->paginate(10);
+            case 'yesterday':
+                return $query->whereDate('created_at', Carbon::yesterday())->groupBy('customer_id')->paginate(10);
+            case 'sevenDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->groupBy('customer_id')
+                    ->paginate(10);
+            case 'thirtyDays':
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->groupBy('customer_id')
+                    ->paginate(10);
+            case 'fromTo':
+                return $query->whereBetween('created_at', [$option[1], $option[2]])->groupBy('customer_id')
+                    ->paginate(10);
+            default:
+                return responseApi("Lỗi", false);
+        }
     }
 }

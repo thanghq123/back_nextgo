@@ -26,7 +26,7 @@ var BusinessFieldList = function () {
                             url: (window.location.href + '/delete').replace('#', ''),
                             type: 'DELETE',
                             data: {
-                                 _token: $('meta[name="csrf-token"]').attr('content'),
+                                _token: $('meta[name="csrf-token"]').attr('content'),
                                 id: business_field_id
                             },
                             success: function (data) {

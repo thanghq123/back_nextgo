@@ -56,6 +56,7 @@ class Customer extends Model
     public function commune(){
         return $this->belongsTo(Commune::class,'ward_code');
     }
-
-
+    public function order(){
+        return $this->hasMany(Order::class, 'customer_id', 'id');
+    }
 }

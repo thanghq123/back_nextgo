@@ -29,31 +29,37 @@ class TenantController extends Controller
 
     public function store()
     {
+
         DB::beginTransaction();
         try {
             if (!empty($this->request->validated())) {
-                $filterDatabase = Tenant::where('database', $this->request->input('name_tenant'))->get();
+                $tenantName=cleanText($this->request->input('name_tenant'));
+                $filterDatabase = Tenant::where('database', $tenantName)->get();
+
+                $business_field_id = $this->request->input('business_field');
+
+                if ($business_field_code = $this->request->input('business_code')) {
+
+                    $business_field = BusinessField::where('code', $business_field_code)->first();
+
+                    if (!$business_field) return responseApi('Lĩnh vực kinh doanh không tồn tại');
+
+                    $business_field_id = $business_field->id;
+                }
+
                 if (count($filterDatabase) > 0) return responseApi('Cơ sở đã tổn tại');
-                else if (!$this->request->has('user_id')) {
-                    $user = new User();
-                    $user->name = $this->request->input('username');
-                    $user->email = $this->request->input('email');
-                    $user->password = password_hash($this->request->input('password'),PASSWORD_DEFAULT);
-                    $user->pricing_id = 1;
-                    $user->save();
-                    return responseApi('Tạo người dùng thành công', true);
-                } else {
+                else {
+                    $due_at=Pricing::where('id',$this->request->pricing_id)->first()?->expiry_day;
                     $tenant = new Tenant();
                     $tenant->business_name = $this->request->input('business_name');
                     $tenant->address = $this->request->input('address');
-                    $tenant->name = $this->request->input('name_tenant');
-                    $tenant->domain = $this->request->input('name_tenant') . ".com";
-                    $tenant->database = $this->request->input('name_tenant');
+                    $tenant->name = $tenantName;
+                    $tenant->domain = env('APP_URL').'/'.$tenantName;
+                    $tenant->database = $tenantName;
                     $tenant->user_id = $this->request->input('user_id');
-                    $tenant->business_field_id = $this->request->input('business_field');
-                    $tenant->due_at = $this->request->input('due_at');
+                    $tenant->business_field_id = $business_field_id;
                     $tenant->pricing_id = $this->request->pricing_id;
-                    $tenant->due_at = Carbon::now()->addDays(30)->format('Y-m-d');
+                    $tenant->due_at = Carbon::now()->addDays($due_at)->format('Y-m-d');
                     $tenant->status = 1;
                     $tenant->save();
                     return responseApi('Tạo chi nhánh thành công', true);
@@ -65,6 +71,15 @@ class TenantController extends Controller
         } catch (\Throwable $throwable) {
             DB::rollBack();
             return responseApi($throwable->getMessage());
+        }
+    }
+
+    public function getByUser()
+    {
+        try {
+            return responseApi(\auth()->user()->tenants()->select('name', 'business_name')->get(), true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
         }
     }
 }

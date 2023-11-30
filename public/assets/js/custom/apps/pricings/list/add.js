@@ -42,10 +42,10 @@ const KTPricingAddPricing = function () {
                         price_per_month: {validators: {notEmpty: {message: "Giá không được để trống"},
                                 integer: {message: "Giá phải là một số nguyên"},
                                 greaterThan: {
-                                    value: 0,
+                                    value: -1,
                                     inclusive: false,
                                     message: "Giá phải lớn hơn 0",
-                                    min: 0
+                                    min: -1
                                 }
                             }},
                     },
@@ -72,7 +72,8 @@ const KTPricingAddPricing = function () {
                                         name: form.querySelector('[name="name"]').value,
                                         max_locations: form.querySelector('[name="max_locations"]').value,
                                         max_users: form.querySelector('[name="max_users"]').value,
-                                        price_per_month: form.querySelector('[name="price_per_month"]').value,
+                                        price: form.querySelector('[name="price"]').value,
+                                        expiry_day: form.querySelector('[name="expiry_day"]').value,
                                         id: pricing_id != "" ? pricing_id : null
                                     },
                                     success: function (data) {

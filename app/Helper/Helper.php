@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 function createFolder($folderName, $cloud = 'google')
@@ -99,6 +100,7 @@ function getContent($folderName, $fileName, $cloud = 'google')
 if (!function_exists('responseApi')) {
     function responseApi(mixed $data = "Not found", bool $status = false, int $code = 200, mixed $dataAppend = []): \Illuminate\Http\JsonResponse
     {
+
         if (!$status) $data = ['status' => $status, 'meta' => $data];
 
         if ($status) $data = ['status' => $status, 'payload' => $data];
@@ -107,12 +109,13 @@ if (!function_exists('responseApi')) {
 
         return response()->json(
             $data,
-            $code
+            $code,
         );
     }
 }
 
-function paginateCustom($data, $dataPaginate){
+function paginateCustom($data, $dataPaginate)
+{
     return new \Illuminate\Pagination\LengthAwarePaginator(
         $data,
         $dataPaginate->total(),
@@ -124,4 +127,48 @@ function paginateCustom($data, $dataPaginate){
             ]
         ]
     );
+}
+
+function generateUserToken($user): array
+{
+    $token = $user->createToken('authToken');
+    $expires_at = Carbon::now()->addHour('2')->timestamp;
+    $token->expires_at = $expires_at;
+    $tokenGen = $token->plainTextToken;
+    $data = [
+        'user' => $user,
+        'token' => $tokenGen,
+        'expires_at' => $expires_at,
+        'token_type' => 'Bearer',
+    ];
+    return $data;
+}
+
+function removeVietnameseAccents($str) {
+    $unicode = [
+        'a' => 'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
+        'd' => 'đ',
+        'e' => 'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
+        'i' => 'í|ì|ỉ|ĩ|ị',
+        'o' => 'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
+        'u' => 'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
+        'y' => 'ý|ỳ|ỷ|ỹ|ỵ',
+        'A' => 'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
+        'D' => 'Đ',
+        'E' => 'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
+        'I' => 'Í|Ì|Ỉ|Ĩ|Ị',
+        'O' => 'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
+        'U' => 'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
+        'Y' => 'Ý|Ỳ|Ỷ|Ỹ|Ỵ',
+    ];
+    foreach ($unicode as $nonDiacritic => $diacritics) {
+        $str = preg_replace("/($diacritics)/i", $nonDiacritic, $str);
+    }
+    return $str;
+}
+function cleanText($str) {
+    $str = strtolower($str);
+    $str = removeVietnameseAccents($str);
+    $str = str_replace(' ', '_', $str);
+    return $str;
 }

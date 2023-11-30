@@ -24,44 +24,6 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <!--begin::Export-->
-                    <button type="button" class="btn btn-light-primary mx-2" data-kt-menu-trigger="click"
-                            data-kt-menu-placement="bottom-end">
-                        <i class="ki-duotone ki-exit-down fs-2"><span class="path1"></span><span
-                                class="path2"></span></i>
-                        Export Report
-                    </button>
-                    <div id="kt_datatable_pricing_export_menu"
-                         class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-200px py-4"
-                         data-kt-menu="true">
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-3">
-                            <a href="#" class="menu-link px-3" data-kt-export="copy">
-                                Copy to clipboard
-                            </a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-3">
-                            <a href="#" class="menu-link px-3" data-kt-export="excel">
-                                Export as Excel
-                            </a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-3">
-                            <a href="#" class="menu-link px-3" data-kt-export="csv">
-                                Export as CSV
-                            </a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-3">
-                            <a href="#" class="menu-link px-3" data-kt-export="pdf">
-                                Export as PDF
-                            </a>
-                        </div>
-                        <!--end::Menu item-->
-                    </div>
                     <!--begin::Hide default export buttons-->
                     <div id="kt_datatable_pricing_buttons" class="d-none"></div>
                     <!--end::Hide default export buttons-->
@@ -75,13 +37,7 @@
                 </div>
                 <!--end::Toolbar-->
                 <!--begin::Group actions-->
-                <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
-                    <div class="fw-bold me-5">
-                        <span class="me-2" data-kt-user-table-select="selected_count"></span>Chọn
-                    </div>
-                    <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Xoá bỏ
-                    </button>
-                </div>
+
                 <!--end::Modal - New Card-->
                 <!--begin::Modal - Add task-->
                 <div class="modal fade" id="kt_modal_add_pricing" tabindex="-1" aria-hidden="true">
@@ -137,10 +93,16 @@
                                                    placeholder="Số chi nhánh tối đa" value=""/>
                                         </div>
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Giá/tháng</label>
-                                            <input type="number" name="price_per_month"
+                                            <label class="required fw-semibold fs-6 mb-2">Giá gói (VNĐ)</label>
+                                            <input type="number" name="price"
                                                    class="form-control form-control-solid mb-3 mb-lg-0"
-                                                   placeholder="Số chi nhánh tối đa" value=""/>
+                                                   placeholder="Giá gói" value=""/>
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Số ngày sử dụng</label>
+                                            <input type="number" name="expiry_day"
+                                                   class="form-control form-control-solid mb-3 mb-lg-0"
+                                                   placeholder="Số ngày sử dụng" value=""/>
                                         </div>
                                     </div>
                                     <!--end::Scroll-->
@@ -181,7 +143,8 @@
                     <th class="min-w-125px">Tên gói dịch vụ</th>
                     <th class="min-w-125px">Số chi nhánh tối đa</th>
                     <th class="min-w-125px">Số người dùng tối đa</th>
-                    <th class="min-w-125px">Giá/tháng</th>
+                    <th class="min-w-125px">Giá (VNĐ)</th>
+                    <th class="min-w-125px">Số ngày sử dụng</th>
                     <th class="text-end min-w-100px">Actions</th>
                 </tr>
                 </thead>
@@ -191,7 +154,8 @@
                         <td>{{$pricing->name}}</td>
                         <td>{{$pricing->max_locations}}</td>
                         <td>{{$pricing->max_users}}</td>
-                        <td>{{$pricing->price_per_month}}</td>
+                        <td>{{number_format($pricing->price)}}</td>
+                        <td>{{$pricing->expiry_day}}</td>
                         <td class="text-end">
                             <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -223,14 +187,14 @@
     <!--begin::Page loading(append to body)-->
     <div class="page-loader flex-column bg-dark bg-opacity-25">
         <span class="spinner-border text-primary" role="status"></span>
-        <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        <span class="text-gray-800 fs-6 fw-semibold mt-5">Đang tải...</span>
     </div>
     <!--end::Page loading-->
 @endsection
 @push('js')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{asset('assets/js/custom/apps/pricings/list/table.js')}}"></script>
-    <script src="{{asset('assets/js/custom/apps/pricings/list/export-pricing.js')}}"></script>
+{{--    <script src="{{asset('assets/js/custom/apps/pricings/list/export-pricing.js')}}"></script>--}}
     <script src="{{asset('assets/js/custom/apps/pricings/list/add.js')}}"></script>
     <script>
         $(document).ready(function () {
@@ -240,7 +204,8 @@
                 let name = $('#kt_modal_add_pricing_form input[name="name"]')
                 let max_locations = $('#kt_modal_add_pricing_form input[name="max_locations"]')
                 let max_users = $('#kt_modal_add_pricing_form input[name="max_users"]')
-                let price_per_month = $('#kt_modal_add_pricing_form input[name="price_per_month"]')
+                let price = $('#kt_modal_add_pricing_form input[name="price"]')
+                let expiry_day = $('#kt_modal_add_pricing_form input[name="expiry_day"]')
                 if (pricing_id) {
                     KTApp.showPageLoading();
                     $.ajax({
@@ -254,7 +219,8 @@
                             name.val(data.payload.name)
                             max_locations.val(data.payload.max_locations)
                             max_users.val(data.payload.max_users)
-                            price_per_month.val(data.payload.price_per_month)
+                            price.val(data.payload.price)
+                            expiry_day.val(data.payload.expiry_day)
                         }
                     })
                 } else {
@@ -263,7 +229,8 @@
                     name.val('')
                     max_locations.val('')
                     max_users.val('')
-                    price_per_month.val('')
+                    price.val('')
+                    expiry_day.val('')
                 }
             })
         })

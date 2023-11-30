@@ -73,45 +73,54 @@
                                          data-kt-scroll-offset="300px">
                                         @csrf
                                         <div class="select-user" style="display: block">
-                                        <!--begin::Input group-->
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tên cửa hàng</label>
-                                            <input type="text" name="business_name" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tên cửa hàng" value=""/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Địa chỉ</label>
-                                            <input type="text" name="address" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Địa chỉ" value=""/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tên miền(Viết liền khum
-                                                dấu)</label>
-                                            <input type="text" name="name_tenant" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tên Tenant" value=""/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Lựa Chọn User</label>
-                                            <select class="form-select mb-2" name="user_id" data-control="select2"
-                                                    data-hide-search="true" data-placeholder="Chọn"
-                                                    id="kt_ecommerce_add_product_status_select">
-                                                <option></option>
-                                                @foreach($users as $user)
-                                                    <option value="{{$user->id}}">{{$user->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Lựa Chọn Lĩnh Vưc Kinh
-                                                Doanh</label>
-                                            <select class="form-select mb-2" name="business_field" data-control="select2"
-                                                    data-hide-search="true" data-placeholder="Chọn">
-                                                <option></option>
-                                                @foreach($businessField as $bf)
-                                                    <option value="{{$bf->id}}">{{$bf->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                            <!--begin::Input group-->
                                             <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Lựa Chọn Gói Dịch Vụ</label>
-                                                <select class="form-select mb-2" name="pricing_id" data-control="select2"
+                                                <label class="required fw-semibold fs-6 mb-2">Tên cửa hàng</label>
+                                                <input type="text" name="business_name"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       placeholder="Tên cửa hàng" value=""/>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Địa chỉ</label>
+                                                <input type="text" name="address"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       placeholder="Địa chỉ" value=""/>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tên miền(Viết liền không
+                                                    dấu)</label>
+                                                <input type="text" name="name_tenant"
+                                                       class="form-control form-control-solid mb-3 mb-lg-0"
+                                                       placeholder="Tên Tenant" value=""/>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Lựa Chọn User</label>
+                                                <select class="form-select mb-2" name="user_id"
+                                                        data-control="select2"
+                                                        data-hide-search="true" data-placeholder="Chọn">
+                                                    <option></option>
+                                                    @foreach($users as $user)
+                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Lựa Chọn Lĩnh Vưc Kinh
+                                                    Doanh</label>
+                                                <select class="form-select mb-2" name="business_field"
+                                                        data-control="select2"
+                                                        data-hide-search="true" data-placeholder="Chọn">
+                                                    <option></option>
+                                                    @foreach($businessField as $bf)
+                                                        <option value="{{$bf->id}}">{{$bf->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Lựa Chọn Gói Dịch
+                                                    Vụ</label>
+                                                <select class="form-select mb-2" name="pricing_id"
+                                                        data-control="select2"
                                                         data-hide-search="true" data-placeholder="Chọn">
                                                     <option></option>
                                                     @foreach($pricing as $price)
@@ -119,28 +128,18 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <button type="button" class="btn btn-primary" id="add-user">
-                                                <i class="ki-duotone ki-plus fs-2"></i>Thêm mới user
-                                            </button>
-                                            <button type="button" class="btn btn-danger" id="hidden-user">
-                                                Ẩn
-                                            </button>
-                                        </div>
-                                        <div class="show-add-user" style="display: none">
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tên Người Dùng</label>
-                                            <input type="text" name="username" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tên Người Dùng" value=""/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Email</label>
-                                            <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Mật Khẩu</label>
-                                            <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent"/>
-                                        </div>
+                                            {{--                                            <div class="fv-row mb-7">--}}
+                                            {{--                                                <label class="required fw-semibold fs-6 mb-2">Chọn ngày hết hạn</label>--}}
+                                            {{--                                                <select class="form-select mb-2" name="due_at" data-control="select2"--}}
+                                            {{--                                                        data-hide-search="true" data-placeholder="Chọn"--}}
+                                            {{--                                                        id="kt_ecommerce_add_product_status_select">--}}
+                                            {{--                                                    <option hidden=""></option>--}}
+                                            {{--                                                    <option value="14">Free (14 ngày)</option>--}}
+                                            {{--                                                    <option value="365">1 Năm</option>--}}
+                                            {{--                                                    <option value="730">2 Năm</option>--}}
+                                            {{--                                                    <option value="1095">3 Năm</option>--}}
+                                            {{--                                                </select>--}}
+                                            {{--                                            </div>--}}
                                         </div>
                                     </div>
                                     <!--end::Scroll-->
@@ -194,7 +193,7 @@
                         <td>{{$tenant->business_name}}</td>
                         <td>{{$tenant->name}}</td>
                         <td>{{$tenant->address }}</td>
-{{--                        <td>{{$tenant->database}}</td>--}}
+                        {{--                        <td>{{$tenant->database}}</td>--}}
                         <td>{{$tenant->user->name}}</td>
                         <td>{{$tenant->business_field->name}}</td>
                         <td class="{{$tenant->status == 1? 'text-success': 'text-danger'}}">{{$tenant->status == 1? 'Kích hoạt': 'Khum kích hoạt'}}</td>
@@ -221,14 +220,14 @@
     <script>
         $(document).ready(function () {
             $("#hidden-user").hide()
-            $("#add-user").click(function (){
+            $("#add-user").click(function () {
                 $("#add-user").hide()
                 $(".show-add-user").show()
                 $("#hidden-user").show()
                 $(".select-user").hide()
 
             })
-            $("#hidden-user").click(function (){
+            $("#hidden-user").click(function () {
                 $("#hidden-user").hide()
                 $("#add-user").show()
                 $(".select-user").show()

@@ -8,6 +8,7 @@ use App\Models\Tenant\OrderDetail;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Order;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class StatisticController extends Controller
 {
@@ -21,14 +22,14 @@ class StatisticController extends Controller
 
     public function income(){
         try {
-            return responseApi([
-                $this->request->option => $this->orderModel::query()->whereCreatedAt(
-                    [
-                        $this->request->option,
-                        $this->request->start_date,
-                        $this->request->end_date],
-                    $this->request->location)
-            ], true);
+            $data = $this->orderModel::query()->income(
+                [
+                    $this->request->option,
+                    $this->request->start_date,
+                    $this->request->end_date],
+                $this->request->location);
+
+            return responseApi($data, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -64,10 +65,7 @@ class StatisticController extends Controller
 
     public function general(){
         try {
-            return responseApi([
-                'total' => $this->orderModel::query()->whereCreatedAt(['today']),
-                'order_completed' => $this->orderModel::query()->orderCompleted()
-            ], true);
+            return $this->orderModel::query()->general();
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

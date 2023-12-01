@@ -17,6 +17,7 @@ class OrderDetail extends Model
         "price",
         "discount",
         "discount_type",
+        "quantity",
         "tax",
         "total_price",
     ];

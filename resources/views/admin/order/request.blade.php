@@ -13,7 +13,8 @@
                         <span class="path1"></span>
                         <span class="path2"></span>
                     </i>
-                    <input type="text" data-kt-customer-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm" />
+                    <input type="text" data-kt-customer-table-filter="search"
+                           class="form-control form-control-solid w-250px ps-13" placeholder="Tìm kiếm"/>
                 </div>
                 <!--end::Search-->
             </div>
@@ -25,7 +26,8 @@
                     <!--begin::Filter-->
                     <div class="w-200px me-3">
                         <!--begin::Select2-->
-                        <select class="form-select form-select-solid" data-control="select2"  data-placeholder="Loại yêu cầu" data-kt-ecommerce-order-filter="type">
+                        <select class="form-select form-select-solid" data-control="select2"
+                                data-placeholder="Loại yêu cầu" data-kt-ecommerce-order-filter="type">
                             <option></option>
                             <option value="all">Tất cả</option>
                             <option value="Gia hạn">Gia hạn</option>
@@ -35,15 +37,19 @@
                     </div>
                     <!--end::Filter-->
                     <!--begin::Add customer-->
-{{--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Thêm dữ liệu mẫu</button>--}}
+                    {{--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Thêm dữ liệu mẫu</button>--}}
                     <!--end::Add customer-->
                 </div>
                 <!--end::Toolbar-->
                 <!--begin::Group actions-->
-                <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected">
+                <div class="d-flex justify-content-end align-items-center d-none"
+                     data-kt-customer-table-toolbar="selected">
                     <div class="fw-bold me-5">
-                        <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected</div>
-                    <button type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Delete Selected</button>
+                        <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected
+                    </div>
+                    <button type="button" class="btn btn-danger" data-kt-customer-table-select="delete_selected">Delete
+                        Selected
+                    </button>
                 </div>
                 <!--end::Group actions-->
             </div>
@@ -62,6 +68,7 @@
                     <th class="min-w-125px">Gói cũ</th>
                     <th class="min-w-125px">Gói mới</th>
                     <th class="min-w-125px">Tổng tiền</th>
+                    <th class="min-w-125px">Trạng thái</th>
                     <th class="min-w-125px">Người phụ trách</th>
                     <th class="min-w-125px">Ngày tạo</th>
                     <th class="text-end min-w-70px">Actions</th>
@@ -76,23 +83,31 @@
                         <td>{{$value['from_pricing']}}</td>
                         <td>{{$value['to_pricing']}}</td>
                         <td>{{number_format($value['total_price'])}}</td>
+                        <td>
+                            <span class="text-light-{{$value['status']==0?'success':'warning'}} bg-{{$value['status']==0?'success':'warning'}}">
+                                {{$value['status']==0?'Đã thanh toán':'Chờ thanh toán'}}
+                            </span>
+                        </td>
                         <td>{{$value['created_by']}}</td>
                         <td>{{$value['created_at']}}</td>
                         <td class="text-end">
-                            <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                            <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                               data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                 <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
                             <!--begin::Menu-->
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
+                            <div
+                                class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                data-kt-menu="true">
                                 <!--begin::Menu item-->
-                                <div class="menu-item px-3">
+                                <div class="menu-item px-3 {{$value['status']==0?'d-none':''}}">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
                                        data-bs-target="#kt_modal_add_customer" data-id="{{$value['id']}}">Thanh toán</a>
                                 </div>
                                 <!--end::Menu item-->
                                 <!--begin::Menu item-->
-{{--                                <div class="menu-item px-3">--}}
-{{--                                    <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$value['id']}}">Delete</a>--}}
-{{--                                </div>--}}
+                                {{--                                <div class="menu-item px-3">--}}
+                                {{--                                    <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$value['id']}}">Delete</a>--}}
+                                {{--                                </div>--}}
                                 <!--end::Menu item-->
                             </div>
                             <!--end::Menu-->
@@ -134,16 +149,20 @@
                     <!--begin::Modal body-->
                     <div class="modal-body py-10 px-lg-17">
                         <!--begin::Scroll-->
-                        <div class="scroll-y me-n7 pe-7" id="kt_modal_add_customer_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_customer_header" data-kt-scroll-wrappers="#kt_modal_add_customer_scroll" data-kt-scroll-offset="300px">
+                        <div class="scroll-y me-n7 pe-7" id="kt_modal_add_customer_scroll" data-kt-scroll="true"
+                             data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+                             data-kt-scroll-dependencies="#kt_modal_add_customer_header"
+                             data-kt-scroll-wrappers="#kt_modal_add_customer_scroll" data-kt-scroll-offset="300px">
                             <!--begin::Input group-->
                             @csrf
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Số tiền cần thanh toán (VNĐ)</label>
-                                <input disabled type="text" class="form-control" placeholder="Số tiền cần thanh toán" name="total_price"/>
+                                <input disabled type="text" class="form-control" placeholder="Số tiền cần thanh toán"
+                                       name="total_price"/>
                             </div>
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Phương thức thanh toán</label>
-                                <select class="required form-select" name="payment_method" >
+                                <select class="required form-select" name="payment_method">
                                     <option>Chọn phương thức thanh toán</option>
                                     <option value="0">Tiền mặt</option>
                                     <option value="1">Chuyển khoản</option>
@@ -153,7 +172,8 @@
                             <!--begin::Input group-->
                             <div class="fv-row mb-7">
                                 <label class="fw-semibold fs-6 mb-2">Mã tham chiếu (khi chuyển khoản)</label>
-                                <input type="text" class="form-control" placeholder="Mã tham chiếu" name="reference_code"/>
+                                <input type="text" class="form-control" placeholder="Mã tham chiếu"
+                                       name="reference_code"/>
                             </div>
                         </div>
                         <!--end::Scroll-->
@@ -168,7 +188,8 @@
                         <button type="submit" id="kt_modal_add_customer_submit" class="btn btn-primary">
                             <span class="indicator-label">Lưu</span>
                             <span class="indicator-progress">Vui lòng chờ...
-														<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+														<span
+                                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
                         <!--end::Button-->
                     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionOrder;
 use App\Models\SubscriptionOrderNote;
@@ -11,6 +12,7 @@ use App\Models\TenantChangeHistory;
 use App\Models\Order;
 use App\Models\Pricing;
 use App\Http\Requests\OrderRequest;
+use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
@@ -133,6 +135,8 @@ class OrderController extends Controller
             $subscriptionOrder->delete();
             $subscriptionOrderNote = SubscriptionOrderNote::where('subscription_order_id', $request->id);
             if ($subscriptionOrderNote) $subscriptionOrderNote->delete();
+            $tenantChangeHistory = TenantChangeHistory::where('tenant_id', $subscriptionOrder->tenant_id);
+            if ($tenantChangeHistory) $tenantChangeHistory->delete();
             return response()->json(['msg' => 'Xóa thành công!', 'status' => 200]);
         } catch (\Throwable $throwable) {
             return response()->json(['error' => $throwable->getMessage()]);
@@ -167,7 +171,7 @@ class OrderController extends Controller
     public function listTenantChangeHistory(Request $request)
     {
         $tenantChangeHistory = TenantChangeHistory::query()
-            ->with('tenant:id,business_name', 'fromPricing:id,name', 'toPricing:id,name', 'createdBy:id,name')
+            ->with('tenant:id,business_name', 'fromPricing:id,name', 'toPricing:id,name', 'createdBy:id,name', 'order:id,tenant_change_history_id')
             ->orderBy('created_at')
             ->get();
         $data = $tenantChangeHistory->map(function ($item) {
@@ -178,6 +182,7 @@ class OrderController extends Controller
                 'from_pricing' => $item->fromPricing->name,
                 'to_pricing' => $item->toPricing->name,
                 'total_price' => $item->total_price,
+                'status' => $item->order->count() > 0 ? 0 : 1,
                 'created_by' => $item->createdBy->name,
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
             ];
@@ -210,6 +215,21 @@ class OrderController extends Controller
                 SubscriptionOrder::where('tenant_id', $tenantChangeHistory->tenant_id)->update([
                     'status' => 3,
                 ]);
+                $expiryDay = Pricing::where('id', $tenantChangeHistory->to_pricing_id)->first()?->expiry_day;
+                $changType = $tenantChangeHistory->change_type;
+                if ($changType == 0) {
+                    $dueAt = Carbon::now()->addDays($expiryDay)->format('Y-m-d');
+                } elseif ($changType == 1) {
+                    $dueAtCurrent = Tenant::where('id', $tenantChangeHistory->tenant_id)->first()?->due_at;
+                    $dueAt = Carbon::parse($dueAtCurrent)->addDays($expiryDay)->format('Y-m-d');
+                } else {
+                    $dueAt = Carbon::now()->addDays($expiryDay)->format('Y-m-d');
+                }
+                Tenant::where('id', $tenantChangeHistory->tenant_id)->update([
+                    'pricing_id' => $tenantChangeHistory->to_pricing_id,
+                    'due_at' => $dueAt,
+                ]);
+                Cache::flush();
             }
             return response()->json(['success' => 'Tạo thành công!', 'order' => $order]);
         } catch (\Throwable $throwable) {

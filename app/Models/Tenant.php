@@ -48,6 +48,11 @@ class Tenant extends SpatieTenant
         return $this->belongsTo(BusinessField::class, 'business_field_id');
     }
 
+    public function pricing()
+    {
+        return $this->belongsTo(Pricing::class, 'pricing_id');
+    }
+
     public function createDatabase()
     {
         // add logic to create database

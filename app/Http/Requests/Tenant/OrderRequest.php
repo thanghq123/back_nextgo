@@ -33,7 +33,7 @@ class OrderRequest extends FormRequest
                 "required",
                 "exists:App\Models\Tenant\Order,id"
             ],
-            "location" => [
+            "location_id" => [
                 "required",
                 "exists:App\Models\Tenant\Location,id"
             ],
@@ -99,7 +99,7 @@ class OrderRequest extends FormRequest
         switch ($getUrl){
             case "store":
                 return [
-                    "location" => $rules['location'],
+                    "location_id" => $rules['location_id'],
                     "customer_id" => $rules['customer_id'],
                     "created_by" => $rules['created_by'],
                     "discount" => $rules['discount'],

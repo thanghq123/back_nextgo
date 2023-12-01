@@ -39,7 +39,7 @@ class OrderController extends Controller
                 'location',
                 'createdBy',
                 'payments'
-            ])->orderBy('id', 'asc')->paginate(10);
+            ])->orderBy('id', 'desc')->paginate(10);
 
             $data = $orderData->getCollection()->transform(function ($orderData) {
                 return [
@@ -271,7 +271,6 @@ class OrderController extends Controller
     {
         try {
             $orderData = $this->model::with([
-                'orderDetails',
                 'orderDetails.variant',
                 'orderDetails.orderDetailBatch.batch',
                 'customer',

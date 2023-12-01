@@ -32,38 +32,37 @@ class TenantController extends Controller
 
         DB::beginTransaction();
         try {
-            if (!empty($this->request->validated())) {
-                $tenantName=cleanText($this->request->input('name_tenant'));
-                $filterDatabase = Tenant::where('database', $tenantName)->get();
+            $tenantName = cleanText($this->request->input('name_tenant'));
+            $filterDatabase = Tenant::where('database', $tenantName)->get();
 
-                $business_field_id = $this->request->input('business_field');
+            $business_field_id = $this->request->input('business_field');
 
-                if ($business_field_code = $this->request->input('business_code')) {
+            if ($business_field_code = $this->request->input('business_code')) {
 
-                    $business_field = BusinessField::where('code', $business_field_code)->first();
+                $business_field = BusinessField::where('code', $business_field_code)->first();
 
-                    if (!$business_field) return responseApi('Lĩnh vực kinh doanh không tồn tại');
+                if (!$business_field) return responseApi('Lĩnh vực kinh doanh không tồn tại');
 
-                    $business_field_id = $business_field->id;
-                }
+                $business_field_id = $business_field->id;
+            }
 
-                if (count($filterDatabase) > 0) return responseApi('Cơ sở đã tổn tại');
-                else {
-                    $due_at=Pricing::where('id',$this->request->pricing_id)->first()?->expiry_day;
-                    $tenant = new Tenant();
-                    $tenant->business_name = $this->request->input('business_name');
-                    $tenant->address = $this->request->input('address');
-                    $tenant->name = $tenantName;
-                    $tenant->domain = env('APP_URL').'/'.$tenantName;
-                    $tenant->database = $tenantName;
-                    $tenant->user_id = $this->request->input('user_id');
-                    $tenant->business_field_id = $business_field_id;
-                    $tenant->pricing_id = $this->request->pricing_id;
-                    $tenant->due_at = Carbon::now()->addDays($due_at)->format('Y-m-d');
-                    $tenant->status = 1;
-                    $tenant->save();
-                    return responseApi('Tạo chi nhánh thành công', true);
-                }
+            if (count($filterDatabase) > 0) {
+                return responseApi('Cơ sở đã tổn tại');
+            } else {
+                $due_at = Pricing::where('id', $this->request->pricing_id)->first()?->expiry_day;
+                $tenant = new Tenant();
+                $tenant->business_name = $this->request->input('business_name');
+                $tenant->address = $this->request->input('address');
+                $tenant->name = $tenantName;
+                $tenant->domain = env('APP_URL') . '/' . $tenantName;
+                $tenant->database = $tenantName;
+                $tenant->user_id = $this->request->input('user_id');
+                $tenant->business_field_id = $business_field_id;
+                $tenant->pricing_id = $this->request->pricing_id;
+                $tenant->due_at = Carbon::now()->addDays($due_at)->format('Y-m-d');
+                $tenant->status = 1;
+                $tenant->save();
+                return responseApi('Tạo chi nhánh thành công', true);
             }
             DB::commit();
             return responseApi("Tạo thất bại", true);

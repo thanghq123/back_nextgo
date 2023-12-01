@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Controllers\Tenant\LocationController;
+use App\Models\Tenant\Config;
 use App\Models\Tenant\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +49,11 @@ class Tenant extends SpatieTenant
         return $this->belongsTo(BusinessField::class, 'business_field_id');
     }
 
+    public function pricing()
+    {
+        return $this->belongsTo(Pricing::class, 'pricing_id');
+    }
+
     public function createDatabase()
     {
         // add logic to create database
@@ -68,6 +74,18 @@ class Tenant extends SpatieTenant
                 $user = $this->user;
 
                 $businessFieldId = $this->business_field_id;
+
+                $businessField = BusinessField::query()->find($businessFieldId);
+
+                $config = [
+                    'business_name' => $this->business_name,
+                    'tel' => $user->tel,
+                    'email' => $user->email,
+                    'address_detail' => $this->address,
+                    'business_field_code' => $businessField->code,
+                ];
+
+                Config::query()->create($config);
 
                 $seedsByBusinessField = Seed::query()
                     ->whereHas('businessFieldSeed', function ($query) use ($businessFieldId) {

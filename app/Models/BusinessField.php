@@ -26,5 +26,8 @@ class BusinessField extends Model
     public function BusinessFieldSeed(){
         return $this->belongsToMany(BusinessFieldSeed::class,'business_field_seeds','business_field_id','seed_id');
     }
-
+    public function scopeStatistic($query)
+    {
+        return $query->withCount('tenants')->get()->pluck('tenants_count', 'name');
+    }
 }

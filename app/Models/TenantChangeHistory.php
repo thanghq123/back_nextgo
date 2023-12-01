@@ -36,4 +36,8 @@ class TenantChangeHistory extends Model
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+    public function order()
+    {
+        return $this->hasMany(Order::class, 'tenant_change_history_id', 'id');
+    }
 }

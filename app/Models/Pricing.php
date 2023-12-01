@@ -16,4 +16,13 @@ class Pricing extends Model
     {
         return $this->hasMany(User::class, 'pricing_id', 'id');
     }
+    public function tenants()
+    {
+        return $this->hasMany(Tenant::class, 'pricing_id', 'id');
+    }
+
+    public function scopeStatistic($query)
+    {
+        return $query->withCount('tenants')->get()->pluck('tenants_count', 'name');
+    }
 }

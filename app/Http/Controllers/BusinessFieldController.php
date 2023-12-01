@@ -25,7 +25,7 @@ class BusinessFieldController extends Controller
     public function list()
     {
         try {
-            return responseApi($this->model::query()->select('code', 'name')->get(), true);
+            return responseApi($this->model::query()->select('id', 'code', 'name')->get(), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

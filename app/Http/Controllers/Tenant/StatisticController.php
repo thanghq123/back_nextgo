@@ -7,8 +7,6 @@ use App\Http\Requests\Tenant\StatisticRequest;
 use App\Models\Tenant\OrderDetail;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Order;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class StatisticController extends Controller
 {

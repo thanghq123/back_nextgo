@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Order extends Model
@@ -128,11 +129,11 @@ class Order extends Model
                         return $query->where('location_id', $locationId);
                     })->where('payment_status', 2)
                     ->whereBetween('created_at', [$option[1], $option[2]])
-                    ->groupBy(\DB::raw('DATE(created_at)'))
-                    ->orderBy(\DB::raw('DATE(created_at)'))
+                    ->groupBy(DB::raw('DATE(created_at)'))
+                    ->orderBy(DB::raw('DATE(created_at)'))
                     ->select([
-                        \DB::raw('DATE(created_at) as date'),
-                        \DB::raw('SUM(total_price) as total_price'),
+                        DB::raw('DATE(created_at) as date'),
+                        DB::raw('SUM(total_price) as total_price'),
                     ])
                     ->get();
 
@@ -155,8 +156,8 @@ class Order extends Model
 
     public function scopeWhereCustomer($query, array $option = [], ?int $locationId = 0){
         $query->select('customer_id',
-            \DB::raw('sum(total_product) as total_product'),
-            \DB::raw('sum(total_price) as total_price'))
+            DB::raw('sum(total_product) as total_product'),
+            DB::raw('sum(total_price) as total_price'))
             ->with(['customer'])
             ->when($locationId != 0, function ($query) use ($locationId){
                 return $query->where('location_id', $locationId);

@@ -113,7 +113,8 @@ class OrderController extends Controller
                         Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
                     'updated_at' => $orderData->updated_at ?
                         Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
-                    'oder_details' => collect($orderData->orderDetails)->map(function ($orderDetails) {
+                    'oder_details' => is_array($orderData->orderDetails)
+                        ? collect($orderData->orderDetails)->map(function ($orderDetails) {
                         return [
                             'id' => $orderDetails->id,
                             'order_id' => $orderDetails->order_id,
@@ -133,7 +134,7 @@ class OrderController extends Controller
                                 'updated_at' => $orderDetails->variant->updated_at ?
                                     Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
                             ] : [],
-                            'batches' => $orderDetails->orderDetailBatch ?
+                            'batches' => is_array($orderDetails->orderDetailBatch) ?
                                 collect($orderDetails->orderDetailBatch)->map(function ($batches){
                                     return [
                                         'id' => $batches->batch->id,
@@ -155,8 +156,8 @@ class OrderController extends Controller
                             'tax' => $orderDetails->tax,
                             'total_price' => $orderDetails->total_price
                         ];
-                    }),
-                    'payment' => $orderData->payments ?
+                    }) : [],
+                    'payment' => is_array($orderData->payments) ?
                         collect($orderData->payments)->map(function ($payment){
                             return [
                                 'paymentable_type' => $payment->paymentable_type,
@@ -352,7 +353,8 @@ class OrderController extends Controller
                         Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
                     'updated_at' => $orderData->updated_at ?
                         Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
-                    'oder_details' => collect($orderData->orderDetails)->map(function ($orderDetails) {
+                    'oder_details' => is_array($orderData->orderDetails)
+                        ? collect($orderData->orderDetails)->map(function ($orderDetails) {
                         return [
                             'id' => $orderDetails->id,
                             'order_id' => $orderDetails->order_id,
@@ -372,7 +374,7 @@ class OrderController extends Controller
                                 'updated_at' => $orderDetails->variant->updated_at ?
                                     Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
                             ] : [],
-                            'batches' => $orderDetails->orderDetailBatch ?
+                            'batches' => is_array($orderDetails->orderDetailBatch) ?
                                 collect($orderDetails->orderDetailBatch)->map(function ($batches){
                                     return [
                                         'id' => $batches->batch->id,
@@ -394,8 +396,8 @@ class OrderController extends Controller
                             'tax' => $orderDetails->tax,
                             'total_price' => $orderDetails->total_price
                         ];
-                    }),
-                    'payment' => $orderData->payments ?
+                    }) : [],
+                    'payment' => is_array($orderData->payments) ?
                         collect($orderData->payments)->map(function ($payment){
                             return [
                                 'paymentable_type' => $payment->paymentable_type,

@@ -41,6 +41,7 @@ Route::get('log-out',[LoginController::class,'logout'])->name('logout');
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 //    Route::view('/', 'admin.dashboard.index')->name('home');
     Route::get('/', [StatisticController::class, 'index'])->name('home');
+    Route::get('get-statistic',[StatisticController::class,'getStatistic'])->name('show-statistic');
     Route::prefix('business-field')->name('bf.')->group(function () {
         Route::get('/', [BusinessFieldController::class, 'index'])->name('index');
         Route::post('store', [BusinessFieldController::class, 'store'])->name('create');

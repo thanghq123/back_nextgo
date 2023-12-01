@@ -30,7 +30,8 @@ class VariationQuantityController extends Controller
                     'inventory_id' => $data->inventory_id,
                     'inventory_name' => $data->inventory->name,
                     'variation_id' => $data->variation_id,
-                    'variation_name' => $data->variation->variation_name,
+                    'product_name_variation' => $data->variation->product->name.' - '.$data->variation->variation_name??'',
+                    'variation_name' => $data->variation->variation_name??null,
                     'sku' => $data->variation->sku??null,
                     'barcode' => $data->variation->barcode??null,
                     'price_import' => $data->variation->price_import??null,
@@ -60,7 +61,7 @@ class VariationQuantityController extends Controller
     public function getVariationQuantityById($id)
     {
         try {
-            $variationQuantity = VariationQuantity::with(['variation', 'batch', 'variation.product:id,code'])->find($id);
+            $variationQuantity = VariationQuantity::with(['variation', 'batch', 'variation.product:id,name'])->find($id);
             if (!$variationQuantity) {
                 return responseApi([], false);
             }
@@ -70,7 +71,7 @@ class VariationQuantityController extends Controller
                 'product_name' => $variationQuantity->variation->product->name,
                 'variation_name' => $variationQuantity->variation->variation_name,
                 'batch_id' => $variationQuantity->batch_id ?? null,
-                'batch_name' => $variationQuantity->batch->code ?? null,
+                'batch_code' => $variationQuantity->batch->code ?? null,
                 'quantity' => $variationQuantity->quantity,
                 'created_at' => $variationQuantity->created_at,
                 'updated_at' => $variationQuantity->updated_at,

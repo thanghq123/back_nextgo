@@ -1,213 +1,153 @@
 @extends('layouts.admin')
 @section('title','Home')
 @section('content')
-    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-        <!--begin::Content wrapper-->
-        <div class="d-flex flex-column flex-column-fluid">
-            <!--begin::Content-->
-            <div id="kt_app_content" class="app-content flex-column-fluid">
-                <!--begin::Content container-->
-                <div id="kt_app_content_container" class="app-container container-fluid">
-                    <!--begin::Row-->
-                    <div class="row g-5 gx-xl-10 mb-5 mb-xl-10">
-                        <!--begin::Col-->
-                        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-                            <!--begin::Card widget 20-->
-                            <div class="card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end h-md-50 mb-5 mb-xl-10" style="background-color: #F1416C;background-image:url('{{ asset('assets/media/patterns/vector-1.png')}}')">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <div class="card-title d-flex flex-column">
-                                        <!--begin::Amount-->
-                                        <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">{{$reponse['tenant']}}</span>
-                                        <!--end::Amount-->
-                                        <!--begin::Subtitle-->
-                                        <span class="text-white opacity-75 pt-1 fw-semibold fs-6">Tổng số chi nhánh</span>
-                                        <!--end::Subtitle-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Row-->
+                <div class="row g-5 g-xl-10 mb-xl-10">
+                    <!--begin::Col-->
+                    <div class="col-lg-12 col-xl-12 col-xxl-6 mb-5 mb-xl-0">
+                        <!--begin::Card widget 4-->
+                        <div class="card card-flush h-md-50 mb-5 mb-xl-10">
+                            <!--begin::Header-->
+                            <div class="card-header pt-5">
+                                <!--begin::Title-->
+                                <div class="card-title d-flex flex-column">
+                                    <!--begin::Info-->
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$reponse['user']}}</span>
                                     </div>
-                                    <!--end::Title-->
+                                    <!--end::Info-->
+                                    <!--begin::Subtitle-->
+                                    <span class="text-gray-400 pt-1 fw-semibold fs-6">Người dùng</span>
+                                    <!--end::Subtitle-->
                                 </div>
-                                <!--end::Header-->
+                                <!--end::Title-->
                             </div>
-                            <!--end::Card widget 20-->
-                            <!--begin::Card widget 7-->
-                            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <div class="card-title d-flex flex-column">
-                                        <!--begin::Amount-->
-                                        <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$reponse['pricing']}}</span>
-                                        <!--end::Amount-->
-                                        <!--begin::Subtitle-->
-                                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Gói dịch vụ</span>
-                                        <!--end::Subtitle-->
-                                    </div>
-                                    <!--end::Title-->
+                            <!--end::Header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-2 pb-4 d-flex align-items-center">
+                                <!--begin::Labels-->
+                                <div class="d-flex flex-column content-justify-center w-100">
+                                    <div id="kt_apexcharts_2" class="w-100 h-300px"></div>
                                 </div>
-                                <!--end::Header-->
+                                <!--end::Labels-->
                             </div>
-                            <!--end::Card widget 7-->
+                            <!--end::Card body-->
                         </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-                            <!--begin::Card widget 17-->
-                            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <div class="card-title d-flex flex-column">
-                                        <!--begin::Info-->
-                                        <div class="d-flex align-items-center">
-
-                                            <!--begin::Amount-->
-                                            <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$reponse['user']}}</span>
-                                            <!--end::Amount-->
-{{--                                            <!--begin::Badge-->--}}
-{{--                                            <span class="badge badge-light-success fs-base">--}}
-{{--															<i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">--}}
-{{--																<span class="path1"></span>--}}
-{{--																<span class="path2"></span>--}}
-{{--															</i>2.2%</span>--}}
-{{--                                            <!--end::Badge-->--}}
-                                        </div>
-                                        <!--end::Info-->
-                                        <!--begin::Subtitle-->
-                                        <span class="text-gray-400 pt-1 fw-semibold fs-6">Tông số khách hàng</span>
-                                        <!--end::Subtitle-->
+                        <!--end::Card widget 4-->
+                        <div class="card card-flush h-md-50 mb-5 mb-xl-10">
+                            <!--begin::Header-->
+                            <div class="card-header pt-5">
+                                <!--begin::Title-->
+                                <div class="card-title d-flex flex-column">
+                                    <!--begin::Info-->
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{$reponse['tenant']}}</span>
+                                        <!--end::Amount-->
                                     </div>
-                                    <!--end::Title-->
+                                    <span class="text-gray-400 pt-1 fw-semibold fs-6">Cửa hàng</span>
                                 </div>
-                                <!--end::Header-->
-                                <!--begin::Card body-->
-                                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-                                    <!--begin::Labels-->
-                                    <div class="d-flex flex-column content-justify-center flex-row-fluid">
-                                        <!--begin::Label-->
-                                        @foreach($reponse['plan'] as $plan => $value)
-                                        <div class="d-flex fw-semibold align-items-center my-3">
-                                            <!--begin::Bullet-->
-                                            <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
-                                            <!--end::Bullet-->
-                                            <!--begin::Label-->
-                                            <div class="text-gray-500 flex-grow-1 me-4">{{$plan}}</div>
-                                            <!--end::Label-->
-                                            <!--begin::Stats-->
-                                            <div class="fw-bolder text-gray-700 text-xxl-end">{{$value}}</div>
-                                            <!--end::Stats-->
-                                        </div>
-                                        @endforeach
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Labels-->
-                                </div>
-                                <!--end::Card body-->
+                                <!--end::Title-->
                             </div>
-                            <!--end::Card widget 17-->
-                            <!--begin::List widget 26-->
-                            <div class="card card-flush h-lg-50">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <h3 class="card-title text-gray-800 fw-bold">External Links</h3>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Menu-->
-                                        <button class="btn btn-icon btn-color-gray-400 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
-                                            <i class="ki-duotone ki-dots-square fs-1 text-gray-400 me-n1">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                            </i>
-                                        </button>
-                                        <!--end::Menu-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-5">
-                                    <!--begin::Item-->
-                                    <div class="d-flex flex-stack">
-                                        <!--begin::Section-->
-                                        <a href="{{route('admin.bf.index')}}" class="text-primary fw-semibold fs-6 me-2">Lĩnh vực kinh doanh</a>
-                                        <!--end::Section-->
-                                        <!--begin::Action-->
-                                        <button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-400 btn-active-color-primary justify-content-end">
-                                            <i class="ki-duotone ki-exit-right-corner fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </button>
-                                        <!--end::Action-->
-                                    </div>
-                                    <!--end::Item-->
-                                    <!--begin::Separator-->
-                                    <div class="separator separator-dashed my-3"></div>
-                                    <!--end::Separator-->
-                                    <!--begin::Item-->
-                                    <div class="d-flex flex-stack">
-                                        <!--begin::Section-->
-                                        <a href="{{route('admin.pricing.index')}}" class="text-primary fw-semibold fs-6 me-2">Bảng giá</a>
-                                        <!--end::Section-->
-                                        <!--begin::Action-->
-                                        <button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-400 btn-active-color-primary justify-content-end">
-                                            <i class="ki-duotone ki-exit-right-corner fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </button>
-                                        <!--end::Action-->
-                                    </div>
-                                    <!--end::Item-->
-                                    <!--begin::Separator-->
-                                    <div class="separator separator-dashed my-3"></div>
-                                    <!--end::Separator-->
-                                    <!--begin::Item-->
-                                    <div class="d-flex flex-stack">
-                                        <!--begin::Section-->
-                                        <a href="{{route('admin.user.index')}}" class="text-primary fw-semibold fs-6 me-2">Người dùng</a>
-                                        <!--end::Section-->
-                                        <!--begin::Action-->
-                                        <button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-400 btn-active-color-primary justify-content-end">
-                                            <i class="ki-duotone ki-exit-right-corner fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </button>
-                                        <!--end::Action-->
-                                    </div>
-                                    <!--end::Item-->
-                                </div>
-                                <!--end::Body-->
+                            <!--end::Header-->
+                            <!--begin::Card body-->
+                            <div class="card-body d-flex align-items-end px-0 pb-0">
+                                <!--begin::Chart-->
+                                <div id="kt_card_widget_6_chart" class="w-100 h-300px"></div>
+                                <!--end::Chart-->
                             </div>
-                            <!--end::LIst widget 26-->
+                            <!--end::Card body-->
                         </div>
-                        <!--end::Col-->
                     </div>
-                    <!--end::Row-->
+                    <!--end::Col-->
+                    <!--begin::Col-->
+                    <div class="col-lg-12 col-xl-12 col-xxl-6 mb-5 mb-xl-0">
+                        <div class="card card-flush h-md-100">
+                            <!--begin::Header-->
+                            <div class="card-header pt-5 mb-6">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{number_format($reponse['orderDay'])}}</span>
+                                        <span class="fs-3 fw-semibold text-gray-400 align-self-start me-1">VNĐ</span>
+                                    </div>
+                                    <span class="fs-6 fw-semibold text-gray-400">Doanh thu hôm nay</span>
+                                    <div class="d-flex align-items-center mb-2 my-2">
+                                        <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{number_format($reponse['orderMonth'])}}</span>
+                                        <span class="fs-3 fw-semibold text-gray-400 align-self-start me-1">VNĐ</span>
+                                    </div>
+                                    <span class="fs-6 fw-semibold text-gray-400">Doanh thu tháng {{$reponse['month']}}</span>
+                                </h3>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Body-->
+                            <div class="card-body py-0 px-0">
+                                <!--begin::Nav-->
+                                <ul class="nav d-flex justify-content-between mb-3 mx-9">
+                                    <!--begin::Item-->
+                                    <li class="nav-item mb-4">
+                                        <!--begin::Link-->
+                                        <a class="nav-link btn btn-flex flex-center btn-active-danger btn-color-gray-600 btn-active-color-white rounded-2 w-150px h-35px active" data-bs-toggle="tab" id="kt_charts_widget_35_tab_1" href="#kt_charts_widget_35_tab_content_1">1 Tuần</a>
+                                        <!--end::Link-->
+                                    </li>
+                                    <!--end::Item-->
+                                    <!--begin::Item-->
+                                    <li class="nav-item mb-4">
+                                        <!--begin::Link-->
+                                        <a class="nav-link btn btn-flex flex-center btn-active-danger btn-color-gray-600 btn-active-color-white rounded-2 w-150px h-35px" data-bs-toggle="tab" id="kt_charts_widget_35_tab_2" href="#kt_charts_widget_35_tab_content_2">1 Tháng</a>
+                                        <!--end::Link-->
+                                    </li>
+                                    <!--end::Item-->
+                                    <!--begin::Item-->
+                                    <li class="nav-item mb-4">
+                                        <!--begin::Link-->
+                                        <a class="nav-link btn btn-flex flex-center btn-active-danger btn-color-gray-600 btn-active-color-white rounded-2 w-150px h-35px" data-bs-toggle="tab" id="kt_charts_widget_35_tab_3" href="#kt_charts_widget_35_tab_content_3">1 Năm</a>
+                                        <!--end::Link-->
+                                    </li>
+                                    <!--end::Item-->
+                                </ul>
+                                <!--end::Nav-->
+                                <!--begin::Tab Content-->
+                                <div class="tab-content mt-n6">
+                                    <!--begin::Tap pane-->
+                                    <div class="tab-pane fade active show" id="kt_charts_widget_35_tab_content_1">
+                                        <!--begin::Chart-->
+                                        <div id="kt_charts_widget_35_chart_1" data-kt-chart-color="primary" class="min-h-auto h-550px ps-3 pe-6"></div>
+                                        <!--end::Chart-->
+                                    </div>
+                                    <!--end::Tap pane-->
+                                    <!--begin::Tap pane-->
+                                    <div class="tab-pane fade" id="kt_charts_widget_35_tab_content_2">
+                                        <!--begin::Chart-->
+                                        <div id="kt_charts_widget_35_chart_2" data-kt-chart-color="primary" class="min-h-auto h-350px ps-3 pe-6"></div>
+                                        <!--end::Chart-->
+                                    </div>
+                                    <!--end::Tap pane-->
+                                    <!--begin::Tap pane-->
+                                    <div class="tab-pane fade" id="kt_charts_widget_35_tab_content_3">
+                                        <!--begin::Chart-->
+                                        <div id="kt_charts_widget_35_chart_3" data-kt-chart-color="primary" class="min-h-auto  ps-3 pe-6"></div>
+                                        <!--end::Chart-->
+                                    </div>
+                                    <!--end::Tap pane-->
+                                </div>
+                                <!--end::Tab Content-->
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                    </div>
+                    <!--end::Col-->
                 </div>
-                <!--end::Content container-->
+                <!--end::Row-->
             </div>
-            <!--end::Content-->
+            <!--end::Container-->
         </div>
-        <!--end::Content wrapper-->
-        <!--begin::Footer-->
-        <div id="kt_app_footer" class="app-footer">
-            <!--begin::Footer container-->
-            <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                <!--begin::Copyright-->
-                <div class="text-dark order-2 order-md-1">
-                    <span class="text-muted fw-semibold me-1">2023&copy;</span>
-                    <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">FullSnack Team</a>
-                </div>
-                <!--end::Copyright-->
-            </div>
-            <!--end::Footer container-->
-        </div>
-        <!--end::Footer-->
+        <!--end::Post-->
     </div>
 @endsection
+@push('js')
+    <script src="{{asset('assets/js/custom/apps/statistic/main.js')}}"></script>
+@endpush

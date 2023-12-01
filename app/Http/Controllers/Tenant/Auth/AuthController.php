@@ -53,9 +53,9 @@ class AuthController extends Controller
         $data = [
             'user' => $user,
             'token' => $token,
-            'location_id' => $location->id ?? null,
-            'inventory_id' => $inventory->id ?? null,
-            'domain_name' => $tenant->name ?? null,
+            'location' => $location ?? null,
+            'inventory' => $inventory ?? null,
+            'tenant' => $tenant ?? null,
         ];
 
         return responseApi($data, true);
@@ -116,9 +116,9 @@ class AuthController extends Controller
         $data = [
             'user' => $user,
             'token' => $token,
-            'location_id' => $location->id ?? null,
-            'inventory_id' => $inventory->id ?? null,
-            'domain_name' => Tenant::current()->name ?? null,
+            'location' => $location ?? null,
+            'inventory' => $inventory ?? null,
+            'tenant' => Tenant::current()->name ?? null,
         ];
         return responseApi($data, true);
     }

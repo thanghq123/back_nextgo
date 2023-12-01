@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant;
 use App\Models\Tenant\Config;
 use App\Http\Requests\Tenant\ConfigRequest;
 use Illuminate\Http\Request;
@@ -11,11 +12,12 @@ use Illuminate\Support\Facades\DB;
 class ConfigController extends Controller
 {
     public function __construct(
-        private Config  $model,
+        private Config        $model,
         private ConfigRequest $request
     )
     {
     }
+
     /**
      * @path /tenant/api/v1/config/store
      * @method POST
@@ -43,6 +45,7 @@ class ConfigController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/config/show
      * @method POST
@@ -59,6 +62,7 @@ class ConfigController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
     /**
      * @path /tenant/api/v1/config/update
      * @method POST
@@ -81,7 +85,8 @@ class ConfigController extends Controller
                 $config = $this->model::first();
                 $this->request->merge(['logo' => $config->logo]);
             }
-            $this->model::where('id',$this->request->id)->update($this->request->except(['id','domain_name']));
+            $this->model::where('id', $this->request->id)->update($this->request->except(['id', 'domain_name', 'location_id', 'inventory_id', 'business_field_id']));
+            $tenant = Tenant::current()->update($this->request->only(['domain_name', 'business_field_id']));
             DB::commit();
             return responseApi("Cập nhật thành công!", true);
         } catch (\Throwable $throwable) {

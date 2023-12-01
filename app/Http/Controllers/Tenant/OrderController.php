@@ -113,51 +113,51 @@ class OrderController extends Controller
                         Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
                     'updated_at' => $orderData->updated_at ?
                         Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
-                    'oder_details' => is_array($orderData->orderDetails)
+                    'oder_details' => $orderData->orderDetails
                         ? collect($orderData->orderDetails)->map(function ($orderDetails) {
-                        return [
-                            'id' => $orderDetails->id,
-                            'order_id' => $orderDetails->order_id,
-                            'variation_id' => $orderDetails->variation_id,
-                            'variation_data' => $orderDetails->variant ? [
-                                'product_id' => $orderDetails->variant->product_id,
-                                'sku' => $orderDetails->variant->sku,
-                                'barcode' => $orderDetails->variant->barcode,
-                                'variation_name' => $orderDetails->variant->variation_name,
-                                'display_name' => $orderDetails->variant->display_name,
-                                'image' => $orderDetails->variant->image,
-                                'price_import' => $orderDetails->variant->price_import,
-                                'price_export' => $orderDetails->variant->price_export,
-                                'status' => $orderDetails->variant->status,
-                                'created_at' => $orderDetails->variant->created_at ?
-                                    Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
-                                'updated_at' => $orderDetails->variant->updated_at ?
-                                    Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
-                            ] : [],
-                            'batches' => is_array($orderDetails->orderDetailBatch) ?
-                                collect($orderDetails->orderDetailBatch)->map(function ($batches){
-                                    return [
-                                        'id' => $batches->batch->id,
-                                        'code' => $batches->batch->code,
-                                        'variation_id' => $batches->batch->variation_id,
-                                        'manufacture_date' => $batches->batch->manufacture_date ?
-                                            Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
-                                        'expiration_date' => $batches->batch->expiration_date ?
-                                            Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
-                                        'created_at' => $batches->batch->created_at ?
-                                            Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
-                                        'updated_at' => $batches->batch->updated_at ?
-                                            Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
-                                    ];
-                                }) : [],
-                            'discount' => $orderDetails->discount,
-                            'discount_type' => $orderDetails->discount_type,
-                            'quantity' => $orderDetails->quantity,
-                            'tax' => $orderDetails->tax,
-                            'total_price' => $orderDetails->total_price
-                        ];
-                    }) : [],
-                    'payment' => is_array($orderData->payments) ?
+                            return [
+                                'id' => $orderDetails->id,
+                                'order_id' => $orderDetails->order_id,
+                                'variation_id' => $orderDetails->variation_id,
+                                'variation_data' => $orderDetails->variant ? [
+                                    'product_id' => $orderDetails->variant->product_id,
+                                    'sku' => $orderDetails->variant->sku,
+                                    'barcode' => $orderDetails->variant->barcode,
+                                    'variation_name' => $orderDetails->variant->variation_name,
+                                    'display_name' => $orderDetails->variant->display_name,
+                                    'image' => $orderDetails->variant->image,
+                                    'price_import' => $orderDetails->variant->price_import,
+                                    'price_export' => $orderDetails->variant->price_export,
+                                    'status' => $orderDetails->variant->status,
+                                    'created_at' => $orderDetails->variant->created_at ?
+                                        Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
+                                    'updated_at' => $orderDetails->variant->updated_at ?
+                                        Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
+                                ] : [],
+                                'batches' => $orderDetails->orderDetailBatch ?
+                                    collect($orderDetails->orderDetailBatch)->map(function ($batches){
+                                        return $batches->batch ? [
+                                            'id' => $batches->batch->id,
+                                            'code' => $batches->batch->code,
+                                            'variation_id' => $batches->batch->variation_id,
+                                            'manufacture_date' => $batches->batch->manufacture_date ?
+                                                Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
+                                            'expiration_date' => $batches->batch->expiration_date ?
+                                                Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
+                                            'created_at' => $batches->batch->created_at ?
+                                                Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
+                                            'updated_at' => $batches->batch->updated_at ?
+                                                Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
+                                        ] : [];
+                                    }) : [],
+                                'discount' => $orderDetails->discount,
+                                'discount_type' => $orderDetails->discount_type,
+                                'quantity' => $orderDetails->quantity,
+                                'tax' => $orderDetails->tax,
+                                'total_price' => $orderDetails->total_price
+                            ];
+                        }) : [],
+                    'payment' => $orderData->payments ?
                         collect($orderData->payments)->map(function ($payment){
                             return [
                                 'paymentable_type' => $payment->paymentable_type,
@@ -302,7 +302,7 @@ class OrderController extends Controller
                             Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
                         'updated_at' => $orderData->updated_at ?
                             Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null
-                        ],
+                    ],
                     'customer_id' => $orderData->customer_id,
                     'customer_data' => [
                         'group_customer_id' => $orderData->customer->group_customer_id,
@@ -353,51 +353,51 @@ class OrderController extends Controller
                         Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,
                     'updated_at' => $orderData->updated_at ?
                         Carbon::make($orderData->updated_at)->format('d/m/Y H:i') : null,
-                    'oder_details' => is_array($orderData->orderDetails)
+                    'oder_details' => $orderData->orderDetails
                         ? collect($orderData->orderDetails)->map(function ($orderDetails) {
-                        return [
-                            'id' => $orderDetails->id,
-                            'order_id' => $orderDetails->order_id,
-                            'variation_id' => $orderDetails->variation_id,
-                            'variation_data' => $orderDetails->variant ? [
-                                'product_id' => $orderDetails->variant->product_id,
-                                'sku' => $orderDetails->variant->sku,
-                                'barcode' => $orderDetails->variant->barcode,
-                                'variation_name' => $orderDetails->variant->variation_name,
-                                'display_name' => $orderDetails->variant->display_name,
-                                'image' => $orderDetails->variant->image,
-                                'price_import' => $orderDetails->variant->price_import,
-                                'price_export' => $orderDetails->variant->price_export,
-                                'status' => $orderDetails->variant->status,
-                                'created_at' => $orderDetails->variant->created_at ?
-                                    Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
-                                'updated_at' => $orderDetails->variant->updated_at ?
-                                    Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
-                            ] : [],
-                            'batches' => is_array($orderDetails->orderDetailBatch) ?
-                                collect($orderDetails->orderDetailBatch)->map(function ($batches){
-                                    return [
-                                        'id' => $batches->batch->id,
-                                        'code' => $batches->batch->code,
-                                        'variation_id' => $batches->batch->variation_id,
-                                        'manufacture_date' => $batches->batch->manufacture_date ?
-                                            Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
-                                        'expiration_date' => $batches->batch->expiration_date ?
-                                            Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
-                                        'created_at' => $batches->batch->created_at ?
-                                            Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
-                                        'updated_at' => $batches->batch->updated_at ?
-                                            Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
-                                    ];
-                                }) : [],
-                            'discount' => $orderDetails->discount,
-                            'discount_type' => $orderDetails->discount_type,
-                            'quantity' => $orderDetails->quantity,
-                            'tax' => $orderDetails->tax,
-                            'total_price' => $orderDetails->total_price
-                        ];
-                    }) : [],
-                    'payment' => is_array($orderData->payments) ?
+                            return [
+                                'id' => $orderDetails->id,
+                                'order_id' => $orderDetails->order_id,
+                                'variation_id' => $orderDetails->variation_id,
+                                'variation_data' => $orderDetails->variant ? [
+                                    'product_id' => $orderDetails->variant->product_id,
+                                    'sku' => $orderDetails->variant->sku,
+                                    'barcode' => $orderDetails->variant->barcode,
+                                    'variation_name' => $orderDetails->variant->variation_name,
+                                    'display_name' => $orderDetails->variant->display_name,
+                                    'image' => $orderDetails->variant->image,
+                                    'price_import' => $orderDetails->variant->price_import,
+                                    'price_export' => $orderDetails->variant->price_export,
+                                    'status' => $orderDetails->variant->status,
+                                    'created_at' => $orderDetails->variant->created_at ?
+                                        Carbon::make($orderDetails->variant->created_at)->format('d/m/Y H:i') : null,
+                                    'updated_at' => $orderDetails->variant->updated_at ?
+                                        Carbon::make($orderDetails->variant->updated_at)->format('d/m/Y H:i') : null,
+                                ] : [],
+                                'batches' => $orderDetails->orderDetailBatch ?
+                                    collect($orderDetails->orderDetailBatch)->map(function ($batches){
+                                        return $batches->batch ? [
+                                            'id' => $batches->batch->id,
+                                            'code' => $batches->batch->code,
+                                            'variation_id' => $batches->batch->variation_id,
+                                            'manufacture_date' => $batches->batch->manufacture_date ?
+                                                Carbon::make($batches->batch->manufacture_date)->format('d/m/Y H:i') : null,
+                                            'expiration_date' => $batches->batch->expiration_date ?
+                                                Carbon::make($batches->batch->expiration_date)->format('d/m/Y H:i') : null,
+                                            'created_at' => $batches->batch->created_at ?
+                                                Carbon::make($batches->batch->created_at)->format('d/m/Y H:i') : null,
+                                            'updated_at' => $batches->batch->updated_at ?
+                                                Carbon::make($batches->batch->updated_at)->format('d/m/Y H:i') : null
+                                        ] : [];
+                                    }) : [],
+                                'discount' => $orderDetails->discount,
+                                'discount_type' => $orderDetails->discount_type,
+                                'quantity' => $orderDetails->quantity,
+                                'tax' => $orderDetails->tax,
+                                'total_price' => $orderDetails->total_price
+                            ];
+                        }) : [],
+                    'payment' => $orderData->payments ?
                         collect($orderData->payments)->map(function ($payment){
                             return [
                                 'paymentable_type' => $payment->paymentable_type,

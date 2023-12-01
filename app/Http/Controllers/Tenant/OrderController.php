@@ -197,7 +197,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             $order = $this->model::create([
-                "location_id" => $this->request->location,
+                "location_id" => $this->request->location_id,
                 "customer_id" => $this->request->customer_id,
                 "created_by" => $this->request->created_by,
                 "discount" => $this->request->discount,

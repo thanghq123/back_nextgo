@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Address\Commune;
+use App\Models\Pricing;
+use App\Models\Tenant;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Location;
 use Illuminate\Http\Request;
@@ -114,6 +116,9 @@ class LocationController extends Controller
                 'is_main' => $request->is_main ?? 0,
                 'created_by' => $request->created_by ?? null
             ];
+            if (!$this->checkCountInventory()) {
+                return responseApi('Số lượng kho đã đạt tối đa', false);
+            }
             $this->createLocationAndInventory($data);
             DB::commit();
             return responseApi('Thêm thành công', true);
@@ -188,5 +193,16 @@ class LocationController extends Controller
             'status' => $location->status,
             'code' => Str::slug('Kho ' . $location->name)
         ]);
+    }
+    protected function checkCountInventory()
+    {
+        $pricingId = Tenant::current()->first()->pricing_id;
+        $max_inventory = Pricing::where('id', $pricingId)->first()->max_locations;
+        $countLocation = Location::query()->count();
+        $countInventory = Inventory::query()->count();
+        if ($countInventory >= $max_inventory || $countLocation >= $max_inventory) {
+            return false;
+        }
+        return true;
     }
 }

@@ -74,7 +74,7 @@
                         <td>{{$value['tel']}}</td>
                         <td>
                             {{--                            <span class="badge status-list--span badge-light-{{$value['status']==0?'danger':($value['status']==1?'warning':($value['status']==2?'info':'success'))}}">{{$value['status']==0?'Huỷ':($value['status']==1?'Chưa xử lý':($value['status']==2?'Đang xử lý':'Đã hoàn thành'))}}</span>--}}
-                            <select class="form-select form-select-solid status-list" aria-label="Trạng thái">
+                            <select class="form-select form-select-solid status-list" aria-label="Trạng thái" {{$value['status']==3?'disabled':''}} >
                                 <option value="0" {{$value['status']==0?'selected':''}}>Huỷ</option>
                                 <option value="1" {{$value['status']==1?'selected':''}}>Chưa xử lý</option>
                                 <option value="2" {{$value['status']==2?'selected':''}}>Đang xử lý</option>
@@ -450,7 +450,12 @@
                     type: 'PATCH',
                     data: {id: id, status: status, _token: '{{csrf_token()}}'},
                     success: function (data) {
-                        toastr.success('Cập nhật trạng thái thành công')
+                        if (data.status == 200){
+                            toastr.success(data.msg)
+                            if (status == 3) {
+                                $('.status-list').attr('disabled', true)
+                            }
+                        }
                     }
                 })
             })
@@ -458,7 +463,6 @@
             $('.assigned_to-detail').on('change', function () {
                 let assigned_to = $(this).val()
                 let id = $('#kt_modal_show_detail_form input[name="subscription_order_id"]').val()
-                console.log(id, assigned_to)
                 $.ajax({
                     url: '{{route('admin.order.update-assigned')}}',
                     type: 'PATCH',
@@ -470,9 +474,7 @@
             })
             //add note
             $('#kt_modal_add_note').on('show.bs.modal', function (event) {
-                // event.preventDefault()
                 let subscription_order_id = $(event.relatedTarget).data('id')
-                console.log(subscription_order_id)
                 $('#kt_modal_add_note_form input[name="subscription_order_id"]').val(subscription_order_id)
                 $.ajax({
                     url: '{{route('admin.order.show-note')}}',

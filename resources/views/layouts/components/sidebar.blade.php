@@ -174,7 +174,7 @@
 														<span class="menu-bullet">
 															<span class="bullet bullet-dot"></span>
 														</span>
-                                    <span class="menu-title">Danh sách Tenant</span>
+                                    <span class="menu-title">Danh sách chi nhánh</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>

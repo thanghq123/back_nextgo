@@ -141,7 +141,7 @@ class CustomerController extends Controller
                 return [
                     'id' => $customerData->id,
                     'group_customer_id' => $customerData->group_customer_id,
-                    'group_customer_name' => $customerData->group_customer->name,
+                    'group_customer_name' => $customerData->group_customer?->name,
                     'type' => $customerData->type,
                     'name' => $customerData->name,
                     'gender' => $customerData->gender,

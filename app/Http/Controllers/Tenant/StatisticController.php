@@ -94,9 +94,11 @@ class StatisticController extends Controller
                 $this->request->end_date
             ],
                 $this->request->location);
+
             $data = $customerData->getCollection()->transform(function ($customerData){
                 return [
                     'customer_id' => $customerData->customer_id,
+                    'total_bill' => $this->orderModel::query()->countBillCustomer($customerData->customer_id),
                     'total_product' => intval($customerData->total_product),
                     'total_price' => $customerData->total_price,
                     'name' => $customerData->customer->name,

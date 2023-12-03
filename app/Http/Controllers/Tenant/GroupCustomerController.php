@@ -21,6 +21,7 @@ class GroupCustomerController extends Controller
         try {
             return responseApi($this->model::query()
                 ->orderBy('id','desc')
+                ->whereType($this->request->type)
                 ->paginate(10), true);
         }catch (\Throwable $throwable)
         {

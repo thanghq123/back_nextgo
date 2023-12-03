@@ -208,7 +208,7 @@
     <!--begin::Page loading(append to body)-->
     <div class="page-loader flex-column bg-dark bg-opacity-25">
         <span class="spinner-border text-primary" role="status"></span>
-        <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        <span class="text-gray-800 fs-6 fw-semibold mt-5">Đang tải...</span>
     </div>
     <!--end::Page loading-->
 @endsection

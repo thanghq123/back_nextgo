@@ -77,10 +77,13 @@ class OrderController extends Controller
     public function updateStatus(Request $request)
     {
         $order = SubscriptionOrder::findOrFail($request->id);
+        if ($request->status == 3) {
+            return response()->json(['msg' => 'Không thể thay đổi trạng thái khi đơn đã hoàn thành', 'status' => 200]);
+        }
         $order->update([
             'status' => $request->status,
         ]);
-        return response()->json(['success' => 'Cập nhật trạng thái thành công!', 'status' => 200]);
+        return response()->json(['msg' => 'Cập nhật trạng thái thành công!', 'status' => 200]);
     }
 
     public function updateAssignedTo(Request $request)

@@ -28,7 +28,7 @@ class StatisticRequest extends FormRequest
     {
         $getUrl = Str::afterLast($this->url(), '/');
         $rules =  [
-            "location" => [
+            "location_id" => [
                 "nullable",
                 "exists:App\Models\Tenant\Location,id"
             ],
@@ -45,7 +45,7 @@ class StatisticRequest extends FormRequest
             case "customers":
             case "products":
                 return [
-                    "location" => $rules["location"],
+                    "location_id" => $rules["location_id"],
                     "inventory_id" => $rules["inventory_id"]
                 ];
             default:

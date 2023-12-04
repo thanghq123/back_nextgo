@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Type\Time;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class Payment extends Model
@@ -33,26 +34,72 @@ class Payment extends Model
         return $this->belongsTo(User::class,'created_by','id');
     }
 
-    public function scopeWhereMethod($query, int $payment_method, array $option = [], ?int $locationId = 0){
-        $query->when($locationId != 0, function ($query) use ($locationId){
-            return $query->whereHas('paymentable', function($query) use ($locationId){
+    private function buildQuery(int $payment_method, $time, array $option = [], ?int $locationId = 0)
+    {
+        $query = $this->when($locationId != 0, function ($query) use ($locationId) {
+            return $query->whereHas('paymentable', function ($query) use ($locationId) {
                 return $query->where('location_id', $locationId);
             });
-        });
+        })->where('payment_method', $payment_method);
 
-        $query->where('payment_method', $payment_method);
+        if($option[0] == "today" || $option[0] == "yesterday"){
+           return $query->whereDate('payment_at', $time);
+        }
 
+        if($option[0] == "sevenDays" || $option[0] == "thirtyDays"){
+            return $query->whereDate('payment_at', '>=', $time);
+        }
+
+        return $query->whereBetween('payment_at', [$option[1], $option[2]]);
+    }
+
+    private function returnData($time, array $option = [], ?int $locationId = 0){
+        $count = [
+            [
+                $this->buildQuery(0, $time, $option, $locationId)->sum('amount'),
+                $this->buildQuery(0, $time, $option, $locationId)->count(),
+            ],
+            [
+                $this->buildQuery(1, $time, $option, $locationId)->sum('amount'),
+                $this->buildQuery(1, $time, $option, $locationId)->count(),
+            ],
+            [
+                $this->buildQuery(2, $time, $option, $locationId)->sum('amount'),
+                $this->buildQuery(2, $time, $option, $locationId)->count(),
+            ]
+        ];
+
+        $newArray = array_map(function ($item) {
+            return ['total_price' => $item[0], 'total_count' => $item[1]];
+        }, $count);
+
+        return [
+            'title' => [
+                'Tiền mặt',
+                'Chuyển khoản',
+                'Ghi nợ'
+            ],
+            'data' => [
+                $this->buildQuery(0, $time, $option, $locationId)->sum('amount'),
+                $this->buildQuery(1, $time, $option, $locationId)->sum('amount'),
+                $this->buildQuery(2, $time, $option, $locationId)->sum('amount'),
+            ],
+            'count' => $newArray
+        ];
+    }
+
+    public function paymentMethod(array $option = [], ?int $locationId = 0){
         switch ($option[0]){
             case 'today':
-                return $query->whereDate('payment_at', Carbon::today())->sum('amount');
+               return $this->returnData(Carbon::today(), $option, $locationId);
             case 'yesterday':
-                return $query->whereDate('payment_at', Carbon::yesterday())->sum('amount');
+                return $this->returnData(Carbon::yesterday(), $option, $locationId);
             case 'sevenDays':
-                return $query->whereDate('payment_at', '>=', Carbon::now()->subDays(7))->sum('amount');
+                return $this->returnData(Carbon::now()->subDays(7), $option, $locationId);
             case 'thirtyDays':
-                return $query->whereDate('payment_at', '>=', Carbon::now()->subDays(30))->sum('amount');
+                return $this->returnData(Carbon::now()->subDays(30), $option, $locationId);
             case 'fromTo':
-                return $query->whereBetween('payment_at', [$option[1], $option[2]])->sum('amount');
+                return $this->returnData(null, $option, $locationId);
             default:
                 return responseApi("Lỗi", false);
         }

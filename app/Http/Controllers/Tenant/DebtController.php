@@ -31,8 +31,8 @@ class DebtController extends Controller
     {
         try {
             $debt = $this->model::with('partner')->paginate(10);
-            if($request->has('type')){
-                $debt = $this->model::with('partner')->where('type',$request->type)->paginate(10);
+            if ($request->has('type')) {
+                $debt = $this->model::with('partner')->where('type', $request->type)->paginate(10);
             }
             $data = $debt->getCollection()->transform(function ($item) {
                 return [
@@ -48,7 +48,7 @@ class DebtController extends Controller
                     "status" => $item->status,
                 ];
             });
-            return responseApi(paginateCustom($data,$debt), true);
+            return responseApi(paginateCustom($data, $debt), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -65,7 +65,13 @@ class DebtController extends Controller
     public function store()
     {
         try {
-            $debt=$this->model::create([
+            if ($this->request->has('due_at') && $this->request->has('debit_at')
+                && $this->request->due_at != "" && $this->request->debit_at != "") {
+                if (Carbon::make($this->request->due_at)->timestamp < Carbon::make($this->request->debit_at)->timestamp) {
+                    return responseApi("Ngày đáo hạn không được nhỏ hơn ngày nợ!", false);
+                }
+            }
+            $debt = $this->model::create([
                 "partner_id" => $this->request->partner_id,
                 "partner_type" => $this->request->partner_type,
                 "debit_at" => $this->request->debit_at ? Carbon::make($this->request->debit_at)->format('Y-m-d') : Carbon::now()->format('Y-m-d'),
@@ -129,7 +135,13 @@ class DebtController extends Controller
     public function update()
     {
         try {
-            $debt=$this->model::find($this->request->id)->update([
+            if ($this->request->has('due_at') && $this->request->has('debit_at')
+                && $this->request->due_at != "" && $this->request->debit_at != "") {
+                if (Carbon::make($this->request->due_at)->timestamp < Carbon::make($this->request->debit_at)->timestamp) {
+                    return responseApi("Ngày đáo hạn không được nhỏ hơn ngày nợ!", false);
+                }
+            }
+            $debt = $this->model::find($this->request->id)->update([
                 "partner_id" => $this->request->partner_id,
                 "partner_type" => $this->request->partner_type,
                 "debit_at" => $this->request->debit_at ? Carbon::make($this->request->debit_at)->format('Y-m-d') : Carbon::now()->format('Y-m-d'),

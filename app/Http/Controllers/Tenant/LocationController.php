@@ -97,6 +97,10 @@ class LocationController extends Controller
         DB::beginTransaction();
         try {
             $this->validation($request);
+            $countMain=Location::where('is_main', 1)->count();
+            if ($countMain>1){
+                return responseApi('Đã có cơ sở mặc định', false);
+            }
             $file = $request->file('image');
             if ($file) {
                 $fileName = $file->getClientOriginalName();
@@ -134,6 +138,12 @@ class LocationController extends Controller
         try {
             $this->validation($request);
             $location = Location::query()->find($request->id);
+            if ($location->is_main == 0 && $request->is_main == 1) {
+                $countMain=Location::where('is_main', 1)->count();
+                if ($countMain>1){
+                    return responseApi('Đã có cơ sở mặc định', false);
+                }
+            }
             if ($request->hasFile('image')) {
                 Storage::delete('public/' . $location->image);
                 $file = $request->file('image');

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('inventory_id');
             $table->index('inventory_id');
             $table->unsignedBigInteger('inventory_id_out')->nullable();
-            $table->unsignedBigInteger('partner_id');
-            $table->tinyInteger('partner_type');
+            $table->unsignedBigInteger('partner_id')->nullable();
+            $table->tinyInteger('partner_type')->nullable();
             $table->tinyInteger('trans_type');
             $table->unsignedBigInteger('inventory_transaction_id');
             $table->index('inventory_transaction_id');

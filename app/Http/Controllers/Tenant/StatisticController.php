@@ -25,7 +25,7 @@ class StatisticController extends Controller
                     $this->request->option,
                     $this->request->start_date,
                     $this->request->end_date],
-                $this->request->location);
+                $this->request->location_id);
 
             return responseApi($data, true);
         }catch (\Throwable $throwable)
@@ -41,7 +41,7 @@ class StatisticController extends Controller
                 $this->request->start_date,
                 $this->request->end_date
             ],
-                $this->request->location);
+                $this->request->location_id);
 
             $data = $productData->getCollection()->transform(function ($productData){
                 return [
@@ -78,7 +78,7 @@ class StatisticController extends Controller
                         $this->request->start_date,
                         $this->request->end_date
                     ],
-                    $this->request->location
+                    $this->request->location_id
                 ), true);
         }catch (\Throwable $throwable)
         {
@@ -93,7 +93,7 @@ class StatisticController extends Controller
                 $this->request->start_date,
                 $this->request->end_date
             ],
-                $this->request->location);
+                $this->request->location_id);
 
             $data = $customerData->getCollection()->transform(function ($customerData){
                 return [

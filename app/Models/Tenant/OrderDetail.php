@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Spatie\Multitenancy\Models\Concerns\UsesTenantConnection;
 
 class OrderDetail extends Model
@@ -35,9 +36,9 @@ class OrderDetail extends Model
     }
     public function scopeWhereProduct($query, array $option = [], ?int $locationId = 0){
         $query->select('variation_id',
-            \DB::raw('sum(quantity) as total_quantity'),
-            \DB::raw('sum(price) as total_price_import'),
-            \DB::raw('sum(total_price) as total_price_sell'))
+            DB::raw('sum(quantity) as total_quantity'),
+            DB::raw('sum(price) as total_price_import'),
+            DB::raw('sum(total_price) as total_price_sell'))
             ->with(['variant'])
             ->when($locationId != 0, function ($query) use ($locationId){
                 return $query->whereHas('order', function ($query) use ($locationId){

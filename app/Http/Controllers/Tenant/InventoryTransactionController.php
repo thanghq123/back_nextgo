@@ -151,9 +151,17 @@ class InventoryTransactionController extends Controller
             if ($inventoryTransaction->status === 2) {
                 return responseApi("Đơn hàng đã được cập nhật trạng thái!", false);
             }
-            $inventoryTransaction->update(["status" => 2]);
+
             if ($request->tranType == 0) {
+                if ($this->checkStatusTransfer($request->id)){
+                    return responseApi("Đơn xuất chưa được xử lý!", false);
+                }
+                $inventoryTransaction->update(["status" => 2]);
                 $this->updateStatusTransfer($request->id);
+            }else if ($request->tranType == 1) {
+                $inventoryTransaction->update(["status" => 2]);
+            }else{
+                return responseApi("Trạng thái không hợp lệ!", false);
             }
             foreach ($inventoryTransaction->inventoryTransactionDetails as $item => $value) {
                 $variationQuantity = $this->variationQuantityModel::where('variation_id', $value->variation_id)->where('inventory_id', $inventoryTransaction->inventory_id);
@@ -219,6 +227,9 @@ class InventoryTransactionController extends Controller
                 ->where('variation_id', $request->variation_id)
                 ->first();
             $priceImport = $this->variationModel::findOrfail($request->variation_id)->price_import;
+            if ($variationQuantity->quantity < $request->quantity) {
+                return responseApi("Số lượng tồn kho không đủ!", false);
+            }
             if ($variationQuantity) {
                 $variationQuantity->increment('quantity', $request->quantity);
             } else {
@@ -237,7 +248,7 @@ class InventoryTransactionController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/trans/store
+     * @path /tenant/api/v1/storage/trans/store
      * @desciption tạo đơn chuyển kho
      * @method POST
      * @param VariationQuantityRequest $request
@@ -247,9 +258,17 @@ class InventoryTransactionController extends Controller
     public function createTransfer(InventoryTransactionRequest $request)
     {
         $inventory_transaction_id = Carbon::now()->timestamp;
-        $quantity = $this->variationQuantityModel::where('inventory_id', $request->inventory_id_out)->where('variation_id', collect($request->inventory_transaction_details)->toArray())->first()->quantity;
-        if ($quantity < $request->quantity) {
-            return responseApi("Số lượng tồn kho không đủ!", false);
+        $variationIds = collect($request->inventory_transaction_details)->pluck('variation_id')->toArray();
+        $requestedQuantities = collect($request->inventory_transaction_details)->pluck('quantity')->toArray();
+        $currentQuantities = $this->variationQuantityModel::where('inventory_id', $request->inventory_id_out)
+            ->whereIn('variation_id', $variationIds)
+            ->get()
+            ->pluck('quantity', 'variation_id')
+            ->toArray();
+        foreach ($variationIds as $index => $variationId) {
+            if (!isset($currentQuantities[$variationId]) || $currentQuantities[$variationId] < $requestedQuantities[$index]) {
+                return responseApi("Số lượng tồn kho không đủ cho biến thể có id là {$variationId}!", false);
+            }
         }
         DB::beginTransaction();
         try {
@@ -299,7 +318,7 @@ class InventoryTransactionController extends Controller
     }
 
     /**
-     * @path /tenant/api/v1/trans
+     * @path /tenant/api/v1//storage/trans
      * @desciption danh sách đơn chuyển kho
      * @method POST
      * @param VariationQuantityRequest $request
@@ -340,10 +359,11 @@ class InventoryTransactionController extends Controller
 
     /**
      * @desciption cập nhật trạng thái đơn chuyển kho khi đơn nhập và đơn xuất đã được xử lý
+     * @param $inventory_transaction_id
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function updateStatusTransfer($inventory_transaction_id)
+    protected function updateStatusTransfer($inventory_transaction_id)
     {
         try {
             $data = $this->model::where('inventory_transaction_id', $inventory_transaction_id);
@@ -358,6 +378,28 @@ class InventoryTransactionController extends Controller
                 }
             }
             return responseApi("Cập nhật thành công!", true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+    /**
+     * @desciption kiểm tra trạng thái đơn xuất kho khi xử lý đơn nhập trong trường hợp chuyển kho
+     * @param $inventory_transaction_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    protected function checkStatusTransfer($inventory_transaction_id)
+    {
+        try {
+            $data = $this->model::where('inventory_transaction_id', $inventory_transaction_id);
+            $count = $data->count();
+            if ($count == 3) {
+                $statusOut = $this->model::where('inventory_transaction_id', $inventory_transaction_id)->where('trans_type', 1)->first()->status;
+                if ($statusOut == 2) {
+                   return false;
+                }
+            }
+            return true;
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

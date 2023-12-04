@@ -25,7 +25,7 @@ class StatisticController extends Controller
                     $this->request->option,
                     $this->request->start_date,
                     $this->request->end_date],
-                $this->request->location);
+                $this->request->location_id);
 
             return responseApi($data, true);
         }catch (\Throwable $throwable)
@@ -41,7 +41,7 @@ class StatisticController extends Controller
                 $this->request->start_date,
                 $this->request->end_date
             ],
-                $this->request->location);
+                $this->request->location_id);
 
             $data = $productData->getCollection()->transform(function ($productData){
                 return [
@@ -72,32 +72,14 @@ class StatisticController extends Controller
 
     public function paymentMethods(){
         try {
-            return responseApi([
-                "cash" => $this->paymentModel::query()->whereMethod(0,
+            return responseApi($this->paymentModel->paymentMethod(
                     [
                         $this->request->option,
                         $this->request->start_date,
                         $this->request->end_date
                     ],
-                    $this->request->location
-                ),
-                "transfer" => $this->paymentModel::query()->whereMethod(1,
-                    [
-                        $this->request->option,
-                        $this->request->start_date,
-                        $this->request->end_date
-                    ],
-                    $this->request->location
-                ),
-                "debit" => $this->paymentModel::query()->whereMethod(2,
-                    [
-                        $this->request->option,
-                        $this->request->start_date,
-                        $this->request->end_date
-                    ],
-                    $this->request->location
-                )
-            ], true);
+                    $this->request->location_id
+                ), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -111,10 +93,12 @@ class StatisticController extends Controller
                 $this->request->start_date,
                 $this->request->end_date
             ],
-                $this->request->location);
+                $this->request->location_id);
+
             $data = $customerData->getCollection()->transform(function ($customerData){
                 return [
                     'customer_id' => $customerData->customer_id,
+                    'total_bill' => $this->orderModel::query()->countBillCustomer($customerData->customer_id),
                     'total_product' => intval($customerData->total_product),
                     'total_price' => $customerData->total_price,
                     'name' => $customerData->customer->name,

@@ -17,24 +17,41 @@ class ConfigSeeder extends Seeder
     public function run()
     {
         //
-        $tenant = Tenant::query()->first();
+        $tenants = Tenant::query()->get();
 
-        $tenant->makeCurrent();
+        echo "Seeding config for tenants" . PHP_EOL;
+        echo "====================================================" . PHP_EOL;
 
-        $user = $tenant->user;
+        foreach ($tenants as $tenant) {
 
-        $businessFieldId = $tenant->business_field_id;
+            echo "Seeding config for tenant: {$tenant->name}........" . PHP_EOL;
 
-        $businessField = BusinessField::query()->find($businessFieldId);
+            $tenant->makeCurrent();
 
-        $config = [
-            'business_name' => $tenant->business_name,
-            'tel' => $user->tel,
-            'email' => $user->email,
-            'address_detail' => $tenant->address,
-            'business_field_code' => $businessField->code,
-        ];
+            if (Config::query()->count() > 0) {
+                echo "Config already seeded for tenant: {$tenant->name}" . PHP_EOL;
+                echo "====================================================" . PHP_EOL;
+                continue;
+            }
 
-        Config::query()->create($config);
+            $user = $tenant->user;
+
+            $businessFieldId = $tenant->business_field_id;
+
+            $businessField = BusinessField::query()->find($businessFieldId);
+
+            $config = [
+                'business_name' => $tenant->business_name,
+                'tel' => $user->tel,
+                'email' => $user->email,
+                'address_detail' => $tenant->address,
+                'business_field_code' => $businessField->code,
+            ];
+
+            Config::query()->create($config);
+
+            echo "Seeding config for tenant: {$tenant->name} successfully" . PHP_EOL;
+            echo "====================================================" . PHP_EOL;
+        }
     }
 }

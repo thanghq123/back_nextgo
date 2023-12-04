@@ -62,9 +62,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class,'created_by','id');
     }
-    public function locations()
+    public function location()
     {
-        return $this->hasMany(Location::class,'created_by','id');
+        return $this->belongsTo(Location::class);
     }
 
     /**

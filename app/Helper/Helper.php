@@ -132,19 +132,30 @@ function paginateCustom($data, $dataPaginate)
 function generateUserToken($user): array
 {
     $token = $user->createToken('authToken');
-    $expires_at = Carbon::now()->addHour('2')->timestamp;
-    $token->expires_at = $expires_at;
+    $expired_at = Carbon::now()->addHour('12');
+    $token->expired_at = $expired_at;
     $tokenGen = $token->plainTextToken;
     $data = [
         'user' => $user,
         'token' => $tokenGen,
-        'expires_at' => $expires_at,
+        'expired_at' => $expired_at,
         'token_type' => 'Bearer',
     ];
     return $data;
 }
 
-function removeVietnameseAccents($str) {
+function getTenantMenus($role = 'super-admin'): array
+{
+    return collect(config('util.TENANT_MENUS'))
+        ->filter(function ($menu) use ($role) {
+            return in_array($role, $menu['roles']);
+        })
+        ->pluck('name')
+        ->toArray();
+}
+
+function removeVietnameseAccents($str)
+{
     $unicode = [
         'a' => 'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
         'd' => 'đ',
@@ -166,7 +177,9 @@ function removeVietnameseAccents($str) {
     }
     return $str;
 }
-function cleanText($str) {
+
+function cleanText($str)
+{
     $str = strtolower($str);
     $str = removeVietnameseAccents($str);
     $str = str_replace(' ', '_', $str);

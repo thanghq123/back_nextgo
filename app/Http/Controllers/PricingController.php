@@ -78,6 +78,7 @@ class PricingController extends Controller
         try {
             $pricings = $this->model->query()
                 ->select([
+                    'id',
                     'name',
                     'max_locations',
                     'max_users',

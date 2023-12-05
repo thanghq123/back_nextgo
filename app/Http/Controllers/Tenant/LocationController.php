@@ -20,18 +20,12 @@ class LocationController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'tel' => [
-                "required",
-                "regex:/^0[0-9]{9}$/"
-            ],
 //            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0'
         ];
         $message = [
             'name.required' => 'Tên phải được nhập',
-            'tel.required' => 'Số điện thoại phải được nhập',
-            'tel.regex' => 'Số điện thoại không hợp lệ',
             'image.required' => 'Ảnh phải được nhập',
             'image.image' => 'Ảnh không đúng định dạng',
             'image.mimes' => 'Ảnh không hợp lệ',

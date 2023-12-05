@@ -18,7 +18,7 @@ return new class extends Migration
             $table ->string('name');
             $table ->string('image')->nullable();
             $table ->text('description')->nullable();
-            $table ->string('tel');
+            $table ->string('tel')->nullable();
             $table ->string('email');
             $table ->unsignedBigInteger('province_code');
             $table ->unsignedBigInteger('district_code');

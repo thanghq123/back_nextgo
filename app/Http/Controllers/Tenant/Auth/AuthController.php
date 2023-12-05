@@ -38,11 +38,16 @@ class AuthController extends Controller
     {
         $user = \auth()->user();
 
-        $tenant = Tenant::query()->where('name', $request->tenant_name)->firstOrFail();
+        $tenant = Tenant::with('pricing')->where('name', $request->tenant_name)->firstOrFail();
+
+
+        if (Carbon::now()->greaterThan(Carbon::make($tenant->due_at))) {
+            return responseApi(['domain_name' => "Cửa hàng đã hết hạn sử dụng, vui lòng nâng cấp hoặc gia hạn"], false);
+        }
 
         $tenant->makeCurrent();
 
-        $tenantUser = Tenant\User::query()->where('email', $user->email)->first();
+        $tenantUser = Tenant\User::query()->with('roles')->where('email', $user->email)->first();
 
         $token = generateUserToken($tenantUser);
 
@@ -50,12 +55,15 @@ class AuthController extends Controller
 
         $inventory = Tenant\Inventory::query()->where('location_id', $location->id)->first();
 
+        $menus = getTenantMenus();
+
         $data = [
-            'user' => $user,
+            'user' => $tenantUser,
             'token' => $token,
             'location' => $location ?? null,
             'inventory' => $inventory ?? null,
             'tenant' => $tenant ?? null,
+            'menus' => $menus ?? null,
         ];
 
         return responseApi($data, true);
@@ -90,6 +98,12 @@ class AuthController extends Controller
         if (!Tenant::checkCurrent()) {
             return responseApi(['domain_name' => "Địa chỉ doanh nghiệp không tồn tại"], false);
         }
+
+        if (Carbon::now()->greaterThan(Carbon::make(Tenant::current()->due_at))) {
+            return responseApi(['domain_name' => "Đã hết hạn sử dụng"], false);
+        }
+
+
         $credentials = $request->only(['email', 'password']);
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
@@ -105,6 +119,14 @@ class AuthController extends Controller
         /* ------------ Create a new personal access token for the user. ------------ */
         $user = Auth::guard('api')->user();
 
+        if ($user->status == 0) {
+            return responseApi(['domain_name' => "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên"], false);
+        }
+
+        $user->load('roles');
+
+        $role = $user->roles->first()->name;
+
         $token = generateUserToken($user);
 
         $location = $user->location_id
@@ -118,7 +140,8 @@ class AuthController extends Controller
             'token' => $token,
             'location' => $location ?? null,
             'inventory' => $inventory ?? null,
-            'tenant' => Tenant::current()->name ?? null,
+            'tenant' => Tenant::current()->load('pricing') ?? null,
+            'menus' => getTenantMenus($role) ?? null,
         ];
         return responseApi($data, true);
     }

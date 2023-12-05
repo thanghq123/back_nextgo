@@ -30,7 +30,7 @@ class OrderController extends Controller
                 'type' => $item->type,
                 'name' => $item->name,
                 'tel' => $item->tel,
-                'assigned_to' => $item->assignedTo->name,
+                'assigned_to' => $item->assignedTo?->name,
                 'status' => $item->status,
                 'status_name' => $this->checkStatus($item->status),
                 'created_at' => $item->created_at->format('Y-m-d H:i'),

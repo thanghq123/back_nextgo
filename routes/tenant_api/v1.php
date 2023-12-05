@@ -14,12 +14,15 @@ use App\Http\Controllers\Tenant\ItemUnitController;
 use App\Http\Controllers\Tenant\LocationController;
 use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\OrderController;
+use App\Http\Controllers\Tenant\RoleController;
 use App\Http\Controllers\Tenant\SupplierController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use App\Http\Controllers\Tenant\VariationController;
 use App\Http\Controllers\Tenant\VariationQuantityController;
 use App\Http\Controllers\Tenant\PaymentController;
 use App\Http\Controllers\Tenant\StatisticController;
+use App\Models\Tenant;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Tenant\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,9 +48,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
     })->name('unauthorized');
 });
 
+Route::get('expired', function () {
+    return responseApi('Cửa hàng này đã hết hạn sử dụng, vui lòng gia hạn', false, 401);
+})->name('tenant.expired');
 
 
-Route::middleware('tenant')->group(function () {
+Route::middleware(['tenant', 'check_expired_tenant'])->group(function () {
 
     Route::post('/', function (Request $request) {
     });
@@ -59,12 +65,6 @@ Route::middleware('tenant')->group(function () {
     Route::post('get-variation', [VariationController::class, 'getListVariation']);
 //    Route::post('storage/list', [VariationQuantityController::class, 'getVariationQuantity']);
 
-    Route::prefix('user')->name('user.')->group(function (){
-        Route::post('/',[UserController::class, 'list'])->name('list');
-        Route::post('store',[UserController::class,'store'])->name('store');
-        Route::post('update', [UserController::class, 'update'])->name('update');
-        Route::post('delete', [UserController::class, 'delete'])->name('delete');
-    });
     Route::prefix('categories')->name('categories')->group(function () {
         Route::post('/', [CategoryController::class, 'list'])->name('list');
         Route::post('store', [CategoryController::class, 'store'])->name('store');
@@ -150,7 +150,7 @@ Route::middleware('tenant')->group(function () {
         });
         Route::post('get-variation', [VariationController::class, 'getListVariation']);
         Route::post('get-variation-inventory', [VariationQuantityController::class, 'getVariationQuantity']);
-        Route::post('get-variation/{id}',[VariationQuantityController::class,'getVariationQuantityById']);
+        Route::post('get-variation/{id}', [VariationQuantityController::class, 'getVariationQuantityById']);
     });
 
     Route::prefix('products')->name('products')->group(function () {
@@ -176,7 +176,7 @@ Route::middleware('tenant')->group(function () {
     });
 
 
-    Route::prefix('orders')->name('orders')->group(function (){
+    Route::prefix('orders')->name('orders')->group(function () {
         Route::post('/', [OrderController::class, 'list'])->name('list');
         Route::post('store', [OrderController::class, 'store'])->name('store');
         Route::post('show', [OrderController::class, 'show'])->name('show');
@@ -204,6 +204,16 @@ Route::middleware('tenant')->group(function () {
         Route::post('general', [StatisticController::class, 'general'])->name('general');
         Route::post('customers', [StatisticController::class, 'customers'])->name('customers');
     });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::prefix('user')->name('user.')->middleware(['role:super-admin|admin'])->group(function () {
+            Route::post('/', [UserController::class, 'list'])->name('list');
+            Route::post('store', [UserController::class, 'store'])->name('store');
+            Route::post('show', [UserController::class, 'show'])->name('show');
+            Route::post('update', [UserController::class, 'update'])->name('update');
+            Route::post('delete', [UserController::class, 'delete'])->name('delete');
+        });
+
+        Route::post('roles', [RoleController::class, 'list'])->name('roles.list');
+    });
 });
-
-

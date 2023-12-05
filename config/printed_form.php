@@ -145,7 +145,7 @@ return [
 
           <h3 class="bfs-bold" style="text-align:center"><strong>CẢM ƠN QUÝ KHÁCH VÀ HẸN GẶP LẠI</strong></h3>
 
-          <h3 class="bfs-bold" style="text-align:center"><strong>Powered by NextShop</strong></h3>
+          <h3 class="bfs-bold" style="text-align:center"><strong>Powered by NextGo</strong></h3>
         </div>
 
         <script type="text/javascript">

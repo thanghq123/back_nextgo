@@ -74,7 +74,7 @@
                         <td>{{$value['tel']}}</td>
                         <td>
                             {{--                            <span class="badge status-list--span badge-light-{{$value['status']==0?'danger':($value['status']==1?'warning':($value['status']==2?'info':'success'))}}">{{$value['status']==0?'Huỷ':($value['status']==1?'Chưa xử lý':($value['status']==2?'Đang xử lý':'Đã hoàn thành'))}}</span>--}}
-                            <select class="form-select form-select-solid status-list" aria-label="Trạng thái" {{$value['status']==3?'disabled':''}} >
+                            <select class="form-select form-select-solid status-list" aria-label="Trạng thái" {{$value['status']==3?'disabled':($value['status']==0?'disabled':'')}} >
                                 <option value="0" {{$value['status']==0?'selected':''}}>Huỷ</option>
                                 <option value="1" {{$value['status']==1?'selected':''}}>Chưa xử lý</option>
                                 <option value="2" {{$value['status']==2?'selected':''}}>Đang xử lý</option>

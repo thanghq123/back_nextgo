@@ -124,7 +124,7 @@ class Tenant extends SpatieTenant
                     'username' => $user->username ?? '',
                 ]);
 
-                $userCreate->roles()->attach(Role::query()->where('name', 'admin')->first()->id);
+                $userCreate->roles()->attach(Role::query()->where('name', 'super-admin')->first()->id);
 
             }
 

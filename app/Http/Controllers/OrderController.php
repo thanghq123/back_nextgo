@@ -20,7 +20,7 @@ class OrderController extends Controller
     {
         $tenants = Tenant::get();
         $pricings = Pricing::get();
-        $users= User::get();
+        $users = User::get();
         $data = SubscriptionOrder::with('tenant:id,business_name', 'pricing:id,name', 'assignedTo:id,name')->orderBy('created_at')->get();
         $subscriptionOrder = $data->map(function ($item) {
             return [
@@ -36,7 +36,7 @@ class OrderController extends Controller
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
             ];
         });
-        return view('admin.order.index', compact('subscriptionOrder', 'tenants', 'pricings','users'));
+        return view('admin.order.index', compact('subscriptionOrder', 'tenants', 'pricings', 'users'));
     }
 
     public function show(Request $request)
@@ -51,7 +51,7 @@ class OrderController extends Controller
                 'type' => $item->type,
                 'name' => $item->name,
                 'tel' => $item->tel,
-                'assigned_to' => $item->assignedTo->id??null,
+                'assigned_to' => $item->assignedTo->id ?? null,
                 'status_name' => $this->checkStatus($item->status),
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
             ];
@@ -77,8 +77,24 @@ class OrderController extends Controller
     public function updateStatus(Request $request)
     {
         $order = SubscriptionOrder::findOrFail($request->id);
-        if ($request->status == 3) {
-            return response()->json(['msg' => 'Không thể thay đổi trạng thái khi đơn đã hoàn thành', 'status' => 200]);
+        if ($order->status == 3 || $order->status == 0) {
+            return response()->json(['msg' => 'Không thể thay đổi trạng thái khi đơn đã hoàn thành hoặc huỷ', 'status' => 200]);
+        }
+        if ($request->status == 2) {
+            $tenant = Tenant::findOrFail($order->tenant_id);
+            $price = Pricing::findOrFail($order->pricing_id)?->price;
+            TenantChangeHistory::create([
+                'tenant_id' => $order->tenant_id,
+                'change_type' => $order->type,
+                'from_pricing_id' => $tenant->pricing_id,
+                'to_pricing_id' => $order->pricing_id,
+                'total_price' => $price,
+                'created_by' => auth()->user()->id
+            ]);
+        }
+        if ($request->status == 0) {
+            $tenantChangeHistory = TenantChangeHistory::where('tenant_id', $order->tenant_id);
+            if ($tenantChangeHistory) $tenantChangeHistory->delete();
         }
         $order->update([
             'status' => $request->status,
@@ -92,7 +108,7 @@ class OrderController extends Controller
         $order->update([
             'assigned_to' => $request->assigned_to,
         ]);
-        return response()->json(['success' => 'Cập nhật thành công!','status'=>200]);
+        return response()->json(['success' => 'Cập nhật thành công!', 'status' => 200]);
     }
 
     public function store(OrderRequest $request)

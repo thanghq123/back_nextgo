@@ -50,13 +50,21 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        $superAdmin = \App\Models\User::query()->latest()->first();
+        $superAdminTenant = \App\Models\Tenant\User::query()->create([
+            'name' => $superAdmin->name,
+            'email' => $superAdmin->email,
+            'password' => null,
+            'status' => 1,
+        ]);
+
+        $superAdminTenant->roles()->attach(\App\Models\Tenant\Role::query()->where('name', 'super-admin')->first()->id);
         $staff = \App\Models\Tenant\User::query()->create([
             'name' => 'staff1',
             'email' => 'staff1@gmail.com',
             'password' => Hash::make('12345678'),
             'location_id' => 1,
         ]);
-
         $staff->roles()->attach(\App\Models\Tenant\Role::query()->where('name', 'staff')->first()->id);
 
         Tenant\PrintedForm::query()->create(config('printed_form'));

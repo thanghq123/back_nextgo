@@ -49,8 +49,8 @@ var CustomerModalHandler = function () {
                                 success: function (data) {
                                     submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
                                         Swal.fire({
-                                            text: data.success,
-                                            icon: "success",
+                                            text: data.payload??data.meta,
+                                            icon: data.payload?"success":"error",
                                             buttonsStyling: !1,
                                             confirmButtonText: "Ok, đồng ý!",
                                             customClass: {confirmButton: "btn btn-primary"}
@@ -61,7 +61,7 @@ var CustomerModalHandler = function () {
                                 }, error: function (data) {
                                     submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
                                         Swal.fire({
-                                            text: data.responseJSON.errors.name,
+                                            text: data.meta??data.responseJSON.meta.errors.name,
                                             icon: "error",
                                             buttonsStyling: !1,
                                             confirmButtonText: "Ok, đồng ý!",

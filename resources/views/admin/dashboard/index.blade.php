@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Home')
+@section('title','Bảng điều khiển')
 @section('content')
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Post-->

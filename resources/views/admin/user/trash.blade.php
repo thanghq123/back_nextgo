@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Tenant List')
+@section('title','Danh sách người dùng đã xoá')
 @section('content')
     <div class="card">
         <!--begin::Card header-->

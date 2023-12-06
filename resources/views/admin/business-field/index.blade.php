@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Business Field List')
+@section('title','Danh sách lĩnh vực kinh doanh')
 @section('content')
     <div class="card">
         <!--begin::Card header-->

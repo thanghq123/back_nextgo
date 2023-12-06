@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Seed List')
+@section('title','Danh sách dữ liệu mẫu')
 @section('content')
     <!--begin::Card-->
     <div class="card">

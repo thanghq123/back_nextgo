@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Pricing List')
+@section('title','Danh sách bảng giá')
 @section('content')
     <div class="card">
         <!--begin::Card header-->

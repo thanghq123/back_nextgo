@@ -41,7 +41,7 @@ const KTbusiness_fieldAddbusiness_field = function () {
                     business_name: form.querySelector('[name="business_name"]') ? {validators: {notEmpty: {message: "Tên cửa hàng phải được nhập"}}} : null,
                     address: form.querySelector('[name="address"]') ? {validators: {notEmpty: {message: "Địa chỉ phải được nhập"}}} : null,
                     password: form.querySelector('[name="password"]') ? {validators: {notEmpty: {message: "Mật khẩu không được để trống"}}} : null,
-
+                    role: form.querySelector('[name="role"]') ? {validators: {notEmpty: {message: "Chọn vai trò"}}} : null,
                 });
                 const btn_submit = modalForm.querySelector('[data-kt-business_field-modal-action="submit"]');
                 btn_submit.addEventListener("click", (modalForm => {
@@ -68,6 +68,7 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                     phone_number: form.querySelector('[name="phone_number"]') ? form.querySelector('[name="phone_number"]').value : null,
                                     ten_user: form.querySelector('[name="ten_user"]') ? form.querySelector('[name="ten_user"]').value : null,
                                     email_user: form.querySelector('[name="email_user"]') ? form.querySelector('[name="email_user"]').value : null,
+                                    role: form.querySelector('[name="role"]') ? form.querySelector('[name="role"]').value : null,
                                     id: business_field_id ? business_field_id : null
                                 },
                                 success: function (data) {

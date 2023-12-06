@@ -328,7 +328,7 @@ class InventoryTransactionController extends Controller
     public function listTransfer()
     {
         try {
-            $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'partner:id,name,type', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')->where('trans_type', 2)->paginate(10);
+            $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')->where('trans_type', 2)->paginate(10);
             $response = $listTransfer->getCollection()->transform(function ($listTransfer) {
                 return [
                     "inventory_transaction_id" => $listTransfer->inventory_transaction_id,
@@ -345,7 +345,6 @@ class InventoryTransactionController extends Controller
                     "total_quantity" => $listTransfer->inventoryTransactionDetails->sum('quantity'),
                     "total_variation" => $listTransfer->inventoryTransactionDetails->count(),
                     "note" => $listTransfer->note,
-                    "partner_name" => $listTransfer->partner->name,
                     "created_by" => $listTransfer->createdBy->name,
                     "created_at" => Carbon::make($listTransfer->created_at)->format('H:i d-m-Y'),
                     "updated_at" => Carbon::make($listTransfer->updated_at)->format('H:i d-m-Y'),

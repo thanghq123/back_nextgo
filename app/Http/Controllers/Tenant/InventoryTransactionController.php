@@ -73,8 +73,8 @@ class InventoryTransactionController extends Controller
             $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
                 return [
                     "inventory_transaction_id" => $inventoryTransactionData->inventory_transaction_id,
-                    "partner_name" => $inventoryTransactionData->partner->name,
-                    "inventory_name" => $inventoryTransactionData->inventory->name,
+                    "partner_name" => $inventoryTransactionData->partner->name??null,
+                    "inventory_name" => $inventoryTransactionData->inventory->name??null,
                     "created_by" => $inventoryTransactionData->createdBy->name,
                     "status" => $inventoryTransactionData->status,
                     "created_at" => Carbon::make($inventoryTransactionData->created_at)->format('H:i d-m-Y'),
@@ -98,14 +98,20 @@ class InventoryTransactionController extends Controller
     public function show($id)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->where('trans_type',0)->get();
+            if ($this->model::where('inventory_transaction_id', $id)->count() == 3) {
+                $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory:id,name','inventoryOut:id,name', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->where('trans_type',2)->get();
+            }else{
+                $inventoryTransactionData = $this->model::with('inventoryTransactionDetails', 'inventory', 'partner', 'createdBy', 'inventoryTransactionDetails.variation:id,variation_name,sku')->where("inventory_transaction_id", $id)->where('trans_type',0)->get();
+            }
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "id" => $inventoryTransactionData->id,
-                    "inventory_id" => $inventoryTransactionData->inventory->id,
-                    "inventory_name" => $inventoryTransactionData->inventory->name,
-                    "partner_name" => $inventoryTransactionData->partner->name,
-                    "partner_type" => $inventoryTransactionData->partner_type,
+                    "inventory_id" => $inventoryTransactionData->inventory->id??null,
+                    "inventory_name" => $inventoryTransactionData->inventory->name??null,
+                    "inventory_id_out" => $inventoryTransactionData->inventoryOut->id??null,
+                    "inventory_name_out" => $inventoryTransactionData->inventoryOut->name??null,
+                    "partner_name" => $inventoryTransactionData->partner->name??null,
+                    "partner_type" => $inventoryTransactionData->partner_type??null,
                     "trans_type" => $inventoryTransactionData->trans_type,
                     "inventory_transaction_id" => $inventoryTransactionData->inventory_transaction_id,
                     "reason" => $inventoryTransactionData->reason,
@@ -114,7 +120,7 @@ class InventoryTransactionController extends Controller
                     "created_by" => $inventoryTransactionData->createdBy->name,
                     "inventory_transaction_details" => $inventoryTransactionData->inventoryTransactionDetails->map(function ($inventoryTransactionDetails) {
                         return [
-                            "variation_name" => $inventoryTransactionDetails->variation->variation_name,
+                            "variation_name" => $inventoryTransactionDetails->variation->variation_name??null,
                             "sku" => $inventoryTransactionDetails->variation->sku??null,
                             "batch_id" => $inventoryTransactionDetails->batch_id,
                             "quantity" => $inventoryTransactionDetails->quantity,

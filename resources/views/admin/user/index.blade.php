@@ -102,6 +102,15 @@
                                                 <input class="form-control form-control-solid" name="phone_number"
                                                        id="kt_inputmask_2" inputmode="text">
                                             </div>
+                                            <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Quyền hạn</label>
+                                            <select name="role" class="form-select form-select-solid"
+                                                     data-placeholder="Chọn quyền hạn">
+                                               @foreach($role as $rl)
+                                                <option value="{{$rl->id}}">{{$rl->name}}</option>
+                                               @endforeach
+                                            </select>
+                                        </div>
                                         </div>
                                         <div class="show-tenant">
                                             <div class="fv-row mb-7">
@@ -191,17 +200,17 @@
                                 data-kt-menu="true">
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
-                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$user->id}}">Show</a>
+                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$user->id}}">Chi tiết</a>
                                 </div>
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
                                        data-bs-target="#kt_modal_add_business_field"
-                                       data-edit-id="{{$user->id}}">Edit</a>
+                                       data-edit-id="{{$user->id}}">Sửa</a>
                                 </div>
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3"
                                        data-kt-business_field-table-filter="delete_row"
-                                       data-id="{{$user->id}}">Delete</a>
+                                       data-id="{{$user->id}}">Xoá</a>
                                 </div>
                             </div>
                             <!--end::Menu-->
@@ -241,6 +250,7 @@
                     let linh_vuc_kinh_doanh = $('#kt_modal_add_business_field_form input[name="linh_vuc_kinh_doanh"]')
                     let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
                     let phone_number = $('#kt_modal_add_business_field_form input[name="phone_number"]')
+                    let role = $('#kt_modal_add_business_field_form select[name="role"]')
                     if (edit_id) {
                         $("#button-submit").show()
                         $(".form-add-user").show()
@@ -251,23 +261,24 @@
                             type: 'GET',
                             data: {update_id: edit_id},
                             success: function (data) {
+                                console.log(data)
                                 KTApp.hidePageLoading();
                                 $('#kt_modal_add_business_field_header .modal-header_title').text('Cập nhật chi nhánh')
                                 if (data.status) {
                                     $('#kt_modal_add_business_field_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
                                     ten_user.val(data.payload.name)
                                     email.val(data.payload.email)
-                                    phone_number.val(!data.payload.tel ? '' : data.payload.tel)
+                                    phone_number.val(data.payload.tel ?? data.payload.tel)
+                                    role.val(data.payload.role).prop('selected', true);
                                     $("form").find("input, select, textarea").prop("disabled", false);
                                 } else {
                                     $('#kt_modal_add_business_field_form input[name="id"]').val(null)
                                     ten_user.val('')
                                     email.val('')
                                     phone_number.val('')
+                                    role.val('')
                                 }
                             }
-
-
                         })
                     }
                     if (tenant_id) {
@@ -277,6 +288,7 @@
                             type: 'GET',
                             data: {show_id: tenant_id},
                             success: function (data) {
+                                console.log(data)
                                 $("#button-submit").hide()
                                 $(".form-add-user").hide()
                                 $(".show-tenant").show()

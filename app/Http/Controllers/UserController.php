@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -18,15 +19,30 @@ class UserController extends Controller
 
     public function index()
     {
+        $role = Role::all();
         $users = User::with(['tenants', 'parent'])->orderBy('created_at', 'desc')->get();
-        return view('admin.user.index', compact('users'));
+        return view('admin.user.index', compact('users', 'role'));
     }
 
     public function show()
     {
         try {
-            if ($this->request->show_id) $user = User::with(['tenants.business_field', 'parent'])->find($this->request->show_id);
-            elseif ($this->request->update_id) $user = User::query()->find($this->request->update_id);
+            if ($this->request->show_id) {
+                $user = User::with(['tenants.business_field', 'parent'])->find($this->request->show_id);
+            } elseif ($this->request->update_id) {
+                $user = User::query()->with('roles:id,name')->whereId($this->request->update_id)->get();
+                $user = collect($user->map(function ($item) {
+                    return [
+                        "id" => $item->id,
+                        "name" => $item->name,
+                        "email" => $item->email,
+                        "tel" => $item->tel,
+                        "status" => $item->status,
+                        "created_by" => $item->created_by,
+                        "role" => $item->roles[0]->id??null,
+                    ];
+                }))->collapse();
+            }
             if (!$user) return responseApi("không tồn tại!");
             return responseApi($user, true);
         } catch (\Throwable $throwable) {
@@ -64,13 +80,14 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-            $user = new User();
-            $user->name = $this->request->input('ten_user');
-            $user->email = $this->request->input('email_user');
-            $user->password = password_hash($this->request->input('password'), PASSWORD_DEFAULT);
-            $user->tel = $this->request->input('phone_number') ? $this->request->input('phone_number') : null;
-            $user->created_by = auth()->id();
-            $user->save();
+            $user = User::create([
+                'name' => $this->request->ten_user,
+                'email' => $this->request->email_user,
+                'password' => password_hash($this->request->password, PASSWORD_DEFAULT),
+                'tel' => $this->request->phone_number ? $this->request->phone_number : null,
+                'created_by' => auth()->id(),
+            ]);
+            $user->roles()->attach($this->request->role);
             DB::commit();
             return responseApi("Tạo thành công", true);
         } catch (\Throwable $throwable) {
@@ -78,18 +95,21 @@ class UserController extends Controller
             return responseApi("Tạo thất bại");
         }
     }
-    public function update(){
-        return responseApi($this->request->url(),true);
+
+    public function update()
+    {
         DB::beginTransaction();
         try {
             $user = User::query()->find($this->request->id);
-            if(!$user) return responseApi('User không tồn tại');
-            $user->name = $this->request->input('ten_user');
-            $user->email = $this->request->input('email_user');
-            $user->password = password_hash($this->request->input('password'), PASSWORD_DEFAULT);
-            $user->tel = $this->request->input('phone_number') ? $this->request->input('phone_number') : null;
-            $user->created_by = auth()->id();
-            $user->save();
+            if (!$user) return responseApi('User không tồn tại');
+            $user->update([
+                'name' => $this->request->ten_user,
+                'email' => $this->request->email_user,
+                'password' => password_hash($this->request->password, PASSWORD_DEFAULT),
+                'tel' => $this->request->phone_number ? $this->request->phone_number : null,
+                'created_by' => auth()->id(),
+            ]);
+            $user->roles()->sync($this->request->role);
             DB::commit();
             return responseApi("Cập nhật thành công", true);
         } catch (\Throwable $throwable) {

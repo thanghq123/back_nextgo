@@ -91,11 +91,15 @@ class DatabaseSeeder extends Seeder
     {
         // run landlord specific seeders
         Role::create([
-            'name' => 'customer',
+            'name' => 'super-admin',
             'guard_name' => 'web'
         ]);
         Role::create([
-            'name' => 'super-admin',
+            'name' => 'admin',
+            'guard_name' => 'web'
+        ]);
+        Role::create([
+            'name' => 'customer',
             'guard_name' => 'web'
         ]);
         $user = User::query()->create([

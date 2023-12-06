@@ -102,13 +102,12 @@ class UserController extends Controller
         try {
             $user = User::query()->find($this->request->id);
             if (!$user) return responseApi('User không tồn tại');
-            $user->update([
-                'name' => $this->request->ten_user,
-                'email' => $this->request->email_user,
-                'password' => password_hash($this->request->password, PASSWORD_DEFAULT),
-                'tel' => $this->request->phone_number ? $this->request->phone_number : null,
-                'created_by' => auth()->id(),
-            ]);
+            $user->name = $this->request->ten_user;
+            $user->email = $this->request->email_user;
+            if($this->request->password) $user->password = $this->request->password;
+            $user->tel = $this->request->phone_number ?? null;
+            $user->created_by = auth()->id();
+            $user->save();
             $user->roles()->sync($this->request->role);
             DB::commit();
             return responseApi("Cập nhật thành công", true);

@@ -40,12 +40,35 @@ const KTbusiness_fieldAddbusiness_field = function () {
                     pricing_id: form.querySelector('[name="pricing_id"]') ? {validators: {notEmpty: {message: "Chọn gói dịch vụ"}}} : null,
                     business_name: form.querySelector('[name="business_name"]') ? {validators: {notEmpty: {message: "Tên cửa hàng phải được nhập"}}} : null,
                     address: form.querySelector('[name="address"]') ? {validators: {notEmpty: {message: "Địa chỉ phải được nhập"}}} : null,
-                    password: form.querySelector('[name="password"]') ? {validators: {notEmpty: {message: "Mật khẩu không được để trống"}}} : null,
+                    password: (form.querySelector('[name="password"]') && form.querySelector('[name="id"]') === null) ? {validators: {notEmpty: {message: "Mật khẩu không được để trống"}}} : null,
                     role: form.querySelector('[name="role"]') ? {validators: {notEmpty: {message: "Chọn vai trò"}}} : null,
                 });
                 const btn_submit = modalForm.querySelector('[data-kt-business_field-modal-action="submit"]');
                 btn_submit.addEventListener("click", (modalForm => {
                     let business_field_id = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : null;
+                    if (business_field_id) {
+                        initFormValidation({
+                            email_user: form.querySelector('[name="email_user"]') ? {
+                                validators: {
+                                    notEmpty: {message: "Email không được để trống"}, regexp: {
+                                        regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email không hợp lệ"
+                                    }
+                                }
+                            } : null,
+                            ten_user: form.querySelector('[name="ten_user"]') ? {validators: {notEmpty: {message: "Tên người dùng không được để trống"}}} : null,
+                            name: form.querySelector('[name="name"]') ? {validators: {notEmpty: {message: "Tên không được để trống"}}} : null,
+                            code: form.querySelector('[name="code"]') ? {validators: {notEmpty: {message: "Mã ngành hàng không được để trống"},}} : null,
+                            detail: form.querySelector('[name="detail"]') ? {validators: {notEmpty: {message: "Mô tả không được để trống"}}} : null,
+                            name_tenant: form.querySelector('[name="name_tenant"]') ? {validators: {notEmpty: {message: "Tên không được để trống"}}} : null,
+                            user_id: form.querySelector('[name="user_id"]') ? {validators: {notEmpty: {message: "Chọn user"}}} : null,
+                            business_field: form.querySelector('[name="business_field"]') ? {validators: {notEmpty: {message: "Chọn lĩnh vực kinh doanh"}}} : null,
+                            due_at: form.querySelector('[name="due_at"]') ? {validators: {notEmpty: {message: "Chọn ngày hết hạn"}}} : null,
+                            pricing_id: form.querySelector('[name="pricing_id"]') ? {validators: {notEmpty: {message: "Chọn gói dịch vụ"}}} : null,
+                            business_name: form.querySelector('[name="business_name"]') ? {validators: {notEmpty: {message: "Tên cửa hàng phải được nhập"}}} : null,
+                            address: form.querySelector('[name="address"]') ? {validators: {notEmpty: {message: "Địa chỉ phải được nhập"}}} : null,
+                            role: form.querySelector('[name="role"]') ? {validators: {notEmpty: {message: "Chọn vai trò"}}} : null,
+                        });
+                    }
                     modalForm.preventDefault(), checkForm && checkForm.validate().then((function (modalForm) {
                         if ("Valid" === modalForm) {
                             (btn_submit.setAttribute("data-kt-indicator", "on"), btn_submit.disabled = !0, $.ajax({

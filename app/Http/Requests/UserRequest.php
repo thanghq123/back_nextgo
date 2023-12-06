@@ -43,7 +43,6 @@ class UserRequest extends FormRequest
                     'email',
                     'unique:users,email,'.$this->id
                 ],
-                'password' => 'required',
                 'ten_user' => 'required'
             ];
         }

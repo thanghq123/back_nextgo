@@ -4,9 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\TMenu;
 
 class AppServiceProvider extends ServiceProvider
 {
+    use TMenu;
+
     /**
      * Register any application services.
      *
@@ -14,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->callApp();
     }
 
     /**
@@ -25,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         try {
-            \Storage::extend('google', function($app, $config) {
+            \Storage::extend('google', function ($app, $config) {
                 $options = [];
 
                 if (!empty($config['teamDriveId'] ?? null)) {
@@ -43,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
 
                 return new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter);
             });
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // your exception handling logic
         }
     }

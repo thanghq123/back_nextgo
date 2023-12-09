@@ -98,12 +98,12 @@
                             <!--begin::Menu item-->
                             <div class="menu-item px-3">
                                 <a href="" class="menu-link px-3" data-bs-toggle="modal"
-                                   data-bs-target="#kt_modal_add_customer" data-id="{{$dataSeed['id']}}">Edit</a>
+                                   data-bs-target="#kt_modal_add_customer" data-id="{{$dataSeed['id']}}">Sửa</a>
                             </div>
                             <!--end::Menu item-->
                             <!--begin::Menu item-->
                             <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$dataSeed['id']}}">Delete</a>
+                                <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row" data-id="{{$dataSeed['id']}}">Xoá</a>
                             </div>
                             <!--end::Menu item-->
                         </div>

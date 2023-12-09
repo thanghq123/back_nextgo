@@ -166,11 +166,11 @@
                                 data-kt-menu="true">
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
-                                       data-bs-target="#kt_modal_add_pricing" data-id="{{$pricing->id}}">Edit</a>
+                                       data-bs-target="#kt_modal_add_pricing" data-id="{{$pricing->id}}">Sửa</a>
                                 </div>
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3"
-                                       data-kt-pricing-table-filter="delete_row" data-id="{{$pricing->id}}">Delete</a>
+                                       data-kt-pricing-table-filter="delete_row" data-id="{{$pricing->id}}">Xoá</a>
                                 </div>
                             </div>
                             <!--end::Menu-->

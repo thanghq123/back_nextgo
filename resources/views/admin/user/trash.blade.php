@@ -157,12 +157,12 @@
                                 data-kt-menu="true">
 {{--                                <div class="menu-item px-3">--}}
 {{--                                    <a href="" class="menu-link px-3" data-bs-toggle="modal"--}}
-{{--                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$user->id}}">Show</a>--}}
+{{--                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$user->id}}">Chi tiết</a>--}}
 {{--                                </div>--}}
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3"
                                        data-kt-business_field-table-filter="restore_row"
-                                       data-id="{{$user->id}}">Restore</a>
+                                       data-id="{{$user->id}}">Phục hồi</a>
                                 </div>
                             </div>
                             <!--end::Menu-->

@@ -149,11 +149,11 @@
                                 data-kt-menu="true">
                                 <div class="menu-item px-3">
                                     <a href="" class="menu-link px-3" data-bs-toggle="modal"
-                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$businessField->id}}">Edit</a>
+                                       data-bs-target="#kt_modal_add_business_field" data-id="{{$businessField->id}}">Sửa</a>
                                 </div>
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3"
-                                       data-kt-business_field-table-filter="delete_row" data-id="{{$businessField->id}}">Delete</a>
+                                       data-kt-business_field-table-filter="delete_row" data-id="{{$businessField->id}}">Xoá</a>
                                 </div>
                             </div>
                             <!--end::Menu-->

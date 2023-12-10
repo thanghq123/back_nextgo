@@ -28,7 +28,7 @@ class OrderRequest extends FormRequest
             'pricing_id' => 'required|exists:pricings,id',
             'type' => 'required|in:0,1',
             'name' => 'required|min:3',
-            'tel' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'tel' => 'required|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
         ];
     }
     public function messages()

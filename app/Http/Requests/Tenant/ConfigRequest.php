@@ -41,6 +41,11 @@ class ConfigRequest extends FormRequest
                 "unique" => "unique:App\Models\Tenant\Config,email",
                 "nullable"
             ],
+            "tel"=>[
+                "regex" => "regex:/^(03|05|07|08|09)+([0-9]{8})$/",
+                "min" => "min:10",
+                "nullable"
+            ],
         ];
 
         switch ($getUrl){
@@ -56,6 +61,7 @@ class ConfigRequest extends FormRequest
                     "id" => $updateId,
                     "business_name" => $rules["business_name"],
                     "email" => $updateEmail,
+                    "tel" => $rules["tel"]
                 ];
             case "delete":
                 return ["id" => $rules["id"]];

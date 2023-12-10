@@ -65,7 +65,7 @@ class CustomerRequest extends FormRequest
                 "required",
                 "max:255",
                 "unique" => "unique:App\Models\Tenant\Customer,tel",
-                "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
+                "regex:/^(03|05|07|08|09)+([0-9]{8})$/"
             ],
             "status" => [
                 "in:0,1",

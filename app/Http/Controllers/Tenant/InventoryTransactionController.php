@@ -400,11 +400,11 @@ class InventoryTransactionController extends Controller
             $count = $data->count();
             if ($count == 3) {
                 $statusOut = $this->model::where('inventory_transaction_id', $inventory_transaction_id)->where('trans_type', 1)->first()->status;
-                if ($statusOut == 2) {
-                   return false;
+                if ($statusOut == 1 || $statusOut == 0) {
+                   return true;
                 }
             }
-            return true;
+            return false;
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

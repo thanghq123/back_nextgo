@@ -76,7 +76,9 @@ class ConfigRequest extends FormRequest
             "required" => "Không được để trống!",
             "exists" => "Dữ liệu không tồn tại!",
             "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!"
+            "max" => "Bạn đã vượt quá ký tự cho phép!",
+            "regex" => "Dữ liệu không hợp lệ!",
+            "min" => "Bạn chưa nhập đủ số ký tự yêu cầu!",
         ];
     }
 }

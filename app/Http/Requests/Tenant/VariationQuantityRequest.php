@@ -42,6 +42,7 @@ class VariationQuantityRequest extends FormRequest
             "quantity.required" => "Vui lòng nhập số lượng",
             "quantity.numeric" => "Số lượng phải là số",
             "quantity.gt" => "Số lượng phải lớn hơn 0",
+            "quantity.integer" => "Số lượng phải là số nguyên"
        ];
     }
 }

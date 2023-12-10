@@ -22,7 +22,9 @@ class LocationController extends Controller
             'name' => 'required',
 //            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',
-            'is_main' => 'required|integer|min:0'
+            'is_main' => 'required|integer|min:0',
+            'tel' => 'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
+            'email' => 'nullable|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
         ];
         $message = [
             'name.required' => 'Tên phải được nhập',
@@ -35,7 +37,10 @@ class LocationController extends Controller
             'status.min' => 'Trạng thái không hợp lệ',
             'is_main.required' => 'Cơ sở mặc định phải được chọn',
             'is_main.integer' => 'Cơ sở mặc định không hợp lệ',
-            'is_main.min' => 'Cơ sở mặc định không hợp lệ'
+            'is_main.min' => 'Cơ sở mặc định không hợp lệ',
+            'tel.regex' => 'Số điện thoại không hợp lệ',
+            'tel.min' => 'Số điện thoại không hợp lệ',
+            'email.regex' => 'Email không hợp lệ',
         ];
         return $request->validate($rules, $message);
     }
@@ -91,8 +96,8 @@ class LocationController extends Controller
         DB::beginTransaction();
         try {
             $this->validation($request);
-            $countMain=Location::where('is_main', 1)->count();
-            if ($countMain>1){
+            $countMain = Location::where('is_main', 1)->count();
+            if ($countMain > 1) {
                 return responseApi('Đã có cơ sở mặc định', false);
             }
             $file = $request->file('image');
@@ -133,8 +138,8 @@ class LocationController extends Controller
             $this->validation($request);
             $location = Location::query()->find($request->id);
             if ($location->is_main == 0 && $request->is_main == 1) {
-                $countMain=Location::where('is_main', 1)->count();
-                if ($countMain>1){
+                $countMain = Location::where('is_main', 1)->count();
+                if ($countMain > 1) {
                     return responseApi('Đã có cơ sở mặc định', false);
                 }
             }
@@ -198,6 +203,7 @@ class LocationController extends Controller
             'code' => Str::slug('Kho ' . $location->name)
         ]);
     }
+
     protected function checkCountInventory()
     {
         $pricingId = Tenant::current()->first()->pricing_id;

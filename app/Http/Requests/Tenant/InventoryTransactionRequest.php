@@ -55,7 +55,7 @@ class InventoryTransactionRequest extends FormRequest
             ],
             "inventory_transaction_details.*.price" => [
                 "required",
-                "min:1",
+                "gt:0",
                 "numeric"
             ],
             "inventory_transaction_details.*.price_type" => [
@@ -64,8 +64,9 @@ class InventoryTransactionRequest extends FormRequest
             ],
             "inventory_transaction_details.*.quantity" => [
                 "required",
-                "min:1",
-                "numeric"
+                "gt:0",
+                "numeric",
+                "integer"
             ],
         ];
         switch ($getUrl) {
@@ -99,7 +100,7 @@ class InventoryTransactionRequest extends FormRequest
             "required" => "Không được để trống!",
             "exists" => "Dữ liệu không tồn tại!",
             "unique" => "Dữ liệu đã tồn tại!",
-            "min" => "Bạn chưa đủ số lượng cho phép!",
+            "gt" => "Bạn chưa đủ số lượng cho phép!",
             "numeric" => "Bạn phải nhập số!",
         ];
     }

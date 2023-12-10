@@ -16,7 +16,8 @@ var CustomerModalHandler = function () {
                     pricing: {validators: {notEmpty: {message: "Gói không được để trống"}}},
                     type: {validators: {notEmpty: {message: "Loại yêu cầu không được để trống"}}},
                     name: {validators: {notEmpty: {message: "Tên khách hàng không được để trống"}}},
-                    tel: {validators: {notEmpty: {message: "Số điện thoại liên hệ không được để trống"}}},
+                    tel: {validators: {notEmpty: {message: "Số điện thoại liên hệ không được để trống"},
+                            phone: {country: "VN", message: "Số điện thoại không hợp lệ"}}},
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger(),

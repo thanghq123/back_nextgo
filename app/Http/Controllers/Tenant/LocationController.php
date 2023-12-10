@@ -23,8 +23,8 @@ class LocationController extends Controller
 //            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0',
-            'tel' => 'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
-            'email' => 'nullable|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            'tel' => ['nullable', 'min:10', 'regex:/^(03|05|07|08|09)+([0-9]{8})$/'],
+            'email' => ['nullable','regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
         ];
         $message = [
             'name.required' => 'Tên phải được nhập',

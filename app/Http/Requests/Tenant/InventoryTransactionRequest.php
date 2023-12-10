@@ -55,7 +55,7 @@ class InventoryTransactionRequest extends FormRequest
             ],
             "inventory_transaction_details.*.price" => [
                 "required",
-                "gt:1",
+                "gt:0",
                 "numeric"
             ],
             "inventory_transaction_details.*.price_type" => [
@@ -64,8 +64,9 @@ class InventoryTransactionRequest extends FormRequest
             ],
             "inventory_transaction_details.*.quantity" => [
                 "required",
-                "gt:1",
-                "numeric"
+                "gt:0",
+                "numeric",
+                "integer"
             ],
         ];
         switch ($getUrl) {

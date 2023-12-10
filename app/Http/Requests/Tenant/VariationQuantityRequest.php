@@ -30,7 +30,8 @@ class VariationQuantityRequest extends FormRequest
             "quantity" => [
                 "required",
                 "numeric",
-                "gt:0"
+                "gt:0",
+                "integer"
             ]
         ];
     }

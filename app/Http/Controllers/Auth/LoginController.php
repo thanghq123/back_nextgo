@@ -11,7 +11,7 @@ class LoginController extends Controller
     {
         if ($request->isMethod('post')) {
             $credential = $request->only('email', 'password');
-            if (auth()->attempt($credential) && auth()->user()->hasAnyRole('admin', 'super-admin')) {
+            if (auth()->attempt($credential) && auth()->user()->hasAnyRole('admin', 'super-admin') && auth()->user()->status == 1) {
                 $user = auth()->user();
                 auth()->login($user, true);
                 return response()->json('success');

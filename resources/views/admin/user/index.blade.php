@@ -126,13 +126,6 @@
                                                        class="form-control form-control-solid mb-3 mb-lg-0"
                                                        value=""/>
                                             </div>
-
-                                            <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Người Tạo</label>
-                                                <input type="text" name="nguoi_tao"
-                                                       class="form-control form-control-solid mb-3 mb-lg-0"
-                                                       value=""/>
-                                            </div>
                                             <div class="fv-row mb-7">
                                                 <label class="required fw-semibold fs-6 mb-2">Trạng thái</label>
                                                 <input type="text" name="trang_thai"
@@ -246,7 +239,6 @@
                     let ten_chi_nhanh = $('#kt_modal_add_business_field_form input[name="ten_chi_nhanh"]')
                     let ten_user = $('#kt_modal_add_business_field_form input[name="ten_user"]')
                     let email = $('#kt_modal_add_business_field_form input[name="email_user"]')
-                    let nguoi_tao = $('#kt_modal_add_business_field_form input[name="nguoi_tao"]')
                     let linh_vuc_kinh_doanh = $('#kt_modal_add_business_field_form input[name="linh_vuc_kinh_doanh"]')
                     let trang_thai = $('#kt_modal_add_business_field_form input[name="trang_thai"]')
                     let phone_number = $('#kt_modal_add_business_field_form input[name="phone_number"]')
@@ -292,7 +284,7 @@
                                 $(".form-add-user").hide()
                                 $(".show-tenant").show()
                                 KTApp.hidePageLoading();
-                                $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
+                                $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết người dùng')
                                 if (data.status) {
                                     let tenantData = [];
                                     let locationData = [];
@@ -308,7 +300,6 @@
                                     ten_user.val(data.payload.name)
                                     ten_chi_nhanh.val(tenantData.join(", ") ? tenantData.join(", ") : "")
                                     email.val(data.payload.email)
-                                    nguoi_tao.val(data.payload.parent?.name)
                                     linh_vuc_kinh_doanh.val(locationData.join(", ") ? locationData.join(", ") : "")
                                     trang_thai.val(statusData.join(", ") ? statusData.join(", ") : "")
                                     $("form").find("input, select, textarea").prop("disabled", true);
@@ -317,7 +308,6 @@
                                     ten_chi_nhanh.val('')
                                     ten_user.val('')
                                     email.val('')
-                                    nguoi_tao.val('')
                                     linh_vuc_kinh_doanh.val('')
                                     trang_thai.val('')
                                     $("form").find("input, select, textarea").prop("disabled", false);
@@ -335,7 +325,6 @@
                         ten_chi_nhanh.val('')
                         ten_user.val('')
                         email.val('')
-                        nguoi_tao.val('')
                         linh_vuc_kinh_doanh.val('')
                         trang_thai.val('')
                         phone_number.val('')

@@ -20,9 +20,9 @@ class VariationQuantityController extends Controller
     public function getVariationQuantity(Request $request)
     {
         try {
-            $data = VariationQuantity::with(['variation', 'inventory', 'batch'])->paginate(10);
+            $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->paginate(10);
             if ($request->has('inventory_id') && $request->inventory_id!="") {
-                $data = VariationQuantity::with(['variation', 'inventory', 'batch'])->where('inventory_id', $request->inventory_id)->paginate(10);
+                $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->where('inventory_id', $request->inventory_id)->paginate(10);
             }
             $result = $data->getCollection()->transform(function ($data) {
                 return [
@@ -61,12 +61,14 @@ class VariationQuantityController extends Controller
     public function getVariationQuantityById($id)
     {
         try {
-            $variationQuantity = VariationQuantity::with(['variation', 'batch', 'variation.product:id,name'])->find($id);
+            $variationQuantity = VariationQuantity::with(['variation', 'batch:id,code', 'variation.product:id,name','inventory:id,name'])->find($id);
             if (!$variationQuantity) {
                 return responseApi([], false);
             }
             $data = [
                 'id' => $variationQuantity->id,
+                'inventory_id' => $variationQuantity->inventory_id,
+                'inventory_name' => $variationQuantity->inventory->name,
                 'variation_id' => $variationQuantity->variation_id,
                 'product_name' => $variationQuantity->variation->product->name,
                 'variation_name' => $variationQuantity->variation->variation_name,

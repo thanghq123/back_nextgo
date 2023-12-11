@@ -38,7 +38,6 @@ class UserController extends Controller
                         "email" => $item->email,
                         "tel" => $item->tel,
                         "status" => $item->status,
-                        "created_by" => $item->created_by,
                         "role" => $item->roles[0]->id??null,
                     ];
                 }))->collapse();

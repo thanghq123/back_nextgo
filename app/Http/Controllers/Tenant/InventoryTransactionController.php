@@ -66,9 +66,9 @@ class InventoryTransactionController extends Controller
     public function list(Request $request)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')->paginate(10);
+            $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')->orderBy('created_at','desc')->paginate(10);
             if ($request->has('trans_type') && $request->trans_type != '') {
-                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',$request->trans_type)->paginate(10);
+                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',$request->trans_type)->orderBy('created_at','desc')->paginate(10);
             }
             $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
                 return [

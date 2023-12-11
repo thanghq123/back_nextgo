@@ -23,7 +23,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return responseApi($validator->errors(), false);
         }
-        if (!Auth::guard('web')->attempt($credentials)) {
+        if (!Auth::guard('web')->attempt($credentials)&&!Auth::guard('web')->user()->status==1) {
             $msg = "Thông tin email hoặc mật khẩu không chính xác";
             return responseApi(['password' => $msg], false);
         }
@@ -86,10 +86,8 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
-
-
+        $user->assignRole('customer');
         $data = generateUserToken($user);
-
         return responseApi($data, true);
     }
 
@@ -112,7 +110,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return responseApi($validator->errors(), false);
         }
-        if (!Auth::guard('api')->attempt($credentials)) {
+        if (!Auth::guard('api')->attempt($credentials)&&!Auth::guard('api')->user()->status==1) {
             $msg = "Thông tin email hoặc mật khẩu không chính xác";
             return responseApi(['password' => $msg], false);
         }
@@ -145,14 +143,6 @@ class AuthController extends Controller
         ];
         return responseApi($data, true);
     }
-
-    public function getUser()
-    {
-        return response()->json([
-            'data' => dd(User::all())
-        ]);
-    }
-
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();

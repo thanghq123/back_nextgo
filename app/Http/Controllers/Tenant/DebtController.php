@@ -190,7 +190,7 @@ class DebtController extends Controller
     public function checkAmountDebt()
     {
         try {
-            $debt = $this->model::where('status', 1)->orWhere('status', 2)->get();
+            $debt = $this->model::where('status', '<>',3)->get();
             $debt->map(function ($item) {
                 $amount_paid = $item->payments->sum('amount');
                 if ($item->payments->sum('amount') > 0) {

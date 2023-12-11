@@ -288,7 +288,6 @@
                             type: 'GET',
                             data: {show_id: tenant_id},
                             success: function (data) {
-                                console.log(data)
                                 $("#button-submit").hide()
                                 $(".form-add-user").hide()
                                 $(".show-tenant").show()

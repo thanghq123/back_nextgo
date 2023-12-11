@@ -7,6 +7,7 @@ const KTPricingAddPricing = function () {
         const number = Number(value);
         return Number.isInteger(number) && number >= 0;
     };
+    var errorMessages ;
     return {
         init: function () {
             (() => {
@@ -88,15 +89,19 @@ const KTPricingAddPricing = function () {
                                                 modalForm.isConfirmed && modal.hide()
                                                 window.location.reload()
                                             }))
-                                    }, error: function (data) {
+                                    },      error: function (data) {
                                         btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1,
-                                            Swal.fire({
-                                                text: "Xin lỗi, đã có lỗi xảy ra xin vui lòng thử lại.",
-                                                icon: "error",
-                                                buttonsStyling: !1,
-                                                confirmButtonText: "Ok, đồng ý!",
-                                                customClass: {confirmButton: "btn btn-primary"}
-                                            })
+                                            errorMessages = data.responseJSON.meta.errors;
+                                        $.each(errorMessages, function (key, value) {
+                                            errorMessages = "Lỗi : " + value.join(", ");
+                                        });
+                                        Swal.fire({
+                                            text: errorMessages,
+                                            icon: "error",
+                                            buttonsStyling: !1,
+                                            confirmButtonText: "Ok, đồng ý!",
+                                            customClass: {confirmButton: "btn btn-primary"}
+                                        })
                                     }
                                 }))
                         } else {

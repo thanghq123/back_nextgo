@@ -284,7 +284,7 @@
                                 $(".form-add-user").hide()
                                 $(".show-tenant").show()
                                 KTApp.hidePageLoading();
-                                $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết chi nhánh')
+                                $('#kt_modal_add_business_field_header .modal-header_title').text('Chi tiết người dùng')
                                 if (data.status) {
                                     let tenantData = [];
                                     let locationData = [];

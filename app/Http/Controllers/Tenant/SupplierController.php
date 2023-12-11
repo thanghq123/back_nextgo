@@ -20,7 +20,7 @@ class SupplierController extends Controller
             $supplierData = $this->model::with(['group_customer' => function ($query) {
                 $query->where('type', 1);
             }])
-                ->where('customer_type', 1)
+                ->where('type', 1)
                 ->orderBy('id', 'desc')
                 ->get();
 
@@ -43,7 +43,6 @@ class SupplierController extends Controller
                     'note' => $supplierData->note,
                     'created_at' => $supplierData->created_at,
                     'updated_at' => $supplierData->updated_at,
-                    'customer_type' => $supplierData->customer_type
                 ];
             });
 
@@ -56,10 +55,7 @@ class SupplierController extends Controller
 
     public function store(){
         try {
-            $this->model::create([
-                ...$this->request->all(),
-                'customer_type' => 1
-            ]);
+            $this->model::create([$this->request->all()]);
             return responseApi("Tạo thành công!", true);
         }catch (\Throwable $throwable)
         {
@@ -73,7 +69,7 @@ class SupplierController extends Controller
             $supplierData = $this->model::with(['group_customer' => function ($query) {
                 $query->where('type', 1);
             }])
-                ->where('customer_type', 1)
+                ->where('type', 1)
                 ->where('id', $this->request->id)->get();
 
             $data = $supplierData->map(function ($supplierData) {
@@ -95,7 +91,6 @@ class SupplierController extends Controller
                     'note' => $supplierData->note,
                     'created_at' => $supplierData->created_at,
                     'updated_at' => $supplierData->updated_at,
-                    'customer_type' => $supplierData->customer_type
                 ];
             });
 

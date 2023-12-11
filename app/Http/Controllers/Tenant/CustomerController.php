@@ -43,7 +43,6 @@ class CustomerController extends Controller
                     'note' => $customerData->note,
                     'created_at' => $customerData->created_at,
                     'updated_at' => $customerData->updated_at,
-                    'customer_type' => $customerData->customer_type
                 ];
             });
 
@@ -156,7 +155,6 @@ class CustomerController extends Controller
                     'note' => $customerData->note,
                     'created_at' => $customerData->created_at,
                     'updated_at' => $customerData->updated_at,
-                    'customer_type' => $customerData->customer_type
                 ];
             });
 

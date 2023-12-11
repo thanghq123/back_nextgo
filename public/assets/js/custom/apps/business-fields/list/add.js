@@ -2,7 +2,7 @@
 const KTbusiness_fieldAddbusiness_field = function () {
     const modalForm = document.getElementById("kt_modal_add_business_field"),
         form = modalForm.querySelector("#kt_modal_add_business_field_form"), modal = new bootstrap.Modal(modalForm);
-    var checkForm;
+    var checkForm, errorMessages;
     const initFormValidation = (fields) => {
         checkForm = FormValidation.formValidation(form, {
             fields: fields, plugins: {
@@ -88,7 +88,7 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                     user_id: form.querySelector('[name="user_id"]') ? form.querySelector('[name="user_id"]').value : null,
                                     email: form.querySelector('[name="email"]') ? form.querySelector('[name="email"]').value : null,
                                     password: form.querySelector('[name="password"]') ? form.querySelector('[name="password"]').value : null,
-                                    phone_number: form.querySelector('[name="phone_number"]') ? form.querySelector('[name="phone_number"]').value : null,
+                                    tel: form.querySelector('[name="phone_number"]') ? form.querySelector('[name="phone_number"]').value : null,
                                     ten_user: form.querySelector('[name="ten_user"]') ? form.querySelector('[name="ten_user"]').value : null,
                                     email_user: form.querySelector('[name="email_user"]') ? form.querySelector('[name="email_user"]').value : null,
                                     role: form.querySelector('[name="role"]') ? form.querySelector('[name="role"]').value : null,
@@ -118,8 +118,13 @@ const KTbusiness_fieldAddbusiness_field = function () {
                                     }
                                 },
                                 error: function (data) {
-                                    btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1, Swal.fire({
-                                        text: "Xin lỗi, đã có lỗi xảy ra xin vui lòng thử lại.",
+                                    btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1,
+                                        errorMessages = data.responseJSON.meta.errors;
+                                    $.each(errorMessages, function (key, value) {
+                                        errorMessages = "Lỗi : " + value.join(", ");
+                                    });
+                                    Swal.fire({
+                                        text: errorMessages,
                                         icon: "error",
                                         buttonsStyling: !1,
                                         confirmButtonText: "Ok, đồng ý!",

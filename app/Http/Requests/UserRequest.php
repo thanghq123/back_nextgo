@@ -32,12 +32,12 @@ class UserRequest extends FormRequest
                     'email',
                     'unique:users,email'
                 ],
-                'phone_number'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/',
+                'tel'=>['nullable','regex:/^(03|05|07|08|09)+([0-9]{8})$/','min:10'],
                 'password' => 'required',
                 'ten_user' => 'required'
             ];
         }
-        else if ($url == 'update') {
+        if ($url == 'update') {
             return [
                 'email_user' => [
                     'required',
@@ -45,12 +45,10 @@ class UserRequest extends FormRequest
                     'unique:users,email,'.$this->id
                 ],
                 'ten_user' => 'required',
-                'phone_number'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
+                'tel'=>['nullable','regex:/^(03|05|07|08|09)+([0-9]{8})$/','min:10'],
             ];
         }
-        return [
-            //
-        ];
+        return [];
     }
 
     public function messages()
@@ -61,8 +59,7 @@ class UserRequest extends FormRequest
             'email_user.email' => 'Email không hợp lệ',
             'password.required' => 'Mật khẩu không được để trống',
             'ten_user.required' => 'Tên người dùng không được để trống',
-            'tel.regex' => 'Số điện thoại không hợp lệ',
-            'tel.min' => 'Số điện thoại không hợp lệ',
+            'tel' => 'Số điện thoại không hợp lệ',
         ];
     }
 }

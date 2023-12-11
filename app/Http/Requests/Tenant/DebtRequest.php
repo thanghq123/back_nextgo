@@ -49,7 +49,8 @@ class DebtRequest extends FormRequest
             ],
             "amount_debt" => [
                 "required",
-                "numeric"
+                "numeric",
+                "gt:0"
             ],
             "note" => [
                 "max:500",
@@ -92,7 +93,8 @@ class DebtRequest extends FormRequest
             "exists" => "Dữ liệu không tồn tại!",
             "in" => "Giá trị không hợp lệ!",
             "unique" => "Dữ liệu đã tồn tại!",
-            "numeric" => "Chỉ được nhập số!"
+            "numeric" => "Chỉ được nhập số!",
+            "gt" => "Phải lớn hơn 0!",
         ];
     }
 }

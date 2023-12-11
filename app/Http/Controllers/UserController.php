@@ -38,7 +38,6 @@ class UserController extends Controller
                         "email" => $item->email,
                         "tel" => $item->tel,
                         "status" => $item->status,
-                        "created_by" => $item->created_by,
                         "role" => $item->roles[0]->id??null,
                     ];
                 }))->collapse();
@@ -85,7 +84,6 @@ class UserController extends Controller
                 'email' => $this->request->email_user,
                 'password' => password_hash($this->request->password, PASSWORD_DEFAULT),
                 'tel' => $this->request->phone_number ? $this->request->phone_number : null,
-                'created_by' => auth()->id(),
             ]);
             $user->roles()->attach($this->request->role);
             DB::commit();
@@ -106,7 +104,6 @@ class UserController extends Controller
             $user->email = $this->request->email_user;
             if($this->request->password) $user->password = $this->request->password;
             $user->tel = $this->request->phone_number ?? null;
-            $user->created_by = auth()->id();
             $user->save();
             $user->roles()->sync($this->request->role);
             DB::commit();

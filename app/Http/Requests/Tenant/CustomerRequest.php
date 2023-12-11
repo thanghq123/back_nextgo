@@ -63,7 +63,7 @@ class CustomerRequest extends FormRequest
             ],
             "tel" => [
                 "required",
-                "max:255",
+                "min:10",
                 "unique" => "unique:App\Models\Tenant\Customer,tel",
                 "regex:/^(03|05|07|08|09)+([0-9]{8})$/"
             ],
@@ -148,6 +148,7 @@ class CustomerRequest extends FormRequest
             "in" => "Giá trị không hợp lệ!",
             "unique" => "Dữ liệu đã tồn tại!",
             "max" => "Bạn đã vượt quá ký tự cho phép!",
+            "min" => "Bạn chưa đủ ký tự cho phép!",
             "date" => "Sai định dạng ngày!",
             "regex" => "Sai định dạng!",
             "numeric" => "Chỉ được nhập số!"

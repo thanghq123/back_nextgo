@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
                     'email',
                     'unique:users,email'
                 ],
-                'tel'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/',
+                'phone_number'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/',
                 'password' => 'required',
                 'ten_user' => 'required'
             ];
@@ -45,7 +45,7 @@ class UserRequest extends FormRequest
                     'unique:users,email,'.$this->id
                 ],
                 'ten_user' => 'required',
-                'tel'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
+                'phone_number'=>'nullable|regex:/^(03|05|07|08|09)+([0-9]{8})$/|min:10',
             ];
         }
         return [

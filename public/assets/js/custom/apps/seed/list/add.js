@@ -1,7 +1,7 @@
 "use strict";
 
 var CustomerModalHandler = function () {
-    var submitButton, cancelButton, closeButton, formValidation, customerForm, customerModal;
+    var submitButton, cancelButton, closeButton, formValidation, customerForm, customerModal, errorMessages;
     return {
         init: function () {
             customerModal = new bootstrap.Modal(document.querySelector("#kt_modal_add_customer"));
@@ -11,8 +11,8 @@ var CustomerModalHandler = function () {
             closeButton = customerForm.querySelector("#kt_modal_add_customer_close");
             formValidation = FormValidation.formValidation(customerForm, {
                 fields: {
-                    name: { validators: { notEmpty: { message: "Tên loại dữ liệu mẫu không được để trống" } } },
-                    type: { validators: { notEmpty: { message: "Loại dữ liệu mẫu không được để trống" } } },
+                    name: {validators: {notEmpty: {message: "Tên loại dữ liệu mẫu không được để trống"}}},
+                    type: {validators: {notEmpty: {message: "Loại dữ liệu mẫu không được để trống"}}},
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger(),
@@ -28,17 +28,17 @@ var CustomerModalHandler = function () {
                 event.preventDefault();
                 formValidation && formValidation.validate().then(function (modalForm) {
                     console.log("validated!");
-                    let seed_id = customerForm.querySelector('[name="id"]')?customerForm.querySelector('[name="id"]').value:"";
+                    let seed_id = customerForm.querySelector('[name="id"]') ? customerForm.querySelector('[name="id"]').value : "";
                     if ("Valid" == modalForm) {
                         (submitButton.setAttribute("data-kt-indicator", "on"), submitButton.disabled = !0,
                             $.ajax({
-                                url: seed_id!=""?'/admin/seed/update':'/admin/seed/store',
-                                method: seed_id!=""?'PUT':'POST',
+                                url: seed_id != "" ? '/admin/seed/update' : '/admin/seed/store',
+                                method: seed_id != "" ? 'PUT' : 'POST',
                                 data: {
                                     _token: customerForm.querySelector('[name="_token"]').value,
                                     name: customerForm.querySelector('[name="name"]').value,
                                     type: customerForm.querySelector('[name="type"]').value,
-                                    id: seed_id!=""?seed_id:null
+                                    id: seed_id != "" ? seed_id : null
                                 },
                                 success: function (data) {
                                     submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
@@ -53,14 +53,18 @@ var CustomerModalHandler = function () {
                                             window.location.reload()
                                         }))
                                 }, error: function (data) {
-                                    submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
-                                        Swal.fire({
-                                            text: data.responseJSON.meta.errors.name,
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, đồng ý!",
-                                            customClass: {confirmButton: "btn btn-primary"}
-                                        })
+                                    btn_submit.removeAttribute("data-kt-indicator"), btn_submit.disabled = !1,
+                                        errorMessages = data.responseJSON.meta.errors;
+                                    $.each(errorMessages, function (key, value) {
+                                        errorMessages = "Lỗi : " + value.join(", ");
+                                    });
+                                    Swal.fire({
+                                        text: errorMessages,
+                                        icon: "error",
+                                        buttonsStyling: !1,
+                                        confirmButtonText: "Ok, đồng ý!",
+                                        customClass: {confirmButton: "btn btn-primary"}
+                                    })
                                 }
                             }))
                     } else {
@@ -93,7 +97,7 @@ var CustomerModalHandler = function () {
                     buttonsStyling: false,
                     confirmButtonText: "Đúng, huỷ nó!",
                     cancelButtonText: "Không, trở lại",
-                    customClass: { confirmButton: "btn btn-primary", cancelButton: "btn btn-active-light" }
+                    customClass: {confirmButton: "btn btn-primary", cancelButton: "btn btn-active-light"}
                 }).then(function (result) {
                     if (result.value) {
                         customerForm.reset();
@@ -104,7 +108,7 @@ var CustomerModalHandler = function () {
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, đồng ý!",
-                            customClass: { confirmButton: "btn btn-primary" }
+                            customClass: {confirmButton: "btn btn-primary"}
                         });
                     }
                 });

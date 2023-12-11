@@ -2,7 +2,7 @@
 
 var CustomerModalHandler = function () {
     var submitButton, cancelButton, closeButton, formValidation, customerForm, customerModal, detailModal,
-        closeButtonDetail, detailForm, cancelButtonDetail;
+        closeButtonDetail, detailForm, cancelButtonDetail, errorMessages;
     return {
         init: function () {
             customerModal = new bootstrap.Modal(document.querySelector("#kt_modal_add_customer"));
@@ -16,8 +16,12 @@ var CustomerModalHandler = function () {
                     pricing: {validators: {notEmpty: {message: "Gói không được để trống"}}},
                     type: {validators: {notEmpty: {message: "Loại yêu cầu không được để trống"}}},
                     name: {validators: {notEmpty: {message: "Tên khách hàng không được để trống"}}},
-                    tel: {validators: {notEmpty: {message: "Số điện thoại liên hệ không được để trống"},
-                            phone: {country: "VN", message: "Số điện thoại không hợp lệ"}}},
+                    tel: {
+                        validators: {
+                            notEmpty: {message: "Số điện thoại liên hệ không được để trống"},
+                            phone: {country: "VN", message: "Số điện thoại không hợp lệ"}
+                        }
+                    },
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger(),
@@ -50,8 +54,8 @@ var CustomerModalHandler = function () {
                                 success: function (data) {
                                     submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
                                         Swal.fire({
-                                            text: data.payload??data.meta,
-                                            icon: data.payload?"success":"error",
+                                            text: data.payload,
+                                            icon: "success",
                                             buttonsStyling: !1,
                                             confirmButtonText: "Ok, đồng ý!",
                                             customClass: {confirmButton: "btn btn-primary"}
@@ -61,13 +65,17 @@ var CustomerModalHandler = function () {
                                         }))
                                 }, error: function (data) {
                                     submitButton.removeAttribute("data-kt-indicator"), submitButton.disabled = !1,
-                                        Swal.fire({
-                                            text: data.meta??data.responseJSON.meta.errors.name,
-                                            icon: "error",
-                                            buttonsStyling: !1,
-                                            confirmButtonText: "Ok, đồng ý!",
-                                            customClass: {confirmButton: "btn btn-primary"}
-                                        })
+                                     errorMessages = data.responseJSON.meta.errors;
+                                    $.each(errorMessages, function(key, value) {
+                                        errorMessages="Lỗi : " + value.join(", ");
+                                    });
+                                    Swal.fire({
+                                        text: errorMessages,
+                                        icon: "error",
+                                        buttonsStyling: !1,
+                                        confirmButtonText: "Ok, đồng ý!",
+                                        customClass: {confirmButton: "btn btn-primary"}
+                                    })
                                 }
                             }))
                     } else {
@@ -84,12 +92,12 @@ var CustomerModalHandler = function () {
 
             cancelButton.addEventListener("click", function (event) {
                 event.preventDefault();
-                showCancelConfirmation(customerForm,customerModal);
+                showCancelConfirmation(customerForm, customerModal);
             });
 
             closeButton.addEventListener("click", function (event) {
                 event.preventDefault();
-                showCancelConfirmation(customerForm,customerModal);
+                showCancelConfirmation(customerForm, customerModal);
             });
             //show detail
             detailModal = new bootstrap.Modal(document.querySelector("#kt_modal_show_detail"));
@@ -173,16 +181,15 @@ var CustomerModalHandler = function () {
             })
             addNoteButtonCancel.addEventListener("click", function (event) {
                 event.preventDefault();
-                showCancelConfirmation(addNoteForm,addNoteModal);
+                showCancelConfirmation(addNoteForm, addNoteModal);
             })
             addNoteButtonClose.addEventListener("click", function (event) {
                 event.preventDefault();
-                showCancelConfirmation(addNoteForm,addNoteModal);
+                showCancelConfirmation(addNoteForm, addNoteModal);
             })
 
 
-
-            function showCancelConfirmation(element,modal) {
+            function showCancelConfirmation(element, modal) {
                 Swal.fire({
                     text: "Bạn chắc chắn muốn huỷ ?",
                     icon: "warning",

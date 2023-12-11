@@ -92,7 +92,7 @@ class UserController extends Controller
             return responseApi("Tạo thành công", true);
         } catch (\Throwable $throwable) {
             DB::rollBack();
-            return responseApi("Tạo thất bại");
+            return responseApi($throwable->getMessage(), false);
         }
     }
 

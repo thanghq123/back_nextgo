@@ -25,25 +25,25 @@ class ItemUnitRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique" => "unique:App\Models\Tenant\ItemUnit,name"
+                "max:255"
             ]
         ];
 
         switch ($getUrl){
             case "store":
             case "update":
+
                 $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\ItemUnit,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\ItemUnit,name");
+                }
 
                 return [
                     "id" => $updateId,
-                    "name" => $updateName,
+                    "name" => $rules['name'],
                 ];
             case "show":
             case "delete":
@@ -56,10 +56,11 @@ class ItemUnitRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!"
+            "id.required" => "Mã đơn vị tính không được để trống!",
+            "id.exists" => "Mã đơn vị tính không tồn tại!",
+            "name.required" => "Tên đơn vị tính không được để trống!",
+            "name.unique" => "Tên đơn vị tính đã tồn tại!",
+            "name.max" => "Tên đơn vị tính đã vượt quá ký tự cho phép!"
         ];
     }
 }

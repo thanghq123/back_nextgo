@@ -35,8 +35,7 @@ class WarrantyRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique" => "unique:App\Models\Tenant\Warranty,name"
+                "max:255"
             ],
             "unit" => [
                 "required",
@@ -54,15 +53,15 @@ class WarrantyRequest extends FormRequest
             case "update":
                 $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Warranty,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Warranty,name");
+                }
 
                 return [
                     "id" => $updateId,
-                    "name" => $updateName,
+                    "name" => $rules["name"],
                     "unit" => $rules["unit"],
                     "period" => $rules["period"]
                 ];
@@ -77,12 +76,15 @@ class WarrantyRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "gt" => "Dữ liệu không hợp lệ!",
-            "max" => "Bạn đã vượt quá ký tự cho phép :max!",
-            "in" => "Dữ liệu không hợp lệ!"
+            "id.required" => "Mã bảo hành không được để trống!",
+            "id.exists" => "Mã bảo hành không tồn tại!",
+            "name.required" => "Tên bảo hành không được để trống!",
+            "name.max" => "Tên bảo hành đã vượt quá ký tự cho phép!",
+            "unit.required" => "Đơn vị tính không được để trống!",
+            "unit.in" => "Đơn vị tính không được hợp lệ!",
+            "period.required" => "Thời hạn bảo hành không được để trống!",
+            "period.gt" => "Thời hạn bảo hành phải lớn hơn 0!",
+            "period.max" => "Thời hạn bảo hành đã vượt quá ký tự cho phép!"
         ];
     }
 }

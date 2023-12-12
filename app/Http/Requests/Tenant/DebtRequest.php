@@ -27,7 +27,6 @@ class DebtRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-        $id = ",".$this->id;
         $rules = [
             "id" => [
                 "required",
@@ -89,12 +88,19 @@ class DebtRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Giá trị không hợp lệ!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "numeric" => "Chỉ được nhập số!",
-            "gt" => "Phải lớn hơn 0!",
+            "id.required" => "Mã khoản nợ Không được để trống!",
+            "id.exists" => "Mã khoản nợ không tồn tại!",
+            "partner_id.required" => "Mã đối tác Không được để trống!",
+            "partner_type.required" => "Mã loại khách hàng Không được để trống!",
+            "partner_type.in" => "Mã loại khách hàng không hợp lệ!",
+            "type.required" => "Loại công nợ Không được để trống!",
+            "type.in" => "Loại công nợ không hợp lệ!",
+            "name.required" => "Tên khoản nợ Không được để trống!",
+            "amount_debt.required" => "Số tiền nợ Không được để trống!",
+            "amount_debt.numeric" => "Số tiền nợ chỉ được nhập số!",
+            "amount_debt.gt" => "Số tiền nợ phải lớn hơn 0!",
+            "note.max" => "Ghi chú vượt quá ký tự cho phép!",
+            "status.in" => "Trạng thái không hợp lệ!",
         ];
     }
 }

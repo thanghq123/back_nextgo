@@ -130,12 +130,29 @@ class OrderRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!",
-            "gt" => "Dữ liệu không hợp lệ!",
-            "gte" => "Dữ liệu không hợp lệ!"
+            "id.required" => "Mã hóa đơn không được để trống!",
+            "id.exists" => "Mã hóa đơn không tồn tại!",
+            "location_id.required" => "Mã cơ sở được để trống!",
+            "location_id.exists" => "Mã cơ sở không tồn tại!",
+            "customer_id.required" => "Mã khách hàng được để trống!",
+            "customer_id.exists" => "Mã khách hàng không tồn tại!",
+            "created_by.required" => "Mã nhân viên được để trống!",
+            "created_by.exists" => "Mã nhân viên không tồn tại!",
+            "discount.gte" => "Chiết khấu phải lớn hơn hoặc bằng 0!",
+            "tax.gte" => "Thuế phải lớn hơn hoặc bằng 0!",
+            "service_charge.gte" => "Phí dịch vụ phải lớn hơn hoặc bằng 0!",
+            "total_product.gt" => "Tổng tiền sản phẩm phải lớn hơn 0!",
+            "total_price.gt" => "Tổng tiền phải lớn hơn 0!",
+            "status.required" => "Trạng thái đơn không được để trống!",
+            "payment_status.required" => "Trạng thái thanh toán không được để trống!",
+            "order_details.required" => "Chi tiết hóa đơn không được để trống!",
+            "order_details.*.variation_quantities.*.variation_id.required" => "Mã phiên bản không được để trống!",
+            "order_details.*.variation_quantities.*.variation_id.exists" => "Mã phiên bản không tồn tại!",
+            "order_details.*.batch_id.exists" => "Mã lô không tồn tại!",
+            "order_details.*.discount.gte" => "Chiết khấu của chi tiết hóa đơn phải lớn hơn hoặc bằng 0!",
+            "order_details.*.tax.gte" => "Thuế của chi tiết hóa đơn phải lớn hơn hoặc bằng 0!",
+            "order_details.*.quanity.gt" => "Số lượng của chi tiết hóa đơn phải lớn hơn 0!",
+            "order_details.*.result.gt" => "Tổng tiền của chi tiết hóa đơn phải lớn hơn 0!"
         ];
     }
 }

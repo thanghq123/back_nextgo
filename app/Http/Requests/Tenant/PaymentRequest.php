@@ -34,9 +34,14 @@ class PaymentRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "in" => "Giá trị không hợp lệ!",
-            "numeric" => "Chỉ được nhập số!"
+            "amount.required" => "Số tiền thanh toán không được để trống!",
+            "amount.numeric" => "Số tiền thanh toán chỉ được nhập số!",
+            "amount_in.required" => "Số tiền khách đưa không được để trống!",
+            "amount_in.numeric" => "Số tiền khách đưa chỉ được nhập số!",
+            "amount_refund.required" => "Số tiền trả lại không được để trống!",
+            "amount_refund.numeric" => "Số tiền trả lại chỉ được nhập số!",
+            "payment_method.required" => "Phương thức thanh toán không được để trống!",
+            "payment_method.in" => "Phương thức thanh toán không hợp lệ!"
         ];
     }
 }

@@ -55,7 +55,7 @@ class SupplierController extends Controller
 
     public function store(){
         try {
-            $this->model::create([$this->request->all()]);
+            $this->model::create($this->request->all());
             return responseApi("Tạo thành công!", true);
         }catch (\Throwable $throwable)
         {

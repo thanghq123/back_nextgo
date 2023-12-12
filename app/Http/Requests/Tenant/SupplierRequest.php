@@ -134,7 +134,7 @@ class SupplierRequest extends FormRequest
         return [
             "required" => "Không được để trống!",
             "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Dữ liệu không hợp lệ!",
+            "in" => "Dữ liệu nhập vào chỉ được chọn 0 và 1!",
             "unique" => "Dữ liệu đã tồn tại!",
             "max" => "Bạn đã vượt quá ký tự cho phép!",
             "regex" => "Sai định dạng!",

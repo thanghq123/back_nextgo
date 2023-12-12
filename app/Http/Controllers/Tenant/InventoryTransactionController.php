@@ -233,7 +233,7 @@ class InventoryTransactionController extends Controller
                 ->where('variation_id', $request->variation_id)
                 ->first();
             $priceImport = $this->variationModel::findOrfail($request->variation_id)->price_import;
-            if ($variationQuantity->quantity < $request->quantity) {
+            if (($variationQuantity->quantity*1 + $request->quantity*1)<0) {
                 return responseApi("Số lượng tồn kho không đủ!", false);
             }
             if ($variationQuantity) {

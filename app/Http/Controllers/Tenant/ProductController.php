@@ -9,6 +9,7 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Variation;
 use App\Models\Tenant\VariationAttribute;
+use App\Models\Tenant\VariationQuantity;
 use Carbon\Carbon;
 
 class ProductController extends Controller
@@ -19,6 +20,7 @@ class ProductController extends Controller
         private AttributeValue     $attributeValueModel,
         private Variation          $variationModel,
         private VariationAttribute $variationAttributeModel,
+        private VariationQuantity  $variationQuantityModel,
         private ProductRequest     $request
     )
     {
@@ -467,6 +469,7 @@ class ProductController extends Controller
             }
 
             $this->variationAttributeModel::whereIn('variation_id', $arrayIdVariationAttribute)->delete();
+            $this->variationQuantityModel::whereIn('variation_id', $arrayIdVariationAttribute)->delete();
 
             $product = $this->productModel::find($this->request->id);
 

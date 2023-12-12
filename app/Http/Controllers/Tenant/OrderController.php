@@ -46,7 +46,7 @@ class OrderController extends Controller
                     'id' => $orderData->id,
                     'location_id' => $orderData->location_id,
                     'location_data' => [
-                        'name' => $orderData->location->name??'Dữ liệu bị lỗi',
+                        'name' => $orderData->location->name??'Chi nhánh không tồn tại hoặc đã bị xóa',
                         'image' => $orderData->location->image??null,
                         'description' => $orderData->location->description??null,
                         'tel' => $orderData->location->tel??null,
@@ -55,8 +55,8 @@ class OrderController extends Controller
                         'district_code' => $orderData->location->district_code??null,
                         'ward_code' => $orderData->location->ward_code??null,
                         'address_detail' => $orderData->location->address_detail??null,
-                        'status' => $orderData->location->status,
-                        'is_main' => $orderData->location->is_main,
+                        'status' => $orderData->location->status??null,
+                        'is_main' => $orderData->location->is_main??null,
                         'created_by' => $orderData->location->created_by??null,
                         'created_at' => $orderData->created_at ?
                             Carbon::make($orderData->created_at)->format('d/m/Y H:i') : null,

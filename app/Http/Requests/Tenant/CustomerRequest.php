@@ -40,7 +40,7 @@ class CustomerRequest extends FormRequest
             ],
             "type" => [
                 "in:0,1",
-                "nullable"
+                "required"
             ],
             "name" => [
                 "required",
@@ -69,7 +69,7 @@ class CustomerRequest extends FormRequest
             ],
             "status" => [
                 "in:0,1",
-                "nullable"
+                "required"
             ],
             "province_code" => [
                 "numeric",

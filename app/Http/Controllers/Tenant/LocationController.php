@@ -24,7 +24,7 @@ class LocationController extends Controller
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0',
             'tel' => ['nullable', 'min:10', 'regex:/^(03|05|07|08|09)+([0-9]{8})$/'],
-            'email' => ['nullable','regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
+            'email' => ['nullable', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
         ];
         $message = [
             'name.required' => 'Tên phải được nhập',
@@ -190,10 +190,18 @@ class LocationController extends Controller
     {
         try {
             $location = Location::query()->findOrFail($request->id);
-            $location?->delete();
-            Storage::delete('public/' . $location->image);
-            Inventory::query()->where('location_id', $request->id)->delete();
-            return responseApi('Xoá thành công', true);
+            if ($location) {
+                $variationQuantity = Tenant\VariationQuantity::query()->where('inventory_id', $location->id);
+                if ($variationQuantity->sum('quantity') > 0) {
+                    return responseApi('Cơ sở này đang được sử dụng và còn hàng trong kho', false);
+                } else {
+                    $location?->delete();
+                    Storage::delete('public/' . $location->image);
+                    Inventory::query()->where('location_id', $request->id)->delete();
+                    $variationQuantity->delete();
+                    return responseApi('Xoá thành công', true);
+                }
+            }
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }

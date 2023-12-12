@@ -45,7 +45,7 @@ class CustomerRequest extends FormRequest
             "name" => [
                 "required",
                 "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,name"
+                "unique:App\Models\Tenant\Customer,name"
             ],
             "gender" => [
                 "in:0,1,2",
@@ -58,14 +58,14 @@ class CustomerRequest extends FormRequest
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,email",
+                "unique:App\Models\Tenant\Customer,email",
                 "nullable"
             ],
             "tel" => [
                 "required",
                 "min:10",
-                "unique" => "unique:App\Models\Tenant\Customer,tel",
-                "regex:/^(03|05|07|08|09)+([0-9]{8})$/"
+                "regex:/^(03|05|07|08|09)+([0-9]{8})$/",
+                "unique:App\Models\Tenant\Customer,tel"
             ],
             "status" => [
                 "in:0,1",
@@ -96,35 +96,28 @@ class CustomerRequest extends FormRequest
         switch ($getUrl){
             case "store":
             case "update":
-                $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
+                if($getUrl == "update"){
+                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name".$id);
+                }
 
-                $updateEmail = $getUrl == "update" ? [
-                    $rules["email"],
-                    $rules["email"]["unique"].$id
-                ] :
-                    $rules["email"];
+                if($getUrl == "update"){
+                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email".$id);
+                }
 
-                $updateTel = $getUrl == "update" ? [
-                    $rules["tel"],
-                    $rules["tel"]["unique"].$id
-                ] :
-                    $rules["tel"];
+                if($getUrl == "update"){
+                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel".$id);
+                }
 
                 return [
-                    "id" => $updateId,
+                    "id" => $getUrl == "update" ? $rules["id"] : [],
                     "group_customer_id" => $rules["group_customer_id"],
                     "type" => $rules["type"],
-                    "name" => $updateName,
+                    "name" => $rules["name"],
                     "gender" => $rules["gender"],
                     "dob" => $rules["dob"],
-                    "email" => $updateEmail,
-                    "tel" => $updateTel,
+                    "email" => $rules["email"],
+                    "tel" => $rules["tel"],
                     "status" => $rules["status"],
                     "province_code" => $rules["province_code"],
                     "district_code" => $rules["district_code"],
@@ -143,15 +136,28 @@ class CustomerRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Giá trị không hợp lệ!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!",
-            "min" => "Bạn chưa đủ ký tự cho phép!",
-            "date" => "Sai định dạng ngày!",
-            "regex" => "Sai định dạng!",
-            "numeric" => "Chỉ được nhập số!"
+            "id.required" => "Mã khách hàng không được để trống!",
+            "id.exists" => "Mã khách hàng không tồn tại!",
+            "group_customer_id.exists" => "Nhóm khách hàng không tồn tại!",
+            "type.in" => "Giá trị loại khách hàng không hợp lệ!",
+            "name.required" => "Tên khách hàng không được để trống!",
+            "name.max" => "Tên khách hàng đã vượt quá ký tự cho phép!",
+            "name.unique" => "Tên khách hàng đã tồn tại!",
+            "gender.in" => "Giới tính không hợp lệ!",
+            "dob.date" => "Sai định dạng ngày!",
+            "email.regex" => "Email sai định dạng!",
+            "email.max" => "Email đã vượt quá ký tự cho phép!",
+            "email.unique" => "Email đã tồn tại!",
+            "tel.required" => "Số điện thoại không được để trống!",
+            "tel.min" => "Số điện thoại sai định dạng!",
+            "tel.regex" => "Số điện thoại sai định dạng!",
+            "tel.unique" => "Số điện thoại đã tồn tại!",
+            "status.in" => "Trạng thái không hợp lệ!",
+            "province_code.numeric" => "Tỉnh chỉ được nhập số!",
+            "district_code.numeric" => "Quận/huyện chỉ được nhập số!",
+            "ward_code.numeric" => "Xã/phường Chỉ được nhập số!",
+            "address_detail.max" => "Địa chỉ cụ thể đã vượt quá ký tự cho phép!",
+            "note.max" => "Ghi chú đã vượt quá ký tự cho phép!",
         ];
     }
 }

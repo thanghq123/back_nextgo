@@ -83,7 +83,7 @@ class CustomerController extends Controller
     public function getCustomerWithStatus()
     {
         try {
-            $query = Customer::with(['province', 'district', 'commune'])->whereStatus(1)->paginate(10);
+            $query = Customer::query()->whereStatus(1)->paginate(10);
             $return = $query->map(function ($data) {
                 return [
                     'id' => $data->id,
@@ -120,11 +120,11 @@ class CustomerController extends Controller
     public function store()
     {
         try {
-            $this->model::create($this->request->all());
+            $customer = $this->model::create($this->request->all());
             if ($this->request->statusCreate == 1) {
                 return $this->list();
             }else{
-                return responseApi("Tạo thành công!", true);
+                return responseApi($customer, true);
             }
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);

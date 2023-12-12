@@ -28,7 +28,7 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         $getUrl = Str::afterLast($this->url(), '/');
-        $id = ",".$this->id;
+        $id = "," . $this->id;
         $rules = [
             "id" => [
                 "required",
@@ -44,8 +44,7 @@ class CustomerRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique:App\Models\Tenant\Customer,name"
+                "max:255"
             ],
             "gender" => [
                 "in:0,1,2",
@@ -58,14 +57,12 @@ class CustomerRequest extends FormRequest
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique:App\Models\Tenant\Customer,email",
                 "nullable"
             ],
             "tel" => [
                 "required",
                 "min:10",
                 "regex:/^(03|05|07|08|09)+([0-9]{8})$/",
-                "unique:App\Models\Tenant\Customer,tel"
             ],
             "status" => [
                 "in:0,1",
@@ -93,21 +90,29 @@ class CustomerRequest extends FormRequest
             ]
         ];
 
-        switch ($getUrl){
+        switch ($getUrl) {
             case "store":
             case "update":
 
-                if($getUrl == "update"){
-                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name".$id);
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name");
                 }
 
-                if($getUrl == "update"){
-                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email".$id);
+                if ($getUrl == "update") {
+                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email" . $id);
+                } else {
+                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email");
                 }
 
-                if($getUrl == "update"){
-                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel".$id);
+
+                if ($getUrl == "update") {
+                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel" . $id);
+                } else {
+                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel");
                 }
+
 
                 return [
                     "id" => $getUrl == "update" ? $rules["id"] : [],

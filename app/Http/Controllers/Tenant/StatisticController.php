@@ -46,8 +46,8 @@ class StatisticController extends Controller
             $data = $productData->getCollection()->transform(function ($productData){
                 return [
                     'variation_id' => $productData->variation_id,
-                    'sku' => $productData->variant->sku,
-                    'variation_name' => $productData->variant->variation_name,
+                    'sku' => $productData->variant->sku??null,
+                    'variation_name' => $productData->variant->variation_name??null,
                     'total_quantity' => intval($productData->total_quantity),
                     'total_price_sell' => $productData->total_price_sell,
                     'total_price_import' => $productData->total_price_import

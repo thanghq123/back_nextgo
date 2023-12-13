@@ -55,7 +55,6 @@ class UserRequest extends FormRequest
                 "required"
             ],
             "password" => [
-                "required",
                 "min:6",
                 "max:255"
             ],
@@ -68,23 +67,16 @@ class UserRequest extends FormRequest
         switch ($getUrl) {
             case "store":
             case "update":
-
                 if ($getUrl == "update") {
                     array_push($rules['name'], "unique:App\Models\Tenant\User,name" . $id);
+                    array_push($rules['email'], "unique:App\Models\Tenant\User,email" . $id);
+                    array_push($rules['tel'], "unique:App\Models\Tenant\User,tel" . $id);
+                    array_push($rules['password'], "nullable");
                 } else {
                     array_push($rules['name'], "unique:App\Models\Tenant\User,name");
-                }
-
-                if ($getUrl == "update") {
-                    array_push($rules['email'], "unique:App\Models\Tenant\User,email" . $id);
-                } else {
                     array_push($rules['email'], "unique:App\Models\Tenant\User,email");
-                }
-
-                if ($getUrl == "update") {
-                    array_push($rules['tel'], "unique:App\Models\Tenant\User,tel" . $id);
-                } else {
                     array_push($rules['tel'], "unique:App\Models\Tenant\User,tel");
+                    array_push($rules['password'], "required");
                 }
                 return [
                     "id" => $getUrl == "update" ? $rules["id"] : [],

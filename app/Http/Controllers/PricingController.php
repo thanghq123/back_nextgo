@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 use App\Models\Pricing;
 use App\Http\Requests\PricingRequest;
@@ -86,6 +87,26 @@ class PricingController extends Controller
                 ])
                 ->get();
             return responseApi($pricings, true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+
+    public function getByTenant(Request $request)
+    {
+        try {
+            $tenant = Tenant::current();
+            $pricing = $this->model->query()
+                ->select([
+                    'id',
+                    'name',
+                    'max_locations',
+                    'max_users',
+                    'price',
+                ])
+                ->where('id', $tenant->pricing_id)
+                ->first();
+            return responseApi($pricing, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

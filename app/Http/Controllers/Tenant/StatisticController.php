@@ -97,13 +97,13 @@ class StatisticController extends Controller
 
             $data = $customerData->map(function ($customerData){
                 return [
-                    'customer_id' => $customerData->customer_id,
+                    'customer_id' => $customerData->customer_id??null,
                     'total_bill' => $this->orderModel::query()->countBillCustomer($customerData->customer_id),
                     'total_product' => intval($customerData->total_product),
                     'total_price' => $customerData->total_price,
-                    'name' => $customerData->customer->name,
-                    'email' => $customerData->customer->email,
-                    'tel' => $customerData->customer->tel
+                    'name' => $customerData->customer->name??'Khách hàng đã bị xóa',
+                    'email' => $customerData->customer->email??null,
+                    'tel' => $customerData->customer->tel??null
                 ];
             });
 

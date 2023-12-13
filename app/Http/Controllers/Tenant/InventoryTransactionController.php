@@ -68,14 +68,14 @@ class InventoryTransactionController extends Controller
         try {
             $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
                 ->where('inventory_transaction_id', 'like', "%".$request->q."%")
-                ->orderBy('created_at','desc')->paginate(10);
+                ->orderBy('created_at','desc')->get();
             if ($request->has('trans_type') && $request->trans_type != '') {
                 $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')
                     ->where('inventory_transaction_id', 'like', "%".$request->q."%")
                     ->where('trans_type',$request->trans_type)
                     ->orderBy('created_at','desc')->paginate(10);
             }
-            $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
+            $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "inventory_transaction_id" => $inventoryTransactionData->inventory_transaction_id,
                     "partner_name" => $inventoryTransactionData->partner->name??null,
@@ -86,7 +86,7 @@ class InventoryTransactionController extends Controller
                     "updated_at" => Carbon::make($inventoryTransactionData->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi(paginateCustom($data,$inventoryTransactionData), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -341,8 +341,8 @@ class InventoryTransactionController extends Controller
         try {
             $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')
                 ->where('inventory_transaction_id', 'like', "%".$request->q."%")
-                ->where('trans_type', 2)->paginate(10);
-            $response = $listTransfer->getCollection()->transform(function ($listTransfer) {
+                ->where('trans_type', 2)->get();
+            $response = $listTransfer->map(function ($listTransfer) {
                 return [
                     "inventory_transaction_id" => $listTransfer->inventory_transaction_id,
                     "inventory_id_in" => $listTransfer->inventory->id,
@@ -363,7 +363,7 @@ class InventoryTransactionController extends Controller
                     "updated_at" => Carbon::make($listTransfer->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi(paginateCustom($response, $listTransfer), true);
+            return responseApi($response, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

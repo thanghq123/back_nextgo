@@ -23,7 +23,7 @@ class GroupCustomerController extends Controller
                 ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
                 ->where('type',0)
-                ->paginate(10), true);
+                ->get(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

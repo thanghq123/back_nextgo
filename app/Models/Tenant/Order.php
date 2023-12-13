@@ -171,15 +171,15 @@ class Order extends Model
 
         switch ($option[0]){
             case 'today':
-                return $query->whereDate('created_at', Carbon::today())->paginate(10);
+                return $query->whereDate('created_at', Carbon::today())->get();
             case 'yesterday':
-                return $query->whereDate('created_at', Carbon::yesterday())->paginate(10);
+                return $query->whereDate('created_at', Carbon::yesterday())->get();
             case 'sevenDays':
-                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->paginate(10);
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->get();
             case 'thirtyDays':
-                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->paginate(10);
+                return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->get();
             case 'fromTo':
-                return $query->whereBetween('created_at', [$option[1], $option[2]])->paginate(10);
+                return $query->whereBetween('created_at', [$option[1], $option[2]])->get();
             default:
                 return responseApi("Lỗi", false);
         }

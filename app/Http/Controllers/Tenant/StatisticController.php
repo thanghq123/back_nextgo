@@ -43,7 +43,7 @@ class StatisticController extends Controller
             ],
                 $this->request->location_id);
 
-            $data = $productData->getCollection()->transform(function ($productData){
+            $data = $productData->map(function ($productData){
                 return [
                     'variation_id' => $productData->variation_id,
                     'sku' => $productData->variant->sku??null,
@@ -54,7 +54,7 @@ class StatisticController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data, $productData), true);
+            return responseApi($data, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);
@@ -95,7 +95,7 @@ class StatisticController extends Controller
             ],
                 $this->request->location_id);
 
-            $data = $customerData->getCollection()->transform(function ($customerData){
+            $data = $customerData->map(function ($customerData){
                 return [
                     'customer_id' => $customerData->customer_id,
                     'total_bill' => $this->orderModel::query()->countBillCustomer($customerData->customer_id),
@@ -107,7 +107,7 @@ class StatisticController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data, $customerData), true);
+            return responseApi($data, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

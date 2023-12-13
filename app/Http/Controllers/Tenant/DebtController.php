@@ -34,12 +34,12 @@ class DebtController extends Controller
                 ->whereHas('partner', function ($query){
                     $query->where('name', 'like', "%".$this->request->q."%");
                 })
-                ->paginate(10);
+                ->get();
 
             if ($request->has('type')) {
                 $debt = $this->model::with('partner')->where('type', $request->type)->paginate(10);
             }
-            $data = $debt->getCollection()->transform(function ($item) {
+            $data = $debt->map(function ($item) {
                 return [
                     "id" => $item->id,
                     "partner_name" => $item->partner->name,
@@ -53,7 +53,7 @@ class DebtController extends Controller
                     "status" => $item->status,
                 ];
             });
-            return responseApi(paginateCustom($data, $debt), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

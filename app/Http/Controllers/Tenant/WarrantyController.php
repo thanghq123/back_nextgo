@@ -20,7 +20,7 @@ class WarrantyController extends Controller
             return responseApi($this->model::query()
                 ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
-                ->paginate(10), true);
+                ->get(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

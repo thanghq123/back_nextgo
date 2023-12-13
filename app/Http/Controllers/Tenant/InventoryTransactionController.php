@@ -78,7 +78,7 @@ class InventoryTransactionController extends Controller
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [
                     "inventory_transaction_id" => $inventoryTransactionData->inventory_transaction_id,
-                    "partner_name" => $inventoryTransactionData->partner->name??null,
+                    "partner_name" => $inventoryTransactionData->partner->name??"Đơn chuyển kho",
                     "inventory_name" => $inventoryTransactionData->inventory->name??null,
                     "created_by" => $inventoryTransactionData->createdBy->name,
                     "status" => $inventoryTransactionData->status,
@@ -272,10 +272,10 @@ class InventoryTransactionController extends Controller
         $variationIds = collect($request->inventory_transaction_details)->pluck('variation_id')->toArray();
         $requestedQuantities = collect($request->inventory_transaction_details)->pluck('quantity')->toArray();
         if ($request->inventory_id_in == $request->inventory_id_out) return responseApi("Kho xuất và kho nhập không được trùng nhau!", false);
-        $filteredCollection = $requestedQuantities->filter(function($value) {
+        $filteredQuantity = array_filter($requestedQuantities, function($value) {
             return $value <= 0;
         });
-        if ($filteredCollection->isNotEmpty()) return responseApi("Số lượng phải lớn hơn 0!", false);
+        if (!empty($filteredQuantity)) return responseApi("Số lượng phải lớn hơn 0!", false);
         $currentQuantities = $this->variationQuantityModel::where('inventory_id', $request->inventory_id_out)
             ->whereIn('variation_id', $variationIds)
             ->get()

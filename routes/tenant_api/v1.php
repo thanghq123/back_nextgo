@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PricingController;
 use App\Http\Controllers\Tenant\Auth\AuthController;
 use App\Http\Controllers\Tenant\PrintedFormController;
 use App\Http\Controllers\Tenant\BrandController;
@@ -53,7 +54,7 @@ Route::get('expired', function () {
 })->name('tenant.expired');
 
 
-Route::middleware(['tenant', 'check_expired_tenant','auth:sanctum'])->group(function () {
+Route::middleware(['tenant', 'check_expired_tenant', 'auth:sanctum'])->group(function () {
     Route::post('/', function (Request $request) {
     });
     Route::post('get-customer', [CustomerController::class, 'getListCustomer']);
@@ -204,15 +205,16 @@ Route::middleware(['tenant', 'check_expired_tenant','auth:sanctum'])->group(func
         Route::post('customers', [StatisticController::class, 'customers'])->name('customers');
     });
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::prefix('user')->name('user.')->middleware(['role:super-admin|admin'])->group(function () {
-            Route::post('/', [UserController::class, 'list'])->name('list');
-            Route::post('store', [UserController::class, 'store'])->name('store');
-            Route::post('show', [UserController::class, 'show'])->name('show');
-            Route::post('update', [UserController::class, 'update'])->name('update');
-            Route::post('delete', [UserController::class, 'delete'])->name('delete');
-        });
+    Route::post('pricings', [PricingController::class, 'getByTenant'])->name('pricing.get-by-tenant');
 
-        Route::post('roles', [RoleController::class, 'list'])->name('roles.list');
+    Route::prefix('user')->name('user.')->middleware(['role:super-admin|admin'])->group(function () {
+        Route::post('/', [UserController::class, 'list'])->name('list');
+        Route::post('store', [UserController::class, 'store'])->name('store');
+        Route::post('show', [UserController::class, 'show'])->name('show');
+        Route::post('update', [UserController::class, 'update'])->name('update');
+        Route::post('delete', [UserController::class, 'delete'])->name('delete');
     });
+
+    Route::post('roles', [RoleController::class, 'list'])->name('roles.list');
+
 });

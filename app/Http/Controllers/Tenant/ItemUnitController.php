@@ -21,7 +21,7 @@ class ItemUnitController extends Controller
         try {
             return responseApi($this->model::query()
                 ->where('name', 'like', "%".$this->request->q."%")
-                ->paginate(10), true);
+                ->get(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

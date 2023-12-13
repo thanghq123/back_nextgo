@@ -20,11 +20,11 @@ class VariationQuantityController extends Controller
     public function getVariationQuantity(Request $request)
     {
         try {
-            $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->paginate(10);
+            $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->get();
             if ($request->has('inventory_id') && $request->inventory_id!="") {
-                $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->where('inventory_id', $request->inventory_id)->paginate(10);
+                $data = VariationQuantity::with(['variation', 'inventory:id,name', 'batch:id,code'])->where('inventory_id', $request->inventory_id)->get();
             }
-            $result = $data->getCollection()->transform(function ($data) {
+            $result = $data->map(function ($data) {
                 return [
                     'id' => $data->id,
                     'inventory_id' => $data->inventory_id??null,
@@ -45,7 +45,7 @@ class VariationQuantityController extends Controller
                     'updated_at' => Carbon::make($data->updated_at)->format('Y-m-d'),
                 ];
             });
-            return responseApi(paginateCustom($result,$data), true);
+            return responseApi($result, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }

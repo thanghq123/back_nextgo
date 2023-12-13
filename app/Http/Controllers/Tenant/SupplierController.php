@@ -23,9 +23,9 @@ class SupplierController extends Controller
                 ->where('name', 'like', "%".$this->request->q."%")
                 ->where('type', 1)
                 ->orderBy('id', 'desc')
-                ->paginate(10);
+                ->get();
 
-            $data = $supplierData->getCollection()->map(function ($supplierData){
+            $data = $supplierData->map(function ($supplierData){
                 return [
                     'id' => $supplierData->id,
                     'group_customer_id' => $supplierData->group_customer_id??null,
@@ -47,7 +47,7 @@ class SupplierController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data,$supplierData), true);
+            return responseApi($data, true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

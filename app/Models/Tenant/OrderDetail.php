@@ -48,18 +48,18 @@ class OrderDetail extends Model
 
         switch ($option[0]){
             case 'today':
-                return $query->whereDate('created_at', Carbon::today())->groupBy('variation_id')->paginate(10);
+                return $query->whereDate('created_at', Carbon::today())->groupBy('variation_id')->get();
             case 'yesterday':
-                return $query->whereDate('created_at', Carbon::yesterday())->groupBy('variation_id')->paginate(10);
+                return $query->whereDate('created_at', Carbon::yesterday())->groupBy('variation_id')->get();
             case 'sevenDays':
                 return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))->groupBy('variation_id')
-                    ->paginate(10);
+                    ->get();
             case 'thirtyDays':
                 return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->groupBy('variation_id')
-                    ->paginate(10);
+                    ->get();
             case 'fromTo':
                 return $query->whereBetween('created_at', [$option[1], $option[2]])->groupBy('variation_id')
-                    ->paginate(10);
+                    ->get();
             default:
                 return responseApi("Lỗi", false);
         }

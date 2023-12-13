@@ -41,9 +41,9 @@ class OrderController extends Controller
                 'payments'
             ])
                 ->where('id', 'like', "%".$this->request->q."%")
-                ->orderBy('id', 'desc')->paginate(10);
+                ->orderBy('id', 'desc')->get();
 
-            $data = $orderData->getCollection()->transform(function ($orderData) {
+            $data = $orderData->map(function ($orderData) {
                 return [
                     'id' => $orderData->id,
                     'location_id' => $orderData->location_id,
@@ -179,7 +179,7 @@ class OrderController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data, $orderData), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

@@ -24,8 +24,8 @@ class CustomerController extends Controller
                 ->where('type', '<>', 1)
                 ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id', 'desc')
-                ->paginate(10);
-            $data = $customerData->getCollection()->map(function ($customerData) {
+                ->get();
+            $data = $customerData->map(function ($customerData) {
                 return [
                     'id' => $customerData->id,
                     'group_customer_id' => $customerData->group_customer_id ?? null,
@@ -47,7 +47,7 @@ class CustomerController extends Controller
                 ];
             });
 
-            return responseApi(paginateCustom($data,$customerData), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -62,6 +62,7 @@ class CustomerController extends Controller
                     'id' => $data->id,
                     'name' => $data->name,
                     'tel' => $data->tel,
+                    'type'=> $data->type,
                     'name_tel' => $data->name . ' - ' . $data->tel,
                     'email' => $data->email,
                     'status' => $data->status,
@@ -79,8 +80,8 @@ class CustomerController extends Controller
     public function getCustomerWithStatus()
     {
         try {
-            $query = Customer::query()->whereStatus(1)->paginate(10);
-            $data = $query->getCollection()->map(function ($data) {
+            $query = Customer::query()->whereStatus(1)->get();
+            $data = $query->map(function ($data) {
                 return [
                     'id' => $data->id,
                     'name' => $data->name,
@@ -92,7 +93,7 @@ class CustomerController extends Controller
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi(paginateCustom($data,$query), true);
+            return responseApi($data, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }

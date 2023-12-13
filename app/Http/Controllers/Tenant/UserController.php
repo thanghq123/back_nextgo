@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Tenant\UserRequest;
 
 class UserController extends Controller
 {
 
     public function __construct(
-        private User $model,
+        private User          $model,
+        protected UserRequest $request
     )
     {
     }
@@ -33,81 +34,68 @@ class UserController extends Controller
         }
     }
 
-    public function show(Request $request)
+    public function show()
     {
         try {
-            return responseApi($this->model::with('roles')->find($request->id), true);
+            return responseApi($this->model::with('roles')->find($this->request->id), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => [
-                'required',
-                'email',
-                'unique:App\Models\Tenant\User,email'
-            ],
-            'password' => 'required',
-            'location_id' => 'required',
-            'role_id' => 'required'
-        ]);
-        if ($validator->fails()) return responseApi($validator->errors());
-        $role = Role::query()->findOrFail($request->role_id);
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->email_verified_at = now();
-        $user->password = password_hash($request->password, PASSWORD_DEFAULT);
-        $user->location_id = $request->location_id;
-        $user->username = !$request->username ? null : $request->username;
-        $user->tel = !$request->tel ? null : $request->tel;
-        $user->status = 1;
-        $user->created_by = $request->user()->id ?? null;
-        $user->save();
-        $user->syncRoles($role->name);
-        return responseApi('Tạo tài khoản admin thành công', true);
+        try {
+            $user = new User();
+            $user->name = $this->request->name;
+            $user->email = $this->request->email;
+            $user->email_verified_at = now();
+            $user->password = password_hash($this->request->password, PASSWORD_DEFAULT);
+            $user->location_id = $this->request->location_id;
+            $user->username = !$this->request->username ? null : $this->request->username;
+            $user->tel = !$this->request->tel ? null : $this->request->tel;
+            $user->status = 1;
+            $user->created_by = $this->request->user()->id ?? null;
+            $user->save();
+            $user->roles()->attach($this->request->role_id);
+            return responseApi('Tạo tài khoản admin thành công', true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
     }
 
-    public function update(Request $request)
+    public function update()
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => [
-                'required',
-                'email',
-                'unique:App\Models\Tenant\User,email,' . $request->id
-            ],
-            'password' => 'nullable',
-            'location_id' => 'required',
-        ]);
-        if ($validator->fails()) return responseApi($validator->errors());
-        $user = $this->model::query()->findOrFail($request->id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->email_verified_at = now();
-        if ($request->password) {
-            $user->password = password_hash($request->password, PASSWORD_DEFAULT);
+        try {
+            $user = $this->model::query()->findOrFail($this->request->id);
+            $user->name = $this->request->name;
+            $user->email = $this->request->email;
+            $user->email_verified_at = now();
+            if ($this->request->password) {
+                $user->password = password_hash($this->request->password, PASSWORD_DEFAULT);
+            }
+            $user->location_id = $this->request->location_id;
+            $user->username = !$this->request->username ? null : $this->request->username;
+            $user->tel = !$this->request->tel ? null : $this->request->tel;
+            $user->status = !$this->request->status ? 0 : $this->request->status;
+            $user->save();
+            if (isset($this->request->role_id)) {
+                $user->roles()->attach($this->request->role_id);
+            }
+            return responseApi('Cập nhật tài khoản thành công', true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
         }
-        $user->location_id = $request->location_id;
-        $user->username = !$request->username ? null : $request->username;
-        $user->tel = !$request->tel ? null : $request->tel;
-        $user->status = !$request->status ? 0 : $request->status;
-        $user->save();
-        if (isset($request->role_id)) {
-            $role = Role::query()->findOrFail($request->role_id);
-            $user->syncRoles($role->name);
-        }
-        return responseApi('Cập nhật tài khoản thành công', true);
     }
 
-    public function delete(Request $request)
+    public function delete()
     {
-        $user = $this->model::query()->findOrFail($request->id);
-        $user?->removeRole($user->getRoleNames()[0])->delete();
-        return responseApi('Xóa tài khoản thành công', true);
+        try {
+            $user = $this->model::query()->findOrFail($this->request->id);
+            $user?->removeRole($user->getRoleNames()[0])->delete();
+            return responseApi('Xóa tài khoản thành công', true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
     }
 }

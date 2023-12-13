@@ -47,7 +47,7 @@ class StatisticController extends Controller
                 return [
                     'variation_id' => $productData->variation_id,
                     'sku' => $productData->variant->sku??null,
-                    'variation_name' => $productData->variant->variation_name??null,
+                    'variation_name' => $productData->variant->variation_name??'Sản phẩm không tồn tại hoặc đã bị xóa',
                     'total_quantity' => intval($productData->total_quantity),
                     'total_price_sell' => $productData->total_price_sell,
                     'total_price_import' => $productData->total_price_import

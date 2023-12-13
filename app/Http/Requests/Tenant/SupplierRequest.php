@@ -33,7 +33,7 @@ class SupplierRequest extends FormRequest
                 "required",
                 "exists:App\Models\Tenant\Customer,id"
             ],
-            "group_supplier_id" => [
+            "group_customer_id" => [
                 "exists:App\Models\Tenant\GroupCustomer,id",
                 "nullable"
             ],
@@ -43,19 +43,16 @@ class SupplierRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,name"
+                "max:255"
             ],
             "email" => [
                 "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,email",
                 "nullable"
             ],
             "tel" => [
                 "required",
                 "max:255",
-                "unique" => "unique:App\Models\Tenant\Customer,tel",
                 "regex:/^(03|05|07|08|09)[0-9]{7,10}$/"
             ],
             "status" => [
@@ -89,31 +86,32 @@ class SupplierRequest extends FormRequest
             case "update":
                 $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Customer,name");
+                }
 
-                $updateEmail = $getUrl == "update" ? [
-                    $rules['email'],
-                    $rules['email']['unique'].$id
-                ] :
-                    $rules["email"];
+                if ($getUrl == "update") {
+                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email" . $id);
+                } else {
+                    array_push($rules['email'], "unique:App\Models\Tenant\Customer,email");
+                }
 
-                $updateTel = $getUrl == "update" ? [
-                    $rules['tel'],
-                    $rules['tel']['unique'].$id
-                ] :
-                    $rules["tel"];
+
+                if ($getUrl == "update") {
+                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel" . $id);
+                } else {
+                    array_push($rules['tel'], "unique:App\Models\Tenant\Customer,tel");
+                }
 
                 return [
                     "id" => $updateId,
-                    "group_supplier_id" => $rules['group_supplier_id'],
+                    "group_customer_id" => $rules['group_customer_id'],
                     "type" => $rules['type'],
-                    "name" => $updateName,
-                    "email" => $updateEmail,
-                    "tel" => $updateTel,
+                    "name" => $rules['name'],
+                    "email" => $rules['email'],
+                    "tel" => $rules['tel'],
                     "status" => $rules['status'],
                     "province_code" => $rules['province_code'],
                     "district_code" => $rules['district_code'],
@@ -132,13 +130,26 @@ class SupplierRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Dữ liệu nhập vào chỉ được chọn 0 và 1!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!",
-            "regex" => "Sai định dạng!",
-            "numeric" => "Chỉ được nhập số!"
+            "id.required" => "Mã nhà cung cấp không được để trống!",
+            "id.exists" => "Mã nhà cung cấp không tồn tại!",
+            "group_customer_id.exists" => "Nhóm nhà cung cấp không tồn tại!",
+            "type.in" => "Giá trị loại nhà cung cấp không hợp lệ!",
+            "name.required" => "Tên nhà cung cấp không được để trống!",
+            "name.max" => "Tên nhà cung cấp đã vượt quá ký tự cho phép!",
+            "name.unique" => "Tên nhà cung cấp đã tồn tại!",
+            "email.regex" => "Email sai định dạng!",
+            "email.max" => "Email đã vượt quá ký tự cho phép!",
+            "email.unique" => "Email đã tồn tại!",
+            "tel.required" => "Số điện thoại không được để trống!",
+            "tel.min" => "Số điện thoại sai định dạng!",
+            "tel.regex" => "Số điện thoại sai định dạng!",
+            "tel.unique" => "Số điện thoại đã tồn tại!",
+            "status.in" => "Trạng thái không hợp lệ!",
+            "province_code.numeric" => "Tỉnh chỉ được nhập số!",
+            "district_code.numeric" => "Quận/huyện chỉ được nhập số!",
+            "ward_code.numeric" => "Xã/phường Chỉ được nhập số!",
+            "address_detail.max" => "Địa chỉ cụ thể đã vượt quá ký tự cho phép!",
+            "note.max" => "Ghi chú đã vượt quá ký tự cho phép!",
         ];
     }
 }

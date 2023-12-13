@@ -25,8 +25,7 @@ class PrintedFormRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique" => "unique:App\Models\Tenant\PrintedForm,name"
+                "max:255"
             ],
             "form" => [
                 "required",
@@ -38,21 +37,16 @@ class PrintedFormRequest extends FormRequest
             case "update":
                 $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
-
-                $updateForm = $getUrl == "update" ? [
-                    $rules["form"],
-                ] :
-                    $rules["form"];
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\PrintedForm,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\PrintedForm,name");
+                }
 
                 return [
                     "id" => $updateId,
-                    "name" => $updateName,
-                    "form" => $updateForm
+                    "name" => $rules["name"],
+                    "form" => $rules["form"]
                 ];
             case "show":
             case "delete":
@@ -65,10 +59,12 @@ class PrintedFormRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!"
+            "id.required" => "Mã mẫu in không được để trống!",
+            "id.exists" => "Mã mẫu in không tồn tại!",
+            "name.required" => "Tên mẫu in không được để trống!",
+            "name.unique" => "Tên mẫu in đã tồn tại!",
+            "name.max" => "Tên mẫu in đã vượt quá ký tự cho phép!",
+            "form.required" => "Mẫu in không được để trống!"
         ];
     }
 }

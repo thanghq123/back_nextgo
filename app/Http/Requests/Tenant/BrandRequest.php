@@ -35,8 +35,7 @@ class BrandRequest extends FormRequest
             ],
             "name" => [
                 "required",
-                "max:255",
-                "unique" => "unique:App\Models\Tenant\Brand,name"
+                "max:255"
             ]
         ];
 
@@ -45,15 +44,15 @@ class BrandRequest extends FormRequest
             case "update":
                 $updateId = $getUrl == "update" ? $rules["id"] : [];
 
-                $updateName = $getUrl == "update" ? [
-                    $rules["name"],
-                    $rules["name"]["unique"].$id
-                ] :
-                    $rules["name"];
+                if ($getUrl == "update") {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Brand,name" . $id);
+                } else {
+                    array_push($rules['name'], "unique:App\Models\Tenant\Brand,name");
+                }
 
                 return [
                     "id" => $updateId,
-                    "name" => $updateName,
+                    "name" => $rules["name"],
                 ];
             case "show":
             case "delete":
@@ -66,10 +65,11 @@ class BrandRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!"
+            "id.required" => "Mã thương hiệu không được để trống!",
+            "id.exists" => "Thương hiệu không tồn tại!",
+            "name.required" => "Tên thương hiệu không được để trống!",
+            "name.unique" => "Tên thương hiệu đã tồn tại!",
+            "name.max" => "Tên thương hiệu đã vượt quá ký tự cho phép!"
         ];
     }
 }

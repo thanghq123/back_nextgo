@@ -184,10 +184,37 @@ class ProductRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "in" => "Giá trị không hợp lệ!",
-            "max" => "Bạn đã vượt quá ký tự cho phép!"
+            "id.required" => "Mã sản phẩm không được để trống!",
+            "id.exists" => "Mã sản phẩm không tồn tại!",
+            "name.required" => "Tên sản phẩm không được để trống!",
+            "name.max" => "Tên sản phẩm đã vượt quá ký tự cho phép!",
+            "image.max" => "Ảnh sản phẩm đã vượt quá ký tự cho phép!",
+            "weight.max" => "Khối lượng đã vượt quá ký tự cho phép!",
+            "description.max" => "Mô tả đã vượt quá ký tự cho phép!",
+            "manage_type.in" => "Phương thức quản lý sản phẩm không hợp lệ!",
+            "brand_id.exists" => "Mã thương hiệu không tồn tại!",
+            "warranty_id.exists" => "Mã bảo hành không tồn tại!",
+            "item_unit_id.exists" => "Mã đơn vị tính không tồn tại!",
+            "category_id.exists" => "Mã danh mục không tồn tại!",
+            "status.in" => "Trạng thái sản phẩm không hợp lệ!",
+            "attributes.*.id.exists" => "Mã thuộc tính không tồn tại!",
+            "attributes.*.name.required" => "Tên thuộc tính không được để trống!",
+            "attributes.*.name.max" => "Tên thuộc tính đã vượt quá ký tự cho phép!",
+            "attributes.*.attribute_values.required" => "Giá trị của thuộc tính không được để trống!",
+            "attributes.*.attribute_values.*.id.exists" => "Mã giá trị của thuộc tính không tồn tại!",
+            "attributes.*.attribute_values.*.value.required" => "Tên giá trị của thuộc tính không được để trống!",
+            "attributes.*.attribute_values.*.value.max" => "Tên giá trị của thuộc tính đã vượt quá ký tự cho phép!",
+            "variations.*.id.exists" => "Mã phiên bản không tồn tại!",
+            "variations.*.sku.max" => "Sku đã vượt quá ký tự cho phép!",
+            "variations.*.barcode.max" => "Barcode đã vượt quá ký tự cho phép!",
+            "variations.*.variation_name.required" => "Tên phiên bản không được để trống!",
+            "variations.*.variation_name.max" => "Tên phiên bản đã vượt quá ký tự cho phép!",
+            "variations.*.display_name.required" => "Tên hiển thị không được để trống!",
+            "variations.*.display_name.max" => "Tên hiển thị đã vượt quá ký tự cho phép!",
+            "variations.*.image.max" => "Ảnh phiên bản đã vượt quá ký tự cho phép!",
+            "variations.*.price_import.required" => "Giá tiền phiên bản nhập vào không được để trống!",
+            "variations.*.price_export.required" => "Giá tiền phiên bản bán ra không được để trống!",
+            "variations.*.status.required" => "Trạng thái phiên không được để trống!",
         ];
     }
 }

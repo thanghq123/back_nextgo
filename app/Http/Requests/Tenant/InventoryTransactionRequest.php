@@ -97,11 +97,23 @@ class InventoryTransactionRequest extends FormRequest
     public function messages()
     {
         return [
-            "required" => "Không được để trống!",
-            "exists" => "Dữ liệu không tồn tại!",
-            "unique" => "Dữ liệu đã tồn tại!",
-            "gt" => "Bạn chưa đủ số lượng cho phép!",
-            "numeric" => "Bạn phải nhập số!",
+            "inventory_id.required" => "Mã kho Không được để trống!",
+            "inventory_id_out.required" => "Mã kho xuất Không được để trống!",
+            "partner_id.required" => "Mã đối tác Không được để trống!",
+            "partner_type.required" => "Loại đối tác Không được để trống!",
+            "reason.required" => "Lý do Không được để trống!",
+            "created_by.required" => "Mã nhân viên Không được để trống!",
+            "inventory_transaction_details.required" => "Chi tiết giao dịch hàng tồn kho Không được để trống!",
+            "inventory_transaction_details.*.variation_id.required" => "Mã phiên bản Không được để trống!",
+            "inventory_transaction_details.*.price.required" => "Giá tiền Không được để trống!",
+            "inventory_transaction_details.*.price.gt" => "Giá tiền phải lớn hơn 0!",
+            "inventory_transaction_details.*.price.numeric" => "Giá tiền chỉ được nhập số!",
+            "inventory_transaction_details.*.price_type.required" => "Loại giá không được để trống!",
+            "inventory_transaction_details.*.price_type.in" => "Loại giá không hợp lệ!",
+            "inventory_transaction_details.*.quantity.required" => "Số lượng Không được để trống!",
+            "inventory_transaction_details.*.quantity.gt" => "Giá tiền phải lớn hơn 0!",
+            "inventory_transaction_details.*.quantity.numeric" => "Giá tiền chỉ được nhập số!",
+            "inventory_transaction_details.*.quantity.integer" => "Giá tiền phải là số nguyên!",
         ];
     }
 }

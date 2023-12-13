@@ -228,7 +228,7 @@ class InventoryTransactionController extends Controller
                         $query->update(["status" => 0]);
                         return responseApi("Huỷ thành công!", true);
                     } else {
-                        if ($query->whereIn('trans_type',[1,2])->status != 0) {
+                        if ($query->where('trans_type', 1)->status != 0 && $query->where('trans_type', 2)->status != 0) {
                             return responseApi("Đơn nhập kho không thể huỷ khi đơn chuyển chưa hoàn thành!", false);
                         }
                     }

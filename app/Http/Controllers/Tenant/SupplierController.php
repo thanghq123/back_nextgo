@@ -22,9 +22,9 @@ class SupplierController extends Controller
             }])
                 ->where('type', 1)
                 ->orderBy('id', 'desc')
-                ->get();
+                ->paginate(10);
 
-            $data = $supplierData->map(function ($supplierData){
+            $data = $supplierData->getCollection()->map(function ($supplierData){
                 return [
                     'id' => $supplierData->id,
                     'group_customer_id' => $supplierData->group_customer_id??null,
@@ -46,7 +46,7 @@ class SupplierController extends Controller
                 ];
             });
 
-            return responseApi($data, true);
+            return responseApi(paginateCustom($data,$supplierData), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

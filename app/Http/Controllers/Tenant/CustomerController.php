@@ -9,7 +9,7 @@ use App\Models\Tenant\Customer;
 class CustomerController extends Controller
 {
     public function __construct(
-        private Customer $model,
+        private Customer        $model,
         private CustomerRequest $request
     )
     {
@@ -21,32 +21,32 @@ class CustomerController extends Controller
             $customerData = $this->model::with(['group_customer' => function ($query) {
                 $query->where('type', 0);
             }])
-                ->where('type', '<>',1)
+                ->where('type', '<>', 1)
                 ->orderBy('id', 'desc')
-                ->get();
-            $data = $customerData->map(function ($customerData){
+                ->paginate(10);
+            $data = $customerData->getCollection()->map(function ($customerData) {
                 return [
                     'id' => $customerData->id,
-                    'group_customer_id' => $customerData->group_customer_id??null,
-                    'group_customer_name' => $customerData->group_customer->name??null,
+                    'group_customer_id' => $customerData->group_customer_id ?? null,
+                    'group_customer_name' => $customerData->group_customer->name ?? null,
                     'type' => $customerData->type,
                     'name' => $customerData->name,
-                    'gender' => $customerData->gender??null,
-                    'dob' => $customerData->dob??null,
-                    'email' => $customerData->email??null,
-                    'tel' => $customerData->tel??null,
+                    'gender' => $customerData->gender ?? null,
+                    'dob' => $customerData->dob ?? null,
+                    'email' => $customerData->email ?? null,
+                    'tel' => $customerData->tel ?? null,
                     'status' => $customerData->status,
-                    'province_code' => $customerData->province_code??null,
-                    'district_code' => $customerData->district_code??null,
-                    'ward_code' => $customerData->ward_code??null,
-                    'address_detail' => $customerData->address_detail??null,
-                    'note' => $customerData->note??null,
+                    'province_code' => $customerData->province_code ?? null,
+                    'district_code' => $customerData->district_code ?? null,
+                    'ward_code' => $customerData->ward_code ?? null,
+                    'address_detail' => $customerData->address_detail ?? null,
+                    'note' => $customerData->note ?? null,
                     'created_at' => $customerData->created_at,
                     'updated_at' => $customerData->updated_at,
                 ];
             });
 
-            return responseApi($data, true);
+            return responseApi(paginateCustom($data,$customerData), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -55,20 +55,15 @@ class CustomerController extends Controller
     public function getListCustomer()
     {
         try {
-            if ($this->request->type) {
-                $query = Customer::with(['province', 'district', 'commune'])->whereType($this->request->type)->paginate(10);
-            } else {
-                $query = Customer::with(['province', 'district', 'commune'])->paginate(10);
-            }
+            $query = Customer::query()->get();
             $return = $query->map(function ($data) {
                 return [
                     'id' => $data->id,
                     'name' => $data->name,
                     'tel' => $data->tel,
-                    'name_tel' => $data->name . ' - ' .$data->tel,
+                    'name_tel' => $data->name . ' - ' . $data->tel,
                     'email' => $data->email,
                     'status' => $data->status,
-                    'customer_type' => $data->customer_type,
                     'address' => $data->address_detail,
                     'created_at' => $data->created_at->format('H:i d-m-Y'),
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
@@ -84,7 +79,7 @@ class CustomerController extends Controller
     {
         try {
             $query = Customer::query()->whereStatus(1)->paginate(10);
-            $return = $query->map(function ($data) {
+            $data = $query->getCollection()->map(function ($data) {
                 return [
                     'id' => $data->id,
                     'name' => $data->name,
@@ -96,7 +91,7 @@ class CustomerController extends Controller
                     'updated_at' => $data->created_at->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi($return, true);
+            return responseApi(paginateCustom($data,$query), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());
         }
@@ -123,7 +118,7 @@ class CustomerController extends Controller
             $customer = $this->model::create($this->request->all());
             if ($this->request->statusCreate == 1) {
                 return $this->list();
-            }else{
+            } else {
                 return responseApi($customer, true);
             }
         } catch (\Throwable $throwable) {
@@ -139,20 +134,20 @@ class CustomerController extends Controller
             $data = $customerData->map(function ($customerData) {
                 return [
                     'id' => $customerData->id,
-                    'group_customer_id' => $customerData->group_customer_id??null,
-                    'group_customer_name' => $customerData->group_customer?->name??null,
+                    'group_customer_id' => $customerData->group_customer_id ?? null,
+                    'group_customer_name' => $customerData->group_customer?->name ?? null,
                     'type' => $customerData->type,
                     'name' => $customerData->name,
-                    'gender' => $customerData->gender??null,
-                    'dob' => $customerData->dob??null,
-                    'email' => $customerData->email??null,
-                    'tel' => $customerData->tel??null,
+                    'gender' => $customerData->gender ?? null,
+                    'dob' => $customerData->dob ?? null,
+                    'email' => $customerData->email ?? null,
+                    'tel' => $customerData->tel ?? null,
                     'status' => $customerData->status,
-                    'province_code' => $customerData->province_code??null,
-                    'district_code' => $customerData->district_code??null,
-                    'ward_code' => $customerData->ward_code??null,
-                    'address_detail' => $customerData->address_detail??null,
-                    'note' => $customerData->note??null,
+                    'province_code' => $customerData->province_code ?? null,
+                    'district_code' => $customerData->district_code ?? null,
+                    'ward_code' => $customerData->ward_code ?? null,
+                    'address_detail' => $customerData->address_detail ?? null,
+                    'note' => $customerData->note ?? null,
                     'created_at' => $customerData->created_at,
                     'updated_at' => $customerData->updated_at,
                 ];

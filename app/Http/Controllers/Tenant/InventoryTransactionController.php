@@ -271,6 +271,11 @@ class InventoryTransactionController extends Controller
         $inventory_transaction_id = Carbon::now()->timestamp;
         $variationIds = collect($request->inventory_transaction_details)->pluck('variation_id')->toArray();
         $requestedQuantities = collect($request->inventory_transaction_details)->pluck('quantity')->toArray();
+        if ($request->inventory_id_in == $request->inventory_id_out) return responseApi("Kho xuất và kho nhập không được trùng nhau!", false);
+        $filteredCollection = $requestedQuantities->filter(function($value) {
+            return $value <= 0;
+        });
+        if ($filteredCollection->isNotEmpty()) return responseApi("Số lượng phải lớn hơn 0!", false);
         $currentQuantities = $this->variationQuantityModel::where('inventory_id', $request->inventory_id_out)
             ->whereIn('variation_id', $variationIds)
             ->get()

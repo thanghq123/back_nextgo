@@ -36,7 +36,7 @@ class ConfigRequest extends FormRequest
                 "max:255",
             ],
             "email" => [
-                "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
+                "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g",
                 "max" => "max:255",
                 "nullable"
             ],

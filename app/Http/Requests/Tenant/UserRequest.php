@@ -37,7 +37,7 @@ class UserRequest extends FormRequest
                 "min:6"
             ],
             "email" => [
-                "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
+                "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g",
                 "max" => "max:255",
                 "required",
             ],

@@ -53,8 +53,7 @@ Route::get('expired', function () {
 })->name('tenant.expired');
 
 
-Route::middleware(['tenant', 'check_expired_tenant'])->group(function () {
-
+Route::middleware(['tenant', 'check_expired_tenant','auth:sanctum'])->group(function () {
     Route::post('/', function (Request $request) {
     });
     Route::post('get-customer', [CustomerController::class, 'getListCustomer']);

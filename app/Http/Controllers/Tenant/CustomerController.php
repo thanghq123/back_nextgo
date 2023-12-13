@@ -55,7 +55,7 @@ class CustomerController extends Controller
     public function getListCustomer()
     {
         try {
-            $query = Customer::query()->get();
+            $query = Customer::query()->where('status',1)->get();
             $return = $query->map(function ($data) {
                 return [
                     'id' => $data->id,

@@ -16,7 +16,6 @@ class PaymentController extends Controller
         protected Payment $model,
         protected Debt    $debtModel,
         protected Order   $orderModel,
-        protected PaymentRequest   $request
     )
     {
     }

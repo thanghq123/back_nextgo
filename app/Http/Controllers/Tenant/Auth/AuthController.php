@@ -110,7 +110,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return responseApi($validator->errors(), false);
         }
-        if (!Auth::guard('api')->attempt($credentials)&&!Auth::guard('api')->user()->status==1) {
+        if (!Auth::guard('api')->attempt($credentials)) {
             $msg = "Thông tin email hoặc mật khẩu không chính xác";
             return responseApi(['password' => $msg], false);
         }

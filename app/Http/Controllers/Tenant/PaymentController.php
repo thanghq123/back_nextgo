@@ -46,10 +46,10 @@ class PaymentController extends Controller
                     "note" => $item->note,
                     "created_by" => $item->createdBy->name,
                     "created_at" => $item->created_at,
-                    "paymentable" => collect($item->paymentable)->merge(['partner_name'=>$item->paymentable->partner->name])->all(),
+                    "paymentable" => collect($item->paymentable)->merge(['partner_name' => $item->paymentable->partner->name])->all(),
                 ];
             });
-            return responseApi(paginateCustom($data,$payment), true);
+            return responseApi(paginateCustom($data, $payment), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }
@@ -67,6 +67,8 @@ class PaymentController extends Controller
     {
         try {
             $debt = $this->debtModel::find($request->id);
+            $amount = $debt->payments()->sum('amount');
+            if (($debt->amount_debt - $amount) < $request->amount) return responseApi("Số tiền thanh toán không được lớn hơn số tiền nợ", false);
             $payment = $debt->payments()->create([
                 'amount' => $request->amount,
                 'amount_in' => $request->amount_in,
@@ -95,19 +97,19 @@ class PaymentController extends Controller
     {
         try {
             $order = $this->orderModel::find($request->order_payment[0]['paymentable_id']);
-            $paymentOrder=collect($request->order_payment);
-            if ($paymentOrder->count() == 1){
+            $paymentOrder = collect($request->order_payment);
+            if ($paymentOrder->count() == 1) {
                 $amount = $paymentOrder[0]['amount'];
                 $amount_in = $paymentOrder[0]['amount_in'];
             }
             foreach ($paymentOrder as $item) {
                 $payment = $order->payments()->create([
-                    'amount' => $amount??$item['pricePayment'],
-                    'amount_in' => $amount_in??$item['pricePayment'],
+                    'amount' => $amount ?? $item['pricePayment'],
+                    'amount_in' => $amount_in ?? $item['pricePayment'],
                     'amount_refund' => $item['amount_refund'],
                     'payment_method' => $item['payment_method'],
                     'payment_at' => now(),
-                    'reference_code' => $item['reference_code']??null,
+                    'reference_code' => $item['reference_code'] ?? null,
                     'note' => $item['note'],
                     'created_by' => 1
                 ]);

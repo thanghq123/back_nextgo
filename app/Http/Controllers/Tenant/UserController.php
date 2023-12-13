@@ -54,7 +54,7 @@ class UserController extends Controller
             $user->location_id = $this->request->location_id;
             $user->username = !$this->request->username ? null : $this->request->username;
             $user->tel = !$this->request->tel ? null : $this->request->tel;
-            $user->status = 1;
+            $user->status = !$this->request->status ? 0 : $this->request->status;
             $user->created_by = $this->request->user()->id ?? null;
             $user->save();
             $user->roles()->attach($this->request->role_id);
@@ -80,7 +80,8 @@ class UserController extends Controller
             $user->status = !$this->request->status ? 0 : $this->request->status;
             $user->save();
             if (isset($this->request->role_id)) {
-                $user->roles()->attach($this->request->role_id);
+                $role=Role::find($this->request->role_id)->name;
+                $user->syncRoles($role);
             }
             return responseApi('Cập nhật tài khoản thành công', true);
         } catch (\Throwable $throwable) {

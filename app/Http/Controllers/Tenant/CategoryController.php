@@ -18,6 +18,7 @@ class CategoryController extends Controller
     public function list(){
         try {
             return responseApi($this->model::query()
+                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
                 ->paginate(10), true);
         }catch (\Throwable $throwable)

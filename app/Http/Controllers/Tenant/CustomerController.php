@@ -22,6 +22,7 @@ class CustomerController extends Controller
                 $query->where('type', 0);
             }])
                 ->where('type', '<>', 1)
+                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id', 'desc')
                 ->paginate(10);
             $data = $customerData->getCollection()->map(function ($customerData) {

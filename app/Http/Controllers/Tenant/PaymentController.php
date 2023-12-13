@@ -16,6 +16,7 @@ class PaymentController extends Controller
         protected Payment $model,
         protected Debt    $debtModel,
         protected Order   $orderModel,
+        protected PaymentRequest   $request
     )
     {
     }
@@ -31,7 +32,8 @@ class PaymentController extends Controller
     public function index()
     {
         try {
-            $payment = $this->model::with('paymentable', 'createdBy')->paginate(10);
+            $payment = $this->model::with('paymentable', 'createdBy')
+                ->paginate(10);
             $data = $payment->getCollection()->transform(function ($item) {
                 return [
                     "id" => $item->id,

@@ -45,10 +45,12 @@ class LocationController extends Controller
         return $request->validate($rules, $message);
     }
 
-    public function list()
+    public function list(Request $request)
     {
         try {
-            $locations = Location::with(['inventories'])->get();
+            $locations = Location::with(['inventories'])
+                ->where('name', 'like', "%".$request->q."%")
+                ->get();
             $return = $locations->map(function ($data) {
                 return [
                     'id' => $data->id,

@@ -22,6 +22,7 @@ class GroupSupplierController extends Controller
             return responseApi($this->model
                 ->query()
                 ->where('type', 1)
+                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
                 ->paginate(10), true);
         }catch (\Throwable $throwable)

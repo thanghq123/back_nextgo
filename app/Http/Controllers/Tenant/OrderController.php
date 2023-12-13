@@ -39,7 +39,9 @@ class OrderController extends Controller
                 'location',
                 'createdBy',
                 'payments'
-            ])->orderBy('id', 'desc')->paginate(10);
+            ])
+                ->where('id', 'like', "%".$this->request->q."%")
+                ->orderBy('id', 'desc')->paginate(10);
 
             $data = $orderData->getCollection()->transform(function ($orderData) {
                 return [

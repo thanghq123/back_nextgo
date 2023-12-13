@@ -43,7 +43,9 @@ class ProductController extends Controller
                 'category',
                 'attributes.attributeValues',
                 'variations'
-            ])->orderBy('id', 'desc')->paginate(10);
+            ])
+                ->where('name', 'like', "%".$this->request->q."%")
+                ->orderBy('id', 'desc')->paginate(10);
 
             $data = $productData->getCollection()->transform(function ($productData) {
                 return [

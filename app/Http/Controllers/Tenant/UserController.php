@@ -23,6 +23,7 @@ class UserController extends Controller
         try {
             $user = request()->user();
             $userQuery = $this->model::with(['location', 'roles'])
+                ->where('name', 'like', "%".$this->request->q."%")
                 ->where('id', '!=', $user->id);
             if ($user->hasRole('admin')) {
                 $userQuery->where('location_id', $user->location_id);

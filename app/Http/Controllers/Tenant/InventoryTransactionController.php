@@ -66,9 +66,14 @@ class InventoryTransactionController extends Controller
     public function list(Request $request)
     {
         try {
-            $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')->orderBy('created_at','desc')->paginate(10);
+            $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
+                ->where('inventory_transaction_id', 'like', "%".$request->q."%")
+                ->orderBy('created_at','desc')->paginate(10);
             if ($request->has('trans_type') && $request->trans_type != '') {
-                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')->where('trans_type',$request->trans_type)->orderBy('created_at','desc')->paginate(10);
+                $inventoryTransactionData=$this->model::with('inventory', 'partner', 'createdBy')
+                    ->where('inventory_transaction_id', 'like', "%".$request->q."%")
+                    ->where('trans_type',$request->trans_type)
+                    ->orderBy('created_at','desc')->paginate(10);
             }
             $data = $inventoryTransactionData->getCollection()->transform(function ($inventoryTransactionData) {
                 return [
@@ -327,14 +332,16 @@ class InventoryTransactionController extends Controller
      * @path /tenant/api/v1//storage/trans
      * @desciption danh sách đơn chuyển kho
      * @method POST
-     * @param VariationQuantityRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function listTransfer()
+    public function listTransfer(Request $request)
     {
         try {
-            $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')->where('trans_type', 2)->paginate(10);
+            $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')
+                ->where('inventory_transaction_id', 'like', "%".$request->q."%")
+                ->where('trans_type', 2)->paginate(10);
             $response = $listTransfer->getCollection()->transform(function ($listTransfer) {
                 return [
                     "inventory_transaction_id" => $listTransfer->inventory_transaction_id,
@@ -356,7 +363,7 @@ class InventoryTransactionController extends Controller
                     "updated_at" => Carbon::make($listTransfer->updated_at)->format('H:i d-m-Y'),
                 ];
             });
-            return responseApi($response, true);
+            return responseApi(paginateCustom($response, $listTransfer), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

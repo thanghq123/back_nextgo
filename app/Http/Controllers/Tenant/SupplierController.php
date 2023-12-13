@@ -20,6 +20,7 @@ class SupplierController extends Controller
             $supplierData = $this->model::with(['group_customer' => function ($query) {
                 $query->where('type', 1);
             }])
+                ->where('name', 'like', "%".$this->request->q."%")
                 ->where('type', 1)
                 ->orderBy('id', 'desc')
                 ->paginate(10);

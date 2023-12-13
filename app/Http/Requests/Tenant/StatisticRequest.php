@@ -42,7 +42,6 @@ class StatisticRequest extends FormRequest
             case "products":
                 return [
                     "location_id" => $rules["location_id"],
-                    "inventory_id" => $rules["inventory_id"]
                 ];
             default:
                 return [];

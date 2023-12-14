@@ -49,7 +49,7 @@ class LocationController extends Controller
     {
         try {
             $locations = Location::with(['inventories'])
-                ->where('name', 'like', "%".$request->q."%")
+                ->where('name', 'like', "%" . $request->q . "%")
                 ->get();
             $return = $locations->map(function ($data) {
                 return [
@@ -105,7 +105,7 @@ class LocationController extends Controller
         try {
             $this->validation($request);
             $countMain = Location::where('is_main', 1)->count();
-            if ($countMain > 1) {
+            if ($countMain > 1 && $request->is_main == 1) {
                 return responseApi('Đã có cơ sở mặc định', false);
             }
             $file = $request->file('image');
@@ -123,7 +123,7 @@ class LocationController extends Controller
                 'district_code' => $request->district_code ?? null,
                 'ward_code' => $request->ward_code ?? null,
                 'address_detail' => $request->address_detail,
-                'status' => $request->status ?? 1,
+                'status' => $request->status ?? 0,
                 'is_main' => $request->is_main ?? 0,
                 'created_by' => $request->created_by ?? null
             ];

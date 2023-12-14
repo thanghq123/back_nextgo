@@ -147,7 +147,7 @@ class LocationController extends Controller
             $location = Location::query()->find($request->id);
             if ($location->is_main == 0 && $request->is_main == 1) {
                 $countMain = Location::where('is_main', 1)->count();
-                if ($countMain > 1) {
+                if ($countMain > 1 && $request->is_main == 1) {
                     return responseApi('Đã có cơ sở mặc định', false);
                 }
             }

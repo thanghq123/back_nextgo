@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use App\Models\Address\Province;
 use App\Models\Address\District;
 use App\Models\Address\Commune;
+use Illuminate\Support\Facades\Http;
 
 class CrawlGeoDataCommand extends Command
 {
@@ -60,19 +61,28 @@ class CrawlGeoDataCommand extends Command
 
     private function sendApiRequest($url, $params = [])
     {
-        $ch = curl_init();
+//        $ch = curl_init();
+//
+//        if (!empty($params)) {
+//            $url .= '?' . http_build_query($params);
+//        }
+//
+//        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//
+//        $response = curl_exec($ch);
+//
+//        curl_close($ch);
+//
+//        return json_decode($response, true);
+        $response = Http::get($url, $params);
 
-        if (!empty($params)) {
-            $url .= '?' . http_build_query($params);
+        if ($response->ok()) {
+            return $response->json();
         }
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // Xử lý lỗi tại đây nếu cần thiết
 
-        $response = curl_exec($ch);
-
-        curl_close($ch);
-
-        return json_decode($response, true);
+        return null;
     }
 }

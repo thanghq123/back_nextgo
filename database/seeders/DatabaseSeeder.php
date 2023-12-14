@@ -50,6 +50,10 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        Tenant\Customer::query()->create([
+            'name' => 'Khách vãng lai',
+        ]);
+
         $staff = \App\Models\Tenant\User::query()->create([
             'name' => 'staff1',
             'email' => 'staff1@gmail.com',

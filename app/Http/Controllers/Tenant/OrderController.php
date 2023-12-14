@@ -244,7 +244,7 @@ class OrderController extends Controller
                         ->first();
                     if($idVariationQuantities){
                         $this->variationQuantityModel::query()
-                            ->where('id', $idVariationQuantities->id)
+                            ->where('variation_id', $idVariationQuantities->id)
                             ->decrement('quantity', $order_detail['quanity']);
                     }
                 }

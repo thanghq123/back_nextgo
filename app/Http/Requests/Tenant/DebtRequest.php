@@ -36,7 +36,7 @@ class DebtRequest extends FormRequest
                 "required"
             ],
             "partner_type" => [
-                "required",
+                "nullable",
                 "in:0,1"
             ],
             "type" => [
@@ -91,7 +91,6 @@ class DebtRequest extends FormRequest
             "id.required" => "Mã khoản nợ Không được để trống!",
             "id.exists" => "Mã khoản nợ không tồn tại!",
             "partner_id.required" => "Mã đối tác Không được để trống!",
-            "partner_type.required" => "Mã loại khách hàng Không được để trống!",
             "partner_type.in" => "Mã loại khách hàng không hợp lệ!",
             "type.required" => "Loại công nợ Không được để trống!",
             "type.in" => "Loại công nợ không hợp lệ!",

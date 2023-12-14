@@ -191,16 +191,16 @@ class LocationController extends Controller
     public function delete(Request $request)
     {
         try {
-            $location = Location::query()->findOrFail($request->id);
+            $location = Location::query()->find($request->id);
             if ($location) {
                 $variationQuantity = Tenant\VariationQuantity::query()->where('inventory_id', $location->id);
                 if ($variationQuantity->sum('quantity') > 0) {
                     return responseApi('Cơ sở này đang được sử dụng và còn hàng trong kho', false);
                 } else {
-                    $location?->delete();
-                    Storage::delete('public/' . $location->image);
-                    Inventory::query()->where('location_id', $request->id)->delete();
                     $variationQuantity->delete();
+                    Inventory::query()->where('location_id', $request->id)->delete();
+                    $location->delete();
+//                    Storage::delete('public/' . $location->image);
                     return responseApi('Xoá thành công', true);
                 }
             }

@@ -226,7 +226,7 @@ class LocationController extends Controller
         $max_inventory = Pricing::where('id', $pricingId)->first()?->max_locations;
         $countLocation = Location::query()->count();
         $countInventory = Inventory::query()->count();
-        if ($countInventory >= $max_inventory - 1 && $countLocation >= $max_inventory - 1) {
+        if ($countInventory == $max_inventory && $countLocation == $max_inventory) {
             return false;
         }
         return true;

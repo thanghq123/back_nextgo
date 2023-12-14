@@ -20,7 +20,6 @@ class GroupCustomerController extends Controller
     public function list(){
         try {
             return responseApi($this->model::query()
-                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
                 ->where('type',0)
                 ->get(), true);

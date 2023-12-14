@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
         if ($url == 'store') {
             return [
                 "email_user" => [
-                    "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/",
+                    "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                     "max" => "max:255",
                     "unique" => "unique:App\Models\User,email",
                     "required"

@@ -24,7 +24,7 @@ class LocationController extends Controller
             'status' => 'required|integer|min:0',
             'is_main' => 'required|integer|min:0',
             'tel' => ['nullable', 'min:10', 'regex:/^(03|05|07|08|09)+([0-9]{8})$/'],
-            'email' => ['nullable', 'regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/'],
+            'email' => ['nullable', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
         ];
         $message = [
             'name.required' => 'Tên phải được nhập',

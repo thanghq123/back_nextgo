@@ -40,7 +40,6 @@ class OrderController extends Controller
                 'createdBy',
                 'payments'
             ])
-                ->where('id', 'like', "%".$this->request->q."%")
                 ->orderBy('id', 'desc')->get();
 
             $data = $orderData->map(function ($orderData) {

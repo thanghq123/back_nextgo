@@ -19,9 +19,7 @@ class ItemUnitController extends Controller
 
     public function list(){
         try {
-            return responseApi($this->model::query()
-                ->where('name', 'like', "%".$this->request->q."%")
-                ->get(), true);
+            return responseApi($this->model::query()->get(), true);
         }catch (\Throwable $throwable)
         {
             return responseApi($throwable->getMessage(), false);

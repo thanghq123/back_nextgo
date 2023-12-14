@@ -18,7 +18,6 @@ class BrandController extends Controller
     public function list(){
         try {
             return responseApi($this->model::query()
-                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id','desc')
                 ->get(), true);
         }catch (\Throwable $throwable)

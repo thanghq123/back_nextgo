@@ -44,7 +44,6 @@ class ProductController extends Controller
                 'attributes.attributeValues',
                 'variations'
             ])
-                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id', 'desc')->get();
 
             $data = $productData->map(function ($productData) {

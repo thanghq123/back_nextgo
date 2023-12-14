@@ -92,10 +92,15 @@ class OrderController extends Controller
                 'total_price' => $price,
                 'created_by' => auth()->user()->id
             ]);
-        }
-        if ($request->status == 0) {
+        } elseif ($request->status == 0) {
             $tenantChangeHistory = TenantChangeHistory::where('tenant_id', $order->tenant_id);
             if ($tenantChangeHistory) $tenantChangeHistory->delete();
+        }elseif ($request->status==3){
+            $tenantChangeHistory=TenantChangeHistory::where('tenant_id',$order->tenant_id)?->id;
+            $order=Order::where('tenant_change_history_id',$tenantChangeHistory)->count();
+            if ($order==0){
+                return response()->json(['msg' => 'Thanh toán đơn hàng trước khi thay dổi trạng thái', 'status' => 200]);
+            }
         }
         $order->update([
             'status' => $request->status,
@@ -277,7 +282,7 @@ class OrderController extends Controller
                 'assigned_to' => null,
                 'status' => 1,
             ]);
-            return responseApi('Tạo thành công mã đơn '.$order->id.'!', true);
+            return responseApi('Tạo thành công mã đơn ' . $order->id . '!', true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

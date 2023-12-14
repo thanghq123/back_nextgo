@@ -29,20 +29,20 @@ class PricingRequest extends FormRequest
         if($url == "store"){
             return [
                 'name' => 'required|min:3|unique:App\Models\Pricing,name',
-                'max_locations' => 'required|numeric|min:0',
-                'max_users' => 'required|numeric|min:0',
-                'price' => 'required|numeric|min:-1',
-                'expiry_day' => 'required|numeric|min:0',
+                'max_locations' => 'required|numeric|integer|gt:0',
+                'max_users' => 'required|numeric|integer|gt:0',
+                'price' => 'required|numeric|gte:0',
+                'expiry_day' => 'required|numeric|integer|gte:0',
             ];
         }
 
         if($url == "update"){
             return [
-                'name' => 'required|min:3|unique:App\Models\Pricing,name,'.$this->id,
-                'max_locations' => 'required|numeric|min:0',
-                'max_users' => 'required|numeric|min:0',
-                'price' => 'required|numeric|min:-1',
-                'expiry_day' => 'required|numeric|min:0',
+                'name' => 'required|min:3|unique:App\Models\Pricing,name'.$this->id,
+                'max_locations' => 'required|numeric|integer|gt:0',
+                'max_users' => 'required|numeric|integer|gt:0',
+                'price' => 'required|numeric|gte:0',
+                'expiry_day' => 'required|numeric|integer|gt:0',
             ];
         }
 
@@ -60,11 +60,15 @@ class PricingRequest extends FormRequest
             "max_locations.numeric" => "Số chi nhánh tối đa phải là số",
             "max_users.numeric" => "Số người dùng tối đa phải là số",
             "price.numeric" => "Giá/tháng phải là số",
-            "max_locations.min" => "Số chi nhánh tối đa phải lớn hơn 0",
-            "max_users.min" => "Số người dùng tối đa phải lớn hơn 0",
-            "price.min" => "Giá phải lớn hơn hoặc bằng 0",
+            "max_locations.gt" => "Số chi nhánh tối đa phải lớn hơn 0",
+            "max_users.gt" => "Số người dùng tối đa phải lớn hơn 0",
+            "max_locations.integer" => "Số chi nhánh tối đa phải là số nguyên",
+            "max_users.integer" => "Số người dùng tối đa phải là số nguyên",
+            "price.gte" => "Giá phải lớn hơn hoặc bằng 0",
             "expiry_day.required" => "Thời hạn không được để trống",
             "expiry_day.numeric" => "Thời hạn phải là số",
+            "expiry_day.integer" => "Thời hạn phải là số nguyên",
+            "expiry_day.gt" => "Thời hạn phải lớn hơn 0",
         ];
     }
 }

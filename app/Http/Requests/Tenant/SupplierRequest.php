@@ -46,7 +46,7 @@ class SupplierRequest extends FormRequest
                 "max:255"
             ],
             "email" => [
-                "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/g",
+                "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/",
                 "max" => "max:255",
                 "nullable"
             ],

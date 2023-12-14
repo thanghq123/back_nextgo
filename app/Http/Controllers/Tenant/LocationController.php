@@ -105,7 +105,7 @@ class LocationController extends Controller
         try {
             $this->validation($request);
             if (!$this->checkCountInventory()) {
-                return responseApi('Số lượng kho đã đạt tối đa', false);
+                return responseApi('Số lượng kho và chi nhánh đã đạt tối đa', false);
             }
             $countMain = Location::where('is_main', 1)->count();
             if ($countMain > 0 && $request->is_main == 1) {

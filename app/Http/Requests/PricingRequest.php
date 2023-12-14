@@ -38,7 +38,7 @@ class PricingRequest extends FormRequest
 
         if($url == "update"){
             return [
-                'name' => 'required|min:3|unique:App\Models\Pricing,name'.$this->id,
+                'name' => 'required|min:3|unique:App\Models\Pricing,name,'.$this->id,
                 'max_locations' => 'required|numeric|integer|gt:0',
                 'max_users' => 'required|numeric|integer|gt:0',
                 'price' => 'required|numeric|gte:0',

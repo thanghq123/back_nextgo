@@ -49,13 +49,13 @@ class UserRequest extends FormRequest
                 "email_user" => [
                     "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                     "max" => "max:255",
-                    "unique" => "unique:App\Models\User,email".$this->id,
+                    "unique" => "unique:App\Models\User,email,".$this->id,
                     "required"
                 ],
                 "tel" => [
                     "nullable",
                     "min:10",
-                    "unique" => "unique:App\Models\User,tel".$this->id,
+                    "unique" => "unique:App\Models\User,tel,".$this->id,
                     "regex:/^(03|05|07|08|09)+([0-9]{8})$/"
                 ],
 

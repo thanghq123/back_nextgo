@@ -104,8 +104,11 @@ class LocationController extends Controller
         DB::beginTransaction();
         try {
             $this->validation($request);
+            if (!$this->checkCountInventory()) {
+                return responseApi('Số lượng kho và chi nhánh đã đạt tối đa', false);
+            }
             $countMain = Location::where('is_main', 1)->count();
-            if ($countMain > 1 && $request->is_main == 1) {
+            if ($countMain > 0 && $request->is_main == 1) {
                 return responseApi('Đã có cơ sở mặc định', false);
             }
             $file = $request->file('image');
@@ -127,9 +130,6 @@ class LocationController extends Controller
                 'is_main' => $request->is_main ?? 0,
                 'created_by' => $request->created_by ?? null
             ];
-            if (!$this->checkCountInventory()) {
-                return responseApi('Số lượng kho đã đạt tối đa', false);
-            }
             $this->createLocationAndInventory($data);
             DB::commit();
             return responseApi('Thêm thành công', true);
@@ -147,7 +147,7 @@ class LocationController extends Controller
             $location = Location::query()->find($request->id);
             if ($location->is_main == 0 && $request->is_main == 1) {
                 $countMain = Location::where('is_main', 1)->count();
-                if ($countMain > 1 && $request->is_main == 1) {
+                if ($countMain > 0 && $request->is_main == 1) {
                     return responseApi('Đã có cơ sở mặc định', false);
                 }
             }
@@ -223,10 +223,10 @@ class LocationController extends Controller
     protected function checkCountInventory()
     {
         $pricingId = Tenant::current()->first()->pricing_id;
-        $max_inventory = Pricing::where('id', $pricingId)->first()->max_locations;
+        $max_inventory = Pricing::where('id', $pricingId)->first()?->max_locations;
         $countLocation = Location::query()->count();
         $countInventory = Inventory::query()->count();
-        if ($countInventory >= $max_inventory || $countLocation >= $max_inventory) {
+        if ($countInventory >= $max_inventory - 1 && $countLocation >= $max_inventory - 1) {
             return false;
         }
         return true;

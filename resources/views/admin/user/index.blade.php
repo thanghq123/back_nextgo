@@ -255,7 +255,7 @@
                             success: function (data) {
                                 console.log(data)
                                 KTApp.hidePageLoading();
-                                $('#kt_modal_add_business_field_header .modal-header_title').text('Cập nhật chi nhánh')
+                                $('#kt_modal_add_business_field_header .modal-header_title').text('Cập nhật người dùng')
                                 if (data.status) {
                                     $('#kt_modal_add_business_field_form').append('<input type="hidden" name="id" value="' + data.payload.id + '">')
                                     ten_user.val(data.payload.name)

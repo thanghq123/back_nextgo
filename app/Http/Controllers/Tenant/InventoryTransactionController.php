@@ -67,13 +67,11 @@ class InventoryTransactionController extends Controller
     {
         try {
             $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
-                ->where('inventory_transaction_id', 'like', "%" . $request->q . "%")
                 ->orderBy('created_at', 'desc')->get();
             if ($request->has('trans_type') && $request->trans_type != '') {
                 $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
-                    ->where('inventory_transaction_id', 'like', "%" . $request->q . "%")
                     ->where('trans_type', $request->trans_type)
-                    ->orderBy('created_at', 'desc')->paginate(10);
+                    ->orderBy('created_at', 'desc')->get();
             }
             $data = $inventoryTransactionData->map(function ($inventoryTransactionData) {
                 return [

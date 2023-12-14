@@ -55,7 +55,7 @@ class CustomerRequest extends FormRequest
                 "nullable"
             ],
             "email" => [
-                "regex" => "regex:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/",
+                "regex" => "regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/",
                 "max" => "max:255",
                 "nullable"
             ],

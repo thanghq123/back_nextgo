@@ -22,7 +22,6 @@ class CustomerController extends Controller
                 $query->where('type', 0);
             }])
                 ->where('type', '<>', 1)
-                ->where('name', 'like', "%".$this->request->q."%")
                 ->orderBy('id', 'desc')
                 ->get();
             $data = $customerData->map(function ($customerData) {

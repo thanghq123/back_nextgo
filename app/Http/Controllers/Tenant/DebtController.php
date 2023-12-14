@@ -30,14 +30,9 @@ class DebtController extends Controller
     public function index(Request $request)
     {
         try {
-            $debt = $this->model::with(['partner'])
-                ->whereHas('partner', function ($query){
-                    $query->where('name', 'like', "%".$this->request->q."%");
-                })
-                ->get();
-
+            $debt = $this->model::with(['partner'])->get();
             if ($request->has('type')) {
-                $debt = $this->model::with('partner')->where('type', $request->type)->paginate(10);
+                $debt = $this->model::with('partner')->where('type', $request->type)->get();
             }
             $data = $debt->map(function ($item) {
                 return [

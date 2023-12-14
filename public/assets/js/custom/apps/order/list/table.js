@@ -64,7 +64,7 @@ var CustomerList = function () {
                 table = $(tableElement).DataTable({
                     info: false,
                     order: [],
-                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 7}]
+                    columnDefs: [{orderable: false, targets: 0}, {orderable: false, targets: 8}]
                 });
 
                 table.on("draw", (function () {
@@ -84,7 +84,7 @@ var CustomerList = function () {
                         if (type === "all") {
                             type = "";
                         }
-                        table.column(3).search(type).draw();
+                        table.column(4).search(type).draw();
                     }))
                 })();
                 (()=>{
@@ -94,7 +94,7 @@ var CustomerList = function () {
                         if (status === "all") {
                             status = "";
                         }
-                        table.column(6).search(status).draw();
+                        table.column(7).search(status).draw();
                     }))
                 })();
             }

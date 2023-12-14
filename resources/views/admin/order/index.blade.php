@@ -56,6 +56,7 @@
                     <th class="min-w-25px">#</th>
                     <th class="min-w-125px">Tên cửa hàng</th>
                     <th class="min-w-125px">Tên gói</th>
+                    <th class="min-w-125px">Hạn gói hiện tại</th>
                     <th class="min-w-125px">Loại yêu cầu</th>
                     <th class="min-w-125px">Họ tên</th>
                     <th class="min-w-125px">SĐT liên hệ</th>
@@ -69,6 +70,7 @@
                         <td>{{$item+1}}</td>
                         <td>{{$value['tenant']}}</td>
                         <td>{{$value['pricing']}}</td>
+                        <td>{{$value['due_at']}}</td>
                         <td>{{$value['type']==0?'Nâng cấp':'Gia hạn'}}</td>
                         <td>{{$value['name']}}</td>
                         <td>{{$value['tel']}}</td>

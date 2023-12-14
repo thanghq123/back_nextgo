@@ -21,11 +21,12 @@ class OrderController extends Controller
         $tenants = Tenant::get();
         $pricings = Pricing::get();
         $users = User::get();
-        $data = SubscriptionOrder::with('tenant:id,business_name', 'pricing:id,name', 'assignedTo:id,name')->orderBy('created_at')->get();
+        $data = SubscriptionOrder::with('tenant:id,business_name,due_at', 'pricing:id,name', 'assignedTo:id,name')->orderBy('created_at')->get();
         $subscriptionOrder = $data->map(function ($item) {
             return [
                 'id' => $item->id,
-                'tenant' => $item->tenant->business_name,
+                'tenant' => $item->tenant?->business_name,
+                'due_at' => $item->tenant?->due_at,
                 'pricing' => $item->pricing->name,
                 'type' => $item->type,
                 'name' => $item->name,

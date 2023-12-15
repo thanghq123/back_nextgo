@@ -50,7 +50,7 @@ class Payment extends Model
             return $query->whereDate('payment_at', '>=', $time);
         }
 
-        return $query->whereBetween('payment_at', [$option[1], $option[2]]);
+        return $query->whereBetween('payment_at', [$option[1].' 00:00:00', $option[2].' 23:59:59']);
     }
 
     private function returnData($time, array $option = [], ?int $locationId = 0){

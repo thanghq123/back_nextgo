@@ -67,9 +67,14 @@ class InventoryTransactionController extends Controller
     {
         try {
             $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
-                ->orderBy('created_at', 'desc')->get();
+                ->when($request->inventory_id, function ($query) use ($request) {
+                   return $query->where('inventory_id', $request->inventory_id);
+            })->orderBy('created_at', 'desc')->get();
             if ($request->has('trans_type') && $request->trans_type != '') {
                 $inventoryTransactionData = $this->model::with('inventory', 'partner', 'createdBy')
+                    ->when($request->inventory_id, function ($query) use ($request) {
+                       return $query->where('inventory_id', $request->inventory_id);
+                    })
                     ->where('trans_type', $request->trans_type)
                     ->orderBy('created_at', 'desc')->get();
             }
@@ -360,7 +365,9 @@ class InventoryTransactionController extends Controller
     {
         try {
             $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')
-                ->where('inventory_transaction_id', 'like', "%" . $request->q . "%")
+                ->when($request->inventory_id, function ($query) use ($request) {
+                    return $query->where('inventory_id', $request->inventory_id);
+                })
                 ->where('trans_type', 2)->get();
             $response = $listTransfer->map(function ($listTransfer) {
                 return [

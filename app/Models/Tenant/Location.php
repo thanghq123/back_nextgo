@@ -52,4 +52,7 @@ class Location extends Model
     public function commune(){
         return $this->belongsTo(Commune::class,'ward_code');
     }
+    public function debts(){
+        return $this->hasMany(Debt::class,'location_id','id');
+    }
 }

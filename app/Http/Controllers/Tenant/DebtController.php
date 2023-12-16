@@ -30,9 +30,18 @@ class DebtController extends Controller
     public function index(Request $request)
     {
         try {
-            $debt = $this->model::with(['partner'])->get();
+            $debt = $this->model::with(['partner','location'])
+                ->when($request->has('location_id'), function ($query) use ($request) {
+                   return $query->where('location_id', $request->location_id);
+                })
+                ->get();
             if ($request->has('type')) {
-                $debt = $this->model::with('partner')->where('type', $request->type)->get();
+                $debt = $this->model::with('partner','location')
+                    ->when($request->has('location_id'), function ($query) use ($request) {
+                        return $query->where('location_id', $request->location_id);
+                    })
+                    ->where('type', $request->type)
+                    ->get();
             }
             $data = $debt->map(function ($item) {
                 return [
@@ -46,6 +55,8 @@ class DebtController extends Controller
                     "amount_paid" => $item->amount_paid,
                     "note" => $item->note,
                     "status" => $item->status,
+                    "location_id" => $item->location_id,
+                    "location_name" => $item->location->name,
                 ];
             });
             return responseApi($data, true);
@@ -81,7 +92,8 @@ class DebtController extends Controller
                 "amount_debt" => $this->request->amount_debt,
                 "amount_paid" => $this->request->amount_paid,
                 "note" => $this->request->note,
-                "status" => 1
+                "status" => 1,
+                "location_id" => $this->request->location_id
             ]);
             return responseApi($debt, true);
         } catch (\Throwable $throwable) {
@@ -151,7 +163,8 @@ class DebtController extends Controller
                 "amount_debt" => $this->request->amount_debt,
                 "amount_paid" => $this->request->amount_paid,
                 "note" => $this->request->note,
-                "status" => $this->request->status
+                "status" => $this->request->status,
+                "location_id" => $this->request->location_id
             ]);
             return responseApi($debt, true);
         } catch (\Throwable $throwable) {

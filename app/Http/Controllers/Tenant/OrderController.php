@@ -40,6 +40,9 @@ class OrderController extends Controller
                 'createdBy',
                 'payments'
             ])
+                ->when($this->request->location_id, function ($query) {
+                    return $query->where('location_id', $this->request->location_id);
+                })
                 ->orderBy('id', 'desc')->get();
 
             $data = $orderData->map(function ($orderData) {

@@ -13,7 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        //
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('partner_id');
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->double('amount_paid')->notNullable();
             $table->text('note')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('location_id');
             $table->timestamps();
         });
     }

@@ -34,6 +34,7 @@ class DebtController extends Controller
                 ->when($request->has('location_id'), function ($query) use ($request) {
                    return $query->where('location_id', $request->location_id);
                 })
+                ->orderBy('id', 'desc')
                 ->get();
             if ($request->has('type')) {
                 $debt = $this->model::with('partner','location')
@@ -41,6 +42,7 @@ class DebtController extends Controller
                         return $query->where('location_id', $request->location_id);
                     })
                     ->where('type', $request->type)
+                    ->orderBy('id', 'desc')
                     ->get();
             }
             $data = $debt->map(function ($item) {

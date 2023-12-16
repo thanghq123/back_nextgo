@@ -27,7 +27,7 @@ class UserController extends Controller
             if ($user->hasRole('admin')) {
                 $userQuery->where('location_id', $user->location_id);
             }
-            $users = $userQuery->get();
+            $users = $userQuery->orderBy('id', 'desc')->get();
             return responseApi($users, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());

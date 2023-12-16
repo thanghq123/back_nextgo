@@ -368,7 +368,7 @@ class InventoryTransactionController extends Controller
                 ->when($request->inventory_id, function ($query) use ($request) {
                     return $query->where('inventory_id', $request->location_id);
                 })
-                ->where('trans_type', 2)->get();
+                ->where('trans_type', 2)->orderBy('id', 'desc')->get();
             $response = $listTransfer->map(function ($listTransfer) {
                 return [
                     "inventory_transaction_id" => $listTransfer->inventory_transaction_id,

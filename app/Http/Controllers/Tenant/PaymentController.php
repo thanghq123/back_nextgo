@@ -31,7 +31,7 @@ class PaymentController extends Controller
     public function index()
     {
         try {
-            $payment = $this->model::with('paymentable', 'createdBy')->get();
+            $payment = $this->model::with('paymentable', 'createdBy')->orderBy('id', 'desc')->get();
             $data = $payment->map(function ($item) {
                 return [
                     "id" => $item->id,

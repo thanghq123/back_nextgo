@@ -112,7 +112,7 @@ class DebtController extends Controller
     public function show()
     {
         try {
-            $debt = $this->model::with('partner')->where('id', $this->request->id)->get();
+            $debt = $this->model::with('partner','location')->where('id', $this->request->id)->get();
             $response = $debt->map(function ($item) {
                 return [
                     "id" => $item->id,
@@ -127,6 +127,8 @@ class DebtController extends Controller
                     "amount_paid" => $item->amount_paid,
                     "note" => $item->note,
                     "status" => $item->status,
+                    "location_id" => $item->location_id,
+                    "location_name" => $item->location->name??"Chi nhánh không tồn tại hoặc đã bị xoá",
                     "payments" => $item->payments
                 ];
             });

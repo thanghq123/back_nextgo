@@ -49,7 +49,7 @@ class LocationController extends Controller
     {
         try {
             $locations = Location::with(['inventories'])
-                ->where('name', 'like', "%" . $request->q . "%")
+                ->orderBy('id', 'desc')
                 ->get();
             $return = $locations->map(function ($data) {
                 return [

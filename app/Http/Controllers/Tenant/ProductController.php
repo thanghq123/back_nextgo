@@ -123,7 +123,7 @@ class ProductController extends Controller
                     'product.itemUnit',
                     'variationQuantities',
                     'batchs'
-                ])->get()->groupBy('product_id');
+                ])->orderBy('id', 'desc')->get()->groupBy('product_id');
             }
             return responseApi($products, true);
         } catch (\Throwable $throwable) {

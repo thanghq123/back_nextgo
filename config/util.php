@@ -16,7 +16,7 @@ return [
             'roles' => ['super-admin', 'admin', 'staff'],
         ],
         [
-            'name' => 'ListOrders',
+            'name' => 'orders',
             'roles' => ['super-admin', 'admin'],
         ],
         [

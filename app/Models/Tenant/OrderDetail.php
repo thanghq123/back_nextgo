@@ -58,7 +58,7 @@ class OrderDetail extends Model
                 return $query->whereDate('created_at', '>=', Carbon::now()->subDays(30))->groupBy('variation_id')
                     ->get();
             case 'fromTo':
-                return $query->whereBetween('created_at', [$option[1], $option[2]])->groupBy('variation_id')
+                return $query->whereBetween('created_at', [$option[1].' 00:00:00', $option[2].' 23:59:59'])->groupBy('variation_id')
                     ->get();
             default:
                 return responseApi("Lỗi", false);

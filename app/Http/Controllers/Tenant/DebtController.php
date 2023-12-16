@@ -56,7 +56,7 @@ class DebtController extends Controller
                     "note" => $item->note,
                     "status" => $item->status,
                     "location_id" => $item->location_id,
-                    "location_name" => $item->location->name,
+                    "location_name" => $item->location->name??"Chi nhánh không tồn tại hoặc đã bị xoá"
                 ];
             });
             return responseApi($data, true);

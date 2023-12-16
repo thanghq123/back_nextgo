@@ -96,7 +96,7 @@ class OrderController extends Controller
             $tenantChangeHistory = TenantChangeHistory::where('tenant_id', $order->tenant_id);
             if ($tenantChangeHistory) $tenantChangeHistory->delete();
         }elseif ($request->status==3){
-            $tenantChangeHistory=TenantChangeHistory::where('tenant_id',$order->tenant_id)?->id;
+            $tenantChangeHistory=TenantChangeHistory::where('tenant_id',$order->tenant_id)->first()?->id;
             $order=Order::where('tenant_change_history_id',$tenantChangeHistory)->count();
             if ($order==0){
                 return response()->json(['msg' => 'Thanh toán đơn hàng trước khi thay dổi trạng thái', 'status' => 200]);

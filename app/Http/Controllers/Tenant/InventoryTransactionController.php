@@ -366,7 +366,7 @@ class InventoryTransactionController extends Controller
         try {
             $listTransfer = $this->model::with('inventory', 'inventoryOut', 'inventoryTransactionDetails', 'createdBy:id,name', 'inventory.location:id,name', 'inventoryOut.location:id,name')
                 ->when($request->inventory_id, function ($query) use ($request) {
-                    return $query->where('inventory_id', $request->inventory_id);
+                    return $query->where('inventory_id_out', $request->inventory_id);
                 })
                 ->where('trans_type', 2)->orderBy('id', 'desc')->get();
             $response = $listTransfer->map(function ($listTransfer) {

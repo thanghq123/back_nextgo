@@ -23,11 +23,14 @@ class UserController extends Controller
         try {
             $user = request()->user();
             $userQuery = $this->model::with(['location', 'roles'])
-                ->where('id', '!=', $user->id);
+                ->where('id', '!=', $user->id)
+                ->when($this->request->location_id, function ($query) {
+                    return $query->where('location_id', $this->request->location_id);
+                });
             if ($user->hasRole('admin')) {
                 $userQuery->where('location_id', $user->location_id);
             }
-            $users = $userQuery->get();
+            $users = $userQuery->orderBy('id', 'desc')->get();
             return responseApi($users, true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage());

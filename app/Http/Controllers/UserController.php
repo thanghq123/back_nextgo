@@ -20,7 +20,8 @@ class UserController extends Controller
     public function index()
     {
         $role = Role::all();
-        $users = User::with(['tenants', 'parent'])->orderBy('created_at', 'desc')->get();
+        $user = request()->user();
+        $users = User::with(['tenants', 'parent'])->where('id', '!=', $user->id)->orderBy('created_at', 'desc')->get();
         return view('admin.user.index', compact('users', 'role'));
     }
 

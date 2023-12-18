@@ -81,4 +81,13 @@ class TenantController extends Controller
             return responseApi($throwable->getMessage(), false);
         }
     }
+
+    public function getTenant()
+    {
+        try {
+            return responseApi(Tenant::current(), true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
 }

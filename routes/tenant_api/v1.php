@@ -55,9 +55,7 @@ Route::get('expired', function () {
 
 
 Route::middleware(['tenant', 'check_expired_tenant', 'auth:sanctum'])->group(function () {
-    Route::post('/', function (Request $request) {
-        return responseApi(Tenant::current(), true);
-    });
+    Route::post('tenant', [\App\Http\Controllers\TenantController::class, 'getTenant']);
     Route::post('get-customer', [CustomerController::class, 'getListCustomer']);
     Route::post('get-status-customer', [CustomerController::class, 'getCustomerWithStatus']);
     Route::post('get-product', [ProductController::class, 'getListProduct']);

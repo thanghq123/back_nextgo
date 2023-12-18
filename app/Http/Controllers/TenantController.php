@@ -20,7 +20,7 @@ class TenantController extends Controller
 
     public function index()
     {
-        $tenants = Tenant::with(['user', 'business_field'])->orderBy('created_at', 'desc')->get();
+        $tenants = Tenant::with(['user', 'business_field', 'pricing'])->orderBy('created_at', 'desc')->get();
         $businessField = BusinessField::all();
         $users = User::all();
         $pricing = Pricing::all();

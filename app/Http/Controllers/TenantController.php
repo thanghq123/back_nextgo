@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Pricing;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 class TenantController extends Controller
 {
@@ -77,6 +78,15 @@ class TenantController extends Controller
     {
         try {
             return responseApi(\auth()->user()->tenants()->select('name', 'business_name')->get(), true);
+        } catch (\Throwable $throwable) {
+            return responseApi($throwable->getMessage(), false);
+        }
+    }
+
+    public function getTenant(Request $request)
+    {
+        try {
+            return responseApi(Tenant::current(), true);
         } catch (\Throwable $throwable) {
             return responseApi($throwable->getMessage(), false);
         }

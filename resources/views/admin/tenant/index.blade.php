@@ -169,6 +169,8 @@
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                     <th class="min-w-125px">Tên cửa hàng</th>
                     <th class="min-w-125px">Tên miền</th>
+                    <th class="min-w-125px">Gói dịch vụ</th>
+                    <th class="min-w-125px">Ngày hết hạn</th>
                     <th class="min-w-125px">Địa chỉ</th>
                     <th class="min-w-125px">Tên User</th>
                     <th class="min-w-125px">Lĩnh Vực Kinh Doanh</th>
@@ -180,6 +182,8 @@
                     <tr data-id="{{$tenant->id}}">
                         <td>{{$tenant->business_name}}</td>
                         <td>{{$tenant->name}}</td>
+                        <td>{{$tenant->pricing->name}}</td>
+                        <td>{{ \Illuminate\Support\Carbon::make($tenant->due_at)->format('d-m-Y') }}</td>
                         <td>{{$tenant->address }}</td>
                         {{--                        <td>{{$tenant->database}}</td>--}}
                         <td>{{$tenant->user->name}}</td>

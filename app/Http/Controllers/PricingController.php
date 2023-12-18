@@ -103,6 +103,7 @@ class PricingController extends Controller
                     'max_locations',
                     'max_users',
                     'price',
+                    'expiry_day'
                 ])
                 ->where('id', $tenant->pricing_id)
                 ->first();

@@ -122,7 +122,7 @@ class OrderController extends Controller
         try {
             $tenant = Tenant::where('id', $request->tenant_id)->first()?->pricing_id;
             if ($request->type == 0 && $tenant == $request->pricing_id) {
-                return responseApi('Bạn đã đăng ký gói này rồi! Không thể nâng cấp', false);
+                return responseApi('Bạn đã đăng ký gói này rồi! Không thể thay đổi gói', false);
             }
             $order = SubscriptionOrder::create([
                 'tenant_id' => $request->tenant_id,
@@ -271,7 +271,7 @@ class OrderController extends Controller
         try {
             $tenant = Tenant::where('id', $request->tenant_id)->first()?->pricing_id;
             if ($request->type == 0 && $tenant == $request->pricing_id) {
-                return responseApi('Bạn đã đăng ký gói này rồi! Không thể nâng cấp', false);
+                return responseApi('Bạn đã đăng ký gói này rồi! Không thể thay đổi gói', false);
             }
             $order = SubscriptionOrder::create([
                 'tenant_id' => $request->tenant_id,

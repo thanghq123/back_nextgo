@@ -31,7 +31,7 @@
                             <option></option>
                             <option value="all">Tất cả</option>
                             <option value="Gia hạn">Gia hạn</option>
-                            <option value="Nâng cấp">Nâng cấp</option>
+                            <option value="Thay đổi gói">Thay đổi gói</option>
                         </select>
                         <!--end::Select2-->
                     </div>
@@ -67,7 +67,7 @@
                     <tr data-id="{{$value['id']}}">
                         <td>{{$item+1}}</td>
                         <td>{{$value['tenant']}}</td>
-                        <td> {{$value['change_type']==0?'Gia hạn':'Nâng cấp'}}</td>
+                        <td> {{$value['change_type']==0?'Gia hạn':'Thay đổi gói'}}</td>
                         <td>{{$value['from_pricing']}}</td>
                         <td>{{$value['to_pricing']}}</td>
                         <td>{{number_format($value['total_price'])}}</td>

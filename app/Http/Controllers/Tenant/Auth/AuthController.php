@@ -23,7 +23,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return responseApi($validator->errors(), false);
         }
-        if (!Auth::guard('web')->attempt($credentials)&&!Auth::guard('web')->user()->status==1) {
+        if (!Auth::guard('web')->attempt($credentials) && !Auth::guard('web')->user()?->status == 1) {
             $msg = "Thông tin email hoặc mật khẩu không chính xác";
             return responseApi(['password' => $msg], false);
         }
@@ -42,7 +42,7 @@ class AuthController extends Controller
 
 
         if (Carbon::now()->greaterThan(Carbon::make($tenant->due_at))) {
-            return responseApi(['domain_name' => "Cửa hàng đã hết hạn sử dụng, vui lòng nâng cấp hoặc gia hạn"], false);
+            return responseApi(['domain_name' => "Cửa hàng đã hết hạn sử dụng, vui lòng thay đổi gói hoặc gia hạn"], false);
         }
 
         $tenant->makeCurrent();
@@ -143,6 +143,7 @@ class AuthController extends Controller
         ];
         return responseApi($data, true);
     }
+
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();

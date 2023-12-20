@@ -31,7 +31,7 @@
                             <option></option>
                             <option value="all">Tất cả</option>
                             <option value="Gia hạn">Gia hạn</option>
-                            <option value="Nâng cấp">Nâng cấp</option>
+                            <option value="Thay đổi gói">Thay đổi gói</option>
                         </select>
                         <!--end::Select2-->
                     </div>
@@ -71,7 +71,7 @@
                         <td>{{$value['tenant']}}</td>
                         <td>{{$value['pricing']}}</td>
                         <td>{{$value['due_at']}}</td>
-                        <td>{{$value['type']==0?'Nâng cấp':'Gia hạn'}}</td>
+                        <td>{{$value['type']==0?'Thay đổi gói':'Gia hạn'}}</td>
                         <td>{{$value['name']}}</td>
                         <td>{{$value['tel']}}</td>
                         <td>
@@ -180,7 +180,7 @@
                                         data-placeholder="Chọn loại dữ liệu mẫu"
                                         data-dropdown-parent="#kt_modal_add_customer">
                                     <option></option>
-                                    <option value="0">Nâng cấp</option>
+                                    <option value="0">Thay đổi gói</option>
                                     <option value="1">Gia hạn</option>
                                 </select>
                             </div>
@@ -431,7 +431,7 @@
                             KTApp.hidePageLoading();
                             tenant_name.val(data.detail.tenant)
                             pricing_name.val(data.detail.pricing)
-                            type.val(data.detail.type == 0 ? 'Nâng cấp' : 'Gia hạn')
+                            type.val(data.detail.type == 0 ? 'Thay đổi gói' : 'Gia hạn')
                             name.val(data.detail.name)
                             tel.val(data.detail.tel)
                             status.val(data.detail.status_name)

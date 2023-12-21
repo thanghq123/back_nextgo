@@ -103,7 +103,7 @@ class UserController extends Controller
             if (!$user) return responseApi('User không tồn tại');
             $user->name = $this->request->ten_user;
             $user->email = $this->request->email_user;
-            if($this->request->password) $user->password = $this->request->password;
+            if($this->request->password) $user->password = bcrypt($this->request->password);
             $user->tel = $this->request->phone_number ?? null;
             $user->save();
             $user->roles()->sync($this->request->role);

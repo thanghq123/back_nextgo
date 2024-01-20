@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'PREFIX_DATABASE' => 'nextgo_tenant_',
     'SEED_TYPES' => [
         0 => \App\Models\Tenant\Category::class,
         1 => \App\Models\Tenant\Brand::class,

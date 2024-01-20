@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\Tenant\LocationController;
 use App\Models\Tenant\Config;
 use App\Models\Tenant\Role;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -133,5 +134,12 @@ class Tenant extends SpatieTenant
             throw $th;
 
         }
+    }
+
+    protected function database(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => config('util.PREFIX_DATABASE') . $value,
+        );
     }
 }
